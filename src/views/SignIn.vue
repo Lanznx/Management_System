@@ -20,7 +20,7 @@
     signInWithEmailAndPassword(auth, email.value, password.value) // THIS LINE CHANGED
     .then(() => {
       console.log('Successfully logged in!');
-      router.push('/feed') // redirect to the feed
+      router.push('/sys/home') 
     })
     .catch(error => {
       switch (error.code) {
