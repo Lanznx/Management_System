@@ -21,7 +21,7 @@
             <el-icon><Menu /></el-icon>
             <span>產品</span>
         </el-menu-item>
-        <el-menu-item index="ware-house">
+        <el-menu-item index="ware-house/menu">
             <el-icon><house /></el-icon>
             <span>倉庫管理</span>
         </el-menu-item>
