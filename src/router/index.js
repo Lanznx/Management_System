@@ -22,8 +22,14 @@ const router = createRouter({
         {
           path: "ware-house", 
           name: "倉庫", 
-          component: () => import("../components/Warehouse/Warehouse.vue"),
+          component: () => import("../components/Warehouse/index.vue"),
           children: [
+            {
+              path: '', redirect: 'menu'
+            },{
+              path: 'menu',
+              component: () => import("../components/Warehouse/Menu.vue")
+            },
             {
               path: ":id",
               component: () => import("../components/Warehouse/House.vue")
