@@ -24,7 +24,7 @@ export default {
 </script>
 
 
-<style>
+<style scoped>
 .el-row {
   margin-left: 30px !important;
   margin-right: 30px !important;
