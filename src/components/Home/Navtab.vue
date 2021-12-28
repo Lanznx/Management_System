@@ -1,6 +1,6 @@
 <template>
   <el-tabs v-model="activeName" @tab-click="handleClick">
-    <el-tab-pane label="訂單" name="first"><TransactionTable /></el-tab-pane>
+    <el-tab-pane label="訂單" name="first"><TransactionTable :tableHeight="700"/></el-tab-pane>
     <el-tab-pane label="倉庫" name="third"><WareHouseTable /></el-tab-pane>
     <el-tab-pane label="工作" name="second"><TodoList /></el-tab-pane>
   </el-tabs>
