@@ -12,13 +12,28 @@
         >
       </template>
     </el-table-column>
+    
   </el-table>
+  <el-button-group>
+    <el-button><el-icon><ArrowLeft /></el-icon>上一頁</el-button>
+    <el-button>
+      下一頁<el-icon><ArrowRight /></el-icon>
+    </el-button>
+  </el-button-group>
 </template>
 
 <script>
-import { getFirestore, collection, query, where, getDocs, limit } from 'firebase/firestore'
+import {
+  ArrowLeft,
+  ArrowRight,
+} from '@element-plus/icons'
+import { getFirestore, collection, query, orderBy, where, getDocs, limit } from 'firebase/firestore'
 
 export default {
+  components:{
+    ArrowLeft,
+    ArrowRight,
+  },
   props:{
     tableHeight: Number
   },
@@ -37,7 +52,7 @@ export default {
       const db = getFirestore()
 
       const ordersRef = collection(db, "orders");
-      const q = query(ordersRef, where("user", "==", uid), limit(10));
+      const q = query(ordersRef, where("user", "==", uid), orderBy("date", "desc"), limit(11));
 
       console.log("getting docs from orders/" + "user" + "==" + uid)
       const querySnapshot = await getDocs(q)
