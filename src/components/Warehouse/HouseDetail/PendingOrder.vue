@@ -4,8 +4,8 @@
     <el-table-column prop="id" label="Order_ID" align="center"></el-table-column>
     <el-table-column prop="operation" label="Operation" width="100"></el-table-column>
     <el-table-column label="Approve" fixed="right" width="150" align="center">
-        <template #default>
-            <el-button type="success" circle><el-icon><Check /></el-icon></el-button>
+        <template #default="scope">
+            <el-button type="success" circle @click="handleApprove(scope.row)"><el-icon><Check /></el-icon></el-button>
         </template>
     </el-table-column>
   </el-table>
