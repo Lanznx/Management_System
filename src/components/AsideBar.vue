@@ -25,15 +25,15 @@
             <el-icon><house /></el-icon>
             <span>倉庫管理</span>
         </el-menu-item>
-        <el-menu-item index="data-anaylsis">
+        <el-menu-item index="data-anaylsis" disabled>
             <el-icon><data-analysis /></el-icon>
             <span>資料分析</span>
         </el-menu-item>
-        <el-menu-item index="customer">
+        <el-menu-item index="customer" disabled>
             <el-icon><avatar /></el-icon>
             <span>客戶管理</span>
         </el-menu-item>
-        <el-menu-item index="setting">
+        <el-menu-item index="setting" disabled>
             <el-icon><setting /></el-icon>
             <span>設定</span>
         </el-menu-item>
