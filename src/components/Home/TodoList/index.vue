@@ -47,14 +47,11 @@ const filters = {
   completed: todos => todos.filter(todo => todo.done)
 }
 const defalutList = [
-  { text: 'star this repository', done: false },
-  { text: 'fork this repository', done: false },
-  { text: 'follow author', done: false },
-  { text: 'vue-element-admin', done: true },
-  { text: 'vue', done: true },
-  { text: 'element-ui', done: true },
-  { text: 'axios', done: true },
-  { text: 'webpack', done: true }
+  { text: '出 30 顆蘋果給 ABC', done: false },
+  { text: '點貨', done: false },
+  { text: '確認 CCC 的進貨', done: false },
+  { text: '加入新產品', done: true },
+  { text: '確認訂單 asdasdsghve 的進度', done: true }
 ]
 export default {
   components: { Todo },
