@@ -32,7 +32,7 @@ const router = createRouter({
             },
             {
               path: ":id",
-              component: () => import("../components/Warehouse/House.vue")
+              component: () => import("../components/Warehouse/HouseDetail/House.vue")
             }
           ]
         },
@@ -40,6 +40,11 @@ const router = createRouter({
           path: "data-anaylsis",
           name: "資料分析",
           component: () => import("../components/Carousel.vue")
+        },
+        {
+          path: "test",
+          name: "測試",
+          component: () => import("../components/test.vue")
         },
         {
           path: '404',
