@@ -47,6 +47,8 @@ const filters = {
   completed: todos => todos.filter(todo => todo.done)
 }
 const defalutList = [
+  { text: '放按鈕在主頁的 orders', done: false },
+  { text: '新增增加 orders 功能', done: false },
   { text: '出 30 顆蘋果給 ABC', done: false },
   { text: '點貨', done: false },
   { text: '確認 CCC 的進貨', done: false },
