@@ -16,37 +16,42 @@
 </template>
 
 <script>
-import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore'
+import { getFirestore, collection, query, where, getDocs, orderBy, onSnapshot } from 'firebase/firestore'
+import { useRoute } from 'vue-router'
 
 export default {
   props:{
     tableHeight: Number
   },
+  computed: {
+      routeId: function(){
+          return useRoute().params.id
+      }
+  },
   data() {
     return {
-      list: null
+      list: [],
+      list1: []
     }
   },
   created() {
-    this.fetchData(this.firebase_user.uid)
+    this.fetchData(this.routeId)
   },
   methods: {
-    async fetchData(uid) {
-      this.list = []
-
+    async fetchData(id) {
       const db = getFirestore()
 
       const ordersRef = collection(db, "orders");
-      const q = query(ordersRef, where("user", "==", uid), where("status", "!=", "Pending"));
+      const q1 = query(ordersRef, where("from", "==", id), where("status", "==", "Success"), orderBy("date", "desc"));
+      const q2 = query(ordersRef, where("to", "==", id), where("status", "==", "Success"), orderBy("date", "desc"));
 
-      console.log("getting docs from orders/" + "user" + "==" + uid)
-      const querySnapshot = await getDocs(q)
+      const querySnapshot1 = await getDocs(q1)
       // intitailize tableData
-      await querySnapshot.forEach((doc) => {
+      await querySnapshot1.forEach((doc) => {
           // console.log(`${doc.id} => ${doc.data()}`)
           console.log(doc.data().date.toDate().toISOString().substring(0, 10))
 
-          this.list.push({
+          this.list1.push({
               id: doc.id,
               user: doc.data().user,
               amount: doc.data().amount,
@@ -58,6 +63,26 @@ export default {
               to: doc.data().to
           })
       });
+
+      onSnapshot(q2, (snapshot) => {
+        this.list = this.list1
+        snapshot.forEach((doc) => {
+            // console.log(`${doc.id} => ${doc.data()}`)
+            console.log(doc.data().date.toDate().toISOString().substring(0, 10))
+
+            this.list.push({
+                id: doc.id,
+                user: doc.data().user,
+                amount: doc.data().amount,
+                date: doc.data().date.toDate().toISOString().substring(0, 10),
+                from: doc.data().from,
+                operation: doc.data().operation,
+                product: doc.data().product,
+                status: doc.data().status,
+                to: doc.data().to
+            })
+        });
+      })
 
       console.log(this.list)
     }
