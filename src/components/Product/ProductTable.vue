@@ -17,10 +17,10 @@
     <el-table-column label="Category" prop="data.category" />
   </el-table>
   <el-button-group style="padding: 10px">
-    <el-button>
+    <el-button @click="prevPage">
       <el-icon class="el-icon--left"><ArrowLeft /></el-icon>上一頁
     </el-button>
-    <el-button>
+    <el-button @click="nextPage">
       下一頁<el-icon class="el-icon--right"><ArrowRight /></el-icon>
     </el-button>
   </el-button-group>
@@ -72,7 +72,7 @@ import {
   ArrowRight,
   Upload
 } from '@element-plus/icons'
-import { getFirestore, addDoc, doc, deleteDoc, collection, getDocs } from 'firebase/firestore'
+import { getFirestore, addDoc, doc, deleteDoc, query, collection, getDocs, limit, orderBy, startAt } from 'firebase/firestore'
 
 export default {
   components:{
@@ -93,6 +93,7 @@ export default {
         price: '',
         category: ''
       }, 
+      pageCount: 1
     }
   },
   methods: {
@@ -101,12 +102,14 @@ export default {
       console.log(this.multipleSelection)
     },
     async buildTable(user) {
-      this.tableData = []
-
       const db = getFirestore()
 
       console.log("getting docs from users/" + user.uid + "/products")
-      const querySnapshot = await getDocs(collection(db, "users/" + user.uid + "/products"))
+      const q = query(collection(db, "users/" + user.uid + "/products"), limit(8), orderBy("id"), startAt(this.pageCount))
+      const querySnapshot = await getDocs(q)
+
+      this.tableData = []
+
       // intitailize tableData
       await querySnapshot.forEach((doc) => {
         // console.log(`${doc.id} => ${doc.data()}`)
@@ -115,6 +118,22 @@ export default {
           data: doc.data()
         })
       });
+    },
+    nextPage(){
+      if(this.tableData.length == 8){
+        console.log("nextPage")
+        console.log(this.pageCount)
+        this.pageCount += 8
+        this.buildTable(this.user)
+      }
+    },
+    prevPage(){
+      if(this.pageCount != 1){
+        console.log("prevPage")
+        console.log(this.pageCount)
+        this.pageCount -= 8
+        this.buildTable(this.user)
+      }
     },
     async addProduct(user) {
       const db = getFirestore()
@@ -137,9 +156,10 @@ export default {
       }
 
       this.buildTable(this.user)
-    }
+    },
   },
   created(){
+    console.log(this.user)
     this.buildTable(this.user)
   },
   computed: {
