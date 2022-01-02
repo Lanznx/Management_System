@@ -30,7 +30,7 @@
       <!-- 新增產品彈出視窗 -->
     <el-dialog
         v-model="dialogOfAddVisible"
-        title="新增產品"
+        title="新增倉庫"
         width="50%"
     >
         <el-form>

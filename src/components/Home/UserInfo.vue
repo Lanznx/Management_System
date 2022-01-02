@@ -40,6 +40,8 @@ export default {
     },
     created(){
       this.buildUserInfo(this.firebase_user)
+    },
+    setup(){
     }
 }
 </script>

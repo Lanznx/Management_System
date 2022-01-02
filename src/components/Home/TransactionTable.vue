@@ -52,7 +52,7 @@ export default {
       const db = getFirestore()
 
       const ordersRef = collection(db, "orders");
-      const q = query(ordersRef, where("user", "==", uid), orderBy("date", "desc"), limit(11));
+      const q = query(ordersRef, where("user", "==", uid), orderBy("date", "desc"), limit(8));
 
       console.log("getting docs from orders/" + "user" + "==" + uid)
       const querySnapshot = await getDocs(q)
@@ -67,7 +67,7 @@ export default {
               amount: doc.data().amount,
               date: doc.data().date.toDate().toISOString().substring(0, 10),
               from: doc.data().from,
-              operation: doc.data().operation,
+              operation: (doc.data().operation == "Sell" ? "輸出" : "輸入"),
               product: doc.data().product,
               status: doc.data().status,
               to: doc.data().to

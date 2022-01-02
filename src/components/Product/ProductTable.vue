@@ -1,7 +1,7 @@
 <template>
   <!--編輯產品按鈕 Container -->
   <el-container style="padding: 10px">
-    <el-button type="primary" @click="dialogOfAddVisible = true"><el-icon><plus /></el-icon></el-button>
+    <el-button type="primary" color="#409eff" @click="dialogOfAddVisible = true"><el-icon><plus /></el-icon></el-button>
     <el-button type="danger"  @click="deleteProduct(user)"><el-icon><Delete /></el-icon></el-button>
   </el-container>
   <!--產品 Table -->

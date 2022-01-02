@@ -8,10 +8,12 @@
 </template>
 
 <script>
+//import { getFirestore, doc, getDoc } from 'firebase/firestore'
 import { useRoute } from 'vue-router'
 export default{
     data(){
-        return {}
+        return {
+        }
     },
     created(){
         console.log(this.routePath)
@@ -22,7 +24,9 @@ export default{
         },
         routeId: function(){
             return useRoute().params.id
-        }
+        },
+    },
+    methods: {
     }
 }
 </script>

@@ -1,6 +1,7 @@
 <template>
     <el-row :gutter="20">
         <el-col :span="12">
+        <CreateNewOrder :routeId="routeId"/>
         <el-divider content-position="left">倉儲</el-divider>
             <el-table :data="warehouseData" style="width: 100%">
                 <el-table-column type="expand">
@@ -30,6 +31,7 @@
 <script>
 import InventoryDetail from './StockDetail.vue'
 //import TransactionTable from '../../Home/TransactionTable.vue'
+import CreateNewOrder from './CreateNewOrder.vue'
 import PendingOrder from './PendingOrder.vue'
 import HistoryOrder from './HistoryOrder.vue'
 import { useRoute } from 'vue-router' 
@@ -47,6 +49,7 @@ onSnapshot} from 'firebase/firestore'
 export default {
     components: {
         InventoryDetail, 
+        CreateNewOrder,
         PendingOrder,
         HistoryOrder,
         //TransactionTable
