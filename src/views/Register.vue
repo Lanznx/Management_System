@@ -48,7 +48,7 @@
             @click="register"
           >註冊</el-button>
         </el-form-item>
-        <el-button type="text" class="forgot-password"><router-link to="/sign-in">登入</router-link></el-button>
+        <el-button type="text" class="forgot-password"><router-link to="/sign-in">回登入頁面</router-link></el-button>
       </el-form>
     </el-card>
   </div>
