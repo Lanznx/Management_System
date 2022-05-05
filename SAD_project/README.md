@@ -1,4 +1,6 @@
-# project
+# 系統分析與設計的期末專案
+還有蠻多錯誤等著修正，有興趣的可以發 PR。
+本人也會不定期更新～
 
 ## Project setup
 ```
@@ -19,6 +21,3 @@ npm run build
 ```
 npm run lint
 ```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).

@@ -6,15 +6,11 @@ import 'element-plus/dist/index.css'
 
 import router from './router'
 
-import { initializeApp } from 'firebase/app'
-
-import { firebaseConfig } from './firebaseConfig.js'
-
-const firebaseApp = initializeApp(firebaseConfig)
+import firebaseApp from './config/firebaseConfig.js'
+import { getAuth, onAuthStateChanged } from 'firebase/auth'
 
 let app
 
-import { getAuth, onAuthStateChanged } from 'firebase/auth'
 onAuthStateChanged(getAuth(), (_user) => {
     if (!app) { // logged in
         app = createApp(App)
