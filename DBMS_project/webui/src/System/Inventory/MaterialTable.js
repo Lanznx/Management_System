@@ -2,7 +2,7 @@ import { styled, alpha } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
 
 import SearchIcon from '@mui/icons-material/Search';
-
+import OriginalTable from "./Components/originalTable"
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
@@ -54,6 +54,6 @@ export default function MaterialTable(){
         //         inputProps={{ 'aria-label': 'search' }}
         //     />
         // </Search>
-        <div> Material </div>
+        <OriginalTable tableType="Material"/>
     )
 }
