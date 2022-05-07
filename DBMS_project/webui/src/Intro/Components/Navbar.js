@@ -34,7 +34,7 @@ function Navbar(props) {
                     Pricing
                 </Link>
                 </nav>
-                <Button href="/signin" variant="outlined" sx={{ my: 1, mx: 1.5 }}>
+                <Button href="signin" variant="outlined" sx={{ my: 1, mx: 1.5 }}>
                 Login
                 </Button>
             </Toolbar>
