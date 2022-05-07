@@ -29,8 +29,8 @@ export default function NavTabs() {
       <Box>
     <Box sx={{ width: '100%' }}>
       <Tabs value={value} onChange={handleChange} aria-label="nav tabs example">
-        <LinkTab label="產品" to="product" />
-        <LinkTab label="原料" to="material" />
+        <LinkTab label="存貨管理" to="product" />
+        <LinkTab label="原料管理" to="material" />
       </Tabs>
       
     </Box>
@@ -38,8 +38,8 @@ export default function NavTabs() {
         <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
             <Routes>
                 <Route index element={<div>index</div>} />
-                <Route label="產品" path="product" element={<ProductTable />} />
-                <Route label="原料" path="material" element={<MaterialTable />} />
+                <Route label="存貨管理" path="product" element={<ProductTable />} />
+                <Route label="原料管理" path="material" element={<MaterialTable />} />
             </Routes>
         </Container>
     </Box>
