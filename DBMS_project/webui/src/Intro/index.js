@@ -16,16 +16,17 @@ import SignUp from './SignUp'
 import ForgotPassword from './ForgotPassword'
 
 export default function Intro(){
+
     return(
         <React.Fragment>
             <Navbar />
             <Container disableGutters maxWidth="sm" component="main" sx={{ pt: 8, pb: 6 }}>
             <Routes>
-                <Route path="/" element={<Feature />} />
-                <Route path="/price" element={<Pricing />} />
-                <Route path="/signin" element={<SignIn />} />
-                <Route path="/signup" element={<SignUp />} />
-                <Route path="/forgotpassword" element={<ForgotPassword />} />
+                <Route index element={<Feature />} />
+                <Route path="price" element={<Pricing />} />
+                <Route path="signin" element={<SignIn />} />
+                <Route path="signup" element={<SignUp />} />
+                <Route path="forgotpassword" element={<ForgotPassword />} />
             </Routes>
             </Container>
             {/* Footer */}
