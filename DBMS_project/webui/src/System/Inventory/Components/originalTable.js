@@ -50,18 +50,15 @@ function createData(name, price, amount, expDate) {
 }
 
 const rows = [
-  createData("Cupcake", 305, 37, 67),
-  createData("Donut", 452, 250, 51),
-  createData("Eclair", 262, 160, 24),
-  createData("Frozen yoghurt", 159, 60, 24),
-  createData("邱德晏", 305, 37, 67),
-  createData("張簡", 452, 250, 51),
-  createData("邱品晏", 26200, 160, 24),
-  createData("呂安", 159, 60, 24),
-  createData("邱家姐弟", 305, 37, 67),
-  createData("宇傑本人", 452, 250, 51),
-  createData("政大創聯會", 262, 160, 24),
-  createData("GDSC", 159, 60, 24),
+  createData("卡片 No.1", 305, 37, 67),
+  createData("卡片 No.2", 452, 250, 51),
+  createData("卡片 No.3", 262, 160, 24),
+  createData("卡片 No.4", 159, 60, 24),
+  createData("卡片 No.5", 305, 37, 67),
+  createData("卡片 No.6", 452, 250, 51),
+  createData("卡片 No.7", 26200, 160, 24),
+  createData("卡片 No.8", 159, 60, 24),
+  createData("卡片 No.9", 305, 37, 67),
 ];
 
 function descendingComparator(a, b, orderBy) {
@@ -159,79 +156,6 @@ function EnhancedTableHead(props) {
     </TableHead>
   );
 }
-
-EnhancedTableHead.propTypes = {
-  numSelected: PropTypes.number.isRequired,
-  onRequestSort: PropTypes.func.isRequired,
-  onSelectAllClick: PropTypes.func.isRequired,
-  order: PropTypes.oneOf(["asc", "desc"]).isRequired,
-  orderBy: PropTypes.string.isRequired,
-  rowCount: PropTypes.number.isRequired,
-};
-
-const EnhancedTableToolbar = (props) => {
-  const { numSelected } = props;
-
-  return (
-    <Toolbar
-      sx={{
-        pl: { sm: 2 },
-        pr: { xs: 1, sm: 1 },
-        ...(numSelected > 0 && {
-          bgcolor: (theme) =>
-            alpha(
-              theme.palette.primary.main,
-              theme.palette.action.activatedOpacity
-            ),
-        }),
-      }}
-    >
-      {numSelected > 0 ? (
-        <Typography
-          sx={{ flex: "1 1 100%" }}
-          color="inherit"
-          variant="subtitle1"
-          component="div"
-        >
-          {numSelected} selected
-        </Typography>
-      ) : (
-        <Typography
-          sx={{ flex: "1 1 100%" }}
-          variant="h6"
-          id="tableTitle"
-          component="div"
-        >
-          {props.tableType}
-        </Typography>
-      )}
-
-      {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton onClick={()=>{
-            // delete rows(0)
-            //待解決
-          }}>
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>
-      ) : (
-        <Tooltip title="Filter list">
-          <IconButton>
-            <FilterListIcon />
-          </IconButton>
-        </Tooltip>
-      )}
-
-      {/*  這裡是 Dialog */}
-      <FormDialog tableType={props.tableType} />
-    </Toolbar>
-  );
-};
-
-EnhancedTableToolbar.propTypes = {
-  numSelected: PropTypes.number.isRequired,
-};
 
 export default function EnhancedTable(props) {
   const [order, setOrder] = React.useState("asc");
