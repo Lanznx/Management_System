@@ -40,81 +40,6 @@ import DialogTitle from "@mui/material/DialogTitle";
 // const [amount, setAmount] = React.useState(0)
 // const [expDate, setExpDate] = React.useState(0)
 
-function FormDialog(props) {
-  const [open, setOpen] = React.useState(false);
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-
-
-  return (
-    <Box>
-      <IconButton onClick={handleClickOpen}>
-        <AddCircleIcon />
-      </IconButton>
-      <Dialog open={open} onClose={handleClose} >
-        <DialogTitle>加入您的 {props.tableType}</DialogTitle>
-        <DialogContent>
-          <DialogContentText>加了也沒用，就跟 AIESEC 一樣</DialogContentText>
-          <TextField
-            // ref="name"
-            autoFocus
-            margin="dense"
-            id="name"
-            label="名稱"
-            type="text"
-            md={6}
-            variant="standard"
-          />
-          <br />
-          <TextField
-            autoFocus
-            // ref="amount"
-            margin="dense"
-            id="amount"
-            label="數量"
-            type="number"
-            md={4}
-            variant="standard"
-          />
-          <br />
-          <TextField
-          // ref="price"
-            autoFocus
-            margin="dense"
-            id="price"
-            label="價錢"
-            type="number"
-            md={4}
-            variant="standard"
-          />
-          <br />
-          <TextField
-            // ref="expDate"
-            autoFocus
-            margin="dense"
-            id="expDate"
-            label="到期天數"
-            type="number"
-            md={4}
-            variant="standard"
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>取消</Button>
-          <Button onClick={handleClose}>送出</Button>
-        </DialogActions>
-      </Dialog>
-    </Box>
-  );
-}
-
 function createData(name, price, amount, expDate) {
   return {
     name,
@@ -125,18 +50,15 @@ function createData(name, price, amount, expDate) {
 }
 
 const rows = [
-  createData("Cupcake", 305, 37, 67),
-  createData("Donut", 452, 250, 51),
-  createData("Eclair", 262, 160, 24),
-  createData("Frozen yoghurt", 159, 60, 24),
-  createData("邱德晏", 305, 37, 67),
-  createData("張簡", 452, 250, 51),
-  createData("邱品晏", 26200, 160, 24),
-  createData("呂安", 159, 60, 24),
-  createData("邱家姐弟", 305, 37, 67),
-  createData("宇傑本人", 452, 250, 51),
-  createData("政大創聯會", 262, 160, 24),
-  createData("GDSC", 159, 60, 24),
+  createData("卡片 No.1", 305, 37, 67),
+  createData("卡片 No.2", 452, 250, 51),
+  createData("卡片 No.3", 262, 160, 24),
+  createData("卡片 No.4", 159, 60, 24),
+  createData("卡片 No.5", 305, 37, 67),
+  createData("卡片 No.6", 452, 250, 51),
+  createData("卡片 No.7", 26200, 160, 24),
+  createData("卡片 No.8", 159, 60, 24),
+  createData("卡片 No.9", 305, 37, 67),
 ];
 
 function descendingComparator(a, b, orderBy) {
@@ -235,79 +157,6 @@ function EnhancedTableHead(props) {
   );
 }
 
-EnhancedTableHead.propTypes = {
-  numSelected: PropTypes.number.isRequired,
-  onRequestSort: PropTypes.func.isRequired,
-  onSelectAllClick: PropTypes.func.isRequired,
-  order: PropTypes.oneOf(["asc", "desc"]).isRequired,
-  orderBy: PropTypes.string.isRequired,
-  rowCount: PropTypes.number.isRequired,
-};
-
-const EnhancedTableToolbar = (props) => {
-  const { numSelected } = props;
-
-  return (
-    <Toolbar
-      sx={{
-        pl: { sm: 2 },
-        pr: { xs: 1, sm: 1 },
-        ...(numSelected > 0 && {
-          bgcolor: (theme) =>
-            alpha(
-              theme.palette.primary.main,
-              theme.palette.action.activatedOpacity
-            ),
-        }),
-      }}
-    >
-      {numSelected > 0 ? (
-        <Typography
-          sx={{ flex: "1 1 100%" }}
-          color="inherit"
-          variant="subtitle1"
-          component="div"
-        >
-          {numSelected} selected
-        </Typography>
-      ) : (
-        <Typography
-          sx={{ flex: "1 1 100%" }}
-          variant="h6"
-          id="tableTitle"
-          component="div"
-        >
-          {props.tableType}
-        </Typography>
-      )}
-
-      {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton onClick={()=>{
-            // delete rows(0)
-            //待解決
-          }}>
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>
-      ) : (
-        <Tooltip title="Filter list">
-          <IconButton>
-            <FilterListIcon />
-          </IconButton>
-        </Tooltip>
-      )}
-
-      {/*  這裡是 Dialog */}
-      <FormDialog tableType={props.tableType} />
-    </Toolbar>
-  );
-};
-
-EnhancedTableToolbar.propTypes = {
-  numSelected: PropTypes.number.isRequired,
-};
-
 export default function EnhancedTable(props) {
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("price");
@@ -315,6 +164,168 @@ export default function EnhancedTable(props) {
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
+  function handleDelete() {
+    // rows.splice(0, 1)
+    selected.map((x) => {
+      rows.splice(x.index,1)
+    });
+    console.log(rows)
+  }
+
+  function FormDialog(props) {
+    const [open, setOpen] = React.useState(false);
+
+    const [name, setName] = React.useState("");
+    const [price, setPrice] = React.useState(0);
+    const [amount, setAmount] = React.useState(0);
+    const [expDate, setExpDate] = React.useState(0);
+
+    const handleClickOpen = () => {
+      setOpen(true);
+    };
+
+    const handleClose = () => {
+      setOpen(false);
+    };
+
+    return (
+      <Box>
+        <IconButton onClick={handleClickOpen}>
+          <AddCircleIcon />
+        </IconButton>
+        <Dialog open={open} onClose={handleClose}>
+          <DialogTitle>加入您的 {props.tableType}</DialogTitle>
+          <DialogContent>
+            <DialogContentText>加了也沒用，就跟系學會一樣</DialogContentText>
+            <TextField
+              autoFocus
+              margin="dense"
+              id="name"
+              label="名稱"
+              type="text"
+              md={6}
+              variant="standard"
+              onChange={(event) => {
+                setName(event.target.value);
+              }}
+            />
+            <br />
+            <TextField
+              autoFocus
+              margin="dense"
+              id="amount"
+              label="數量"
+              type="number"
+              md={4}
+              variant="standard"
+              onChange={(event) => {
+                setAmount(event.target.value);
+              }}
+            />
+            <br />
+            <TextField
+              autoFocus
+              margin="dense"
+              id="price"
+              label="價錢"
+              type="number"
+              md={4}
+              variant="standard"
+              onChange={(event) => {
+                setPrice(event.target.value);
+              }}
+            />
+            <br />
+            <TextField
+              autoFocus
+              margin="dense"
+              id="expDate"
+              label="到期天數"
+              type="number"
+              md={4}
+              variant="standard"
+              onChange={(event) => {
+                setExpDate(event.target.value);
+              }}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose}>取消</Button>
+            <Button
+              onClick={() => {
+                rows.push(createData(name, price, amount, expDate));
+                setOpen(false);
+                console.log(rows);
+              }}
+            >
+              送出
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </Box>
+    );
+  }
+
+  const EnhancedTableToolbar = (props) => {
+    const { numSelected } = props;
+
+    return (
+      <Toolbar
+        sx={{
+          pl: { sm: 2 },
+          pr: { xs: 1, sm: 1 },
+          ...(numSelected > 0 && {
+            bgcolor: (theme) =>
+              alpha(
+                theme.palette.primary.main,
+                theme.palette.action.activatedOpacity
+              ),
+          }),
+        }}
+      >
+        {numSelected > 0 ? (
+          <Typography
+            sx={{ flex: "1 1 100%" }}
+            color="inherit"
+            variant="subtitle1"
+            component="div"
+          >
+            {numSelected} selected
+          </Typography>
+        ) : (
+          <Typography
+            sx={{ flex: "1 1 100%" }}
+            variant="h6"
+            id="tableTitle"
+            component="div"
+          >
+            {props.tableType}
+          </Typography>
+        )}
+
+        {numSelected > 0 ? (
+          <Tooltip title="Delete">
+            <IconButton onClick={handleDelete}>
+              <DeleteIcon />
+            </IconButton>
+          </Tooltip>
+        ) : (
+          <Tooltip title="Filter list">
+            <IconButton>
+              <FilterListIcon />
+            </IconButton>
+          </Tooltip>
+        )}
+
+        {/*  這裡是 Dialog */}
+        <FormDialog tableType={props.tableType} />
+      </Toolbar>
+    );
+  };
+  EnhancedTableToolbar.propTypes = {
+    numSelected: PropTypes.number.isRequired,
+  };
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
