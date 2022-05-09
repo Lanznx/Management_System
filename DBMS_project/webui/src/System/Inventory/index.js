@@ -37,7 +37,7 @@ export default function NavTabs() {
     <Box>
         <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
             <Routes>
-                <Route index element={<div>index</div>} />
+                <Route index element={<ProductTable />} />
                 <Route label="存貨管理" path="product" element={<ProductTable />} />
                 <Route label="原料管理" path="material" element={<MaterialTable />} />
             </Routes>
