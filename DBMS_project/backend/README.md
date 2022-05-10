@@ -1,9 +1,17 @@
+- [API](#api)
+	- [Sign up](#sign-up)
+		- [Parameters](#parameters)
+		- [Responses](#responses)
+	- [Login](#login)
+		- [Parameters](#parameters-1)
+		- [Responses](#responses-1)
+
 ## API
 
 ### Sign up
 
 | Method | Path           |
-| ------ | ---------------|
+| ------ | -------------- |
 | `POST` | `users/signup` |
 
 #### Parameters

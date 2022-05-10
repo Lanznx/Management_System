@@ -15,13 +15,11 @@ router.post("/signup", function (req, res, next) {
   const password = req.body.password;
   const email = req.body.email;
   const phoneNumber = req.body.phoneNumber;
-  const salt = bcrypt.genSaltSync();
-  const passwordHash = bcrypt.hashSync(password, salt);
   //store information into DB
   let insertSQL = {
     user_id: uuidv4(),
     user_name: username,
-    password: passwordHash,
+    password: password,
     email: email,
     phone_number: phoneNumber,
   };
