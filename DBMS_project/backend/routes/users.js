@@ -81,7 +81,7 @@ router.post("/getInformation", function (req, res, next) {
   const mysqlPoolQuery = req.pool;
   const userId = req.body.userId;
   mysqlPoolQuery(
-    "SELECT user_name, email, phone_number FROM user WHERE user_id = ?",
+    "SELECT user_name AS username, email, phone_number AS phoneNumber FROM user WHERE user_id = ?",
     userId,
     function (err, rows) {
       if (err) {
