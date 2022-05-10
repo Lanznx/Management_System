@@ -5,6 +5,9 @@
 	- [Login](#login)
 		- [Parameters](#parameters-1)
 		- [Responses](#responses-1)
+	- [Get User's Information](#get-users-information)
+		- [Parameters](#parameters-2)
+		- [Responses](#responses-2)
 
 ## API
 
@@ -44,3 +47,24 @@
 * `success` `(bool)` - True/False.
 * `userId` `(string: <success>)` - Id of the user.
 * `err` `(string: <not success>)` - Error message.
+
+---
+
+### Get User's Information
+
+| Method | Path                   |
+| ------ | ---------------------- |
+| `POST` | `users/getInformation` |
+
+#### Parameters
+
+* `userId` `(string: <required>)` - Id of the user. 
+
+#### Responses
+
+* `success` `(bool)` - True/False.
+* `err` `(string: <not success>)` - Error message.
+* `userInformation` `(json: <success>)` - The user information.
+  * `username` `(string)` - Name of the user.
+  * `email` `(string)` - Email of the user.
+  * `phoneNumber` `(string)` - Phone number of the user.
