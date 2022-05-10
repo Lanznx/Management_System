@@ -77,4 +77,20 @@ router.post("/login", function (req, res, next) {
   );
 });
 
+router.post("/getInformation", function (req, res, next) {
+  const mysqlPoolQuery = req.pool;
+  const userId = req.body.userId;
+  mysqlPoolQuery(
+    "SELECT user_name, email, phone_number FROM user WHERE user_id = ?",
+    userId,
+    function (err, rows) {
+      if (err) {
+        res.status(404).json({ success: false, err: err });
+      } else {
+        res.status(200).json({ success: true, userInformation: rows[0] });
+      }
+    }
+  );
+});
+
 module.exports = router;
