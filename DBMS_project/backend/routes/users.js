@@ -6,10 +6,20 @@ const { v4: uuidv4 } = require("uuid");
 
 /* GET users listing. */
 router.get("/", function (req, res, next) {
+  // #swagger.tags = ['User']
   res.send("In Users!!");
 });
 
 router.post("/signup", function (req, res, next) {
+  /* 
+  #swagger.tags = ['User']
+  #swagger.responses[201] = {
+    description: '註冊成功',
+  }
+  #swagger.responses[409] = {
+    description: '使用者名稱已存在',
+  }
+  */
   const mysqlPoolQuery = req.pool;
   const username = req.body.username;
   const password = req.body.password;
@@ -51,6 +61,15 @@ router.post("/signup", function (req, res, next) {
 });
 
 router.post("/login", function (req, res, next) {
+  /* 
+  #swagger.tags = ['User']
+  #swagger.responses[201] = {
+    description: '登入成功',
+  }
+  #swagger.responses[409] = {
+    description: '使用者名稱或密碼錯誤',
+  }
+  */
   const mysqlPoolQuery = req.pool;
   const username = req.body.username;
   const password = req.body.password;
@@ -77,6 +96,12 @@ router.post("/login", function (req, res, next) {
 });
 
 router.post("/getInformation", function (req, res, next) {
+  /* 
+  #swagger.tags = ['User']
+  #swagger.responses[409] = {
+    description: '使用者名稱不存在',
+  }
+  */
   const mysqlPoolQuery = req.pool;
   const userId = req.body.userId;
   mysqlPoolQuery(
@@ -88,8 +113,9 @@ router.post("/getInformation", function (req, res, next) {
       } else {
         if (rows.length == 0) {
           res.status(409).json({ success: false, err: "使用者不存在" });
+        } else {
+          res.status(200).json({ success: true, userInformation: rows[0] });
         }
-        res.status(200).json({ success: true, userInformation: rows[0] });
       }
     }
   );
