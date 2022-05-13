@@ -5,6 +5,8 @@ var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 var cors = require("cors");
 
+require("dotenv").config();
+
 const { mysqlPoolQuery } = require("./src/mysql");
 
 var indexRouter = require("./routes/index");
