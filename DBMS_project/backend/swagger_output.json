@@ -250,8 +250,31 @@
           "Material"
         ],
         "description": "",
-        "parameters": [],
-        "responses": {}
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "userId": {
+                  "example": "any"
+                },
+                "materialId": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "刪除原料成功"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
       }
     },
     "/material/updateAmount": {

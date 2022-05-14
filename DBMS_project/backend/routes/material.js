@@ -89,7 +89,26 @@ router.post("/newMaterial", function (req, res, next) {
 });
 
 router.post("/deleteMaterial", function (req, res, next) {
-  // #swagger.tags = ['Material']
+  /* 
+  #swagger.tags = ['Material']
+  #swagger.responses[200] = {
+    description: '刪除原料成功',
+  }
+  */
+  const mysqlPoolQuery = req.pool;
+  const userId = req.body.userId;
+  const materialId = req.body.materialId;
+  mysqlPoolQuery(
+    "DELETE FROM material WHERE material_id = ? AND user_id = ?",
+    [materialId, userId],
+    function (err, rows) {
+      if (err) {
+        res.status(404).json({ success: false, err: err });
+      } else {
+        res.status(200).json({ success: true, message: "刪除原料成功" });
+      }
+    }
+  );
 });
 
 router.post("/updateAmount", function (req, res, next) {
