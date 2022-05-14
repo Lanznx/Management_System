@@ -8,7 +8,23 @@ router.get("/", function (req, res, next) {
 });
 
 router.post("/getAllProducts", function (req, res, next) {
-  // #swagger.tags = ['Product']
+  // #swagger.tags = ['Unfinished']
+});
+
+router.post("/getProduct", function (req, res, next) {
+  // #swagger.tags = ['Unfinished']
+});
+
+router.post("/addNewProduct", function (req, res, next) {
+  // #swagger.tags = ['Unfinished']
+});
+
+router.post("/deleteProduct", function (req, res, next) {
+  // #swagger.tags = ['Unfinished']
+});
+
+router.post("/updateAmount", function (req, res, next) {
+  // #swagger.tags = ['Unfinished']
 });
 
 module.exports = router;
