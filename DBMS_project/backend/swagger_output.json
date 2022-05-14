@@ -192,6 +192,78 @@
         "responses": {}
       }
     },
+    "/material/getMaterialHistory": {
+      "post": {
+        "tags": [
+          "Material"
+        ],
+        "description": "",
+        "parameters": [],
+        "responses": {}
+      }
+    },
+    "/material/newMaterial": {
+      "post": {
+        "tags": [
+          "Material"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "userId": {
+                  "example": "any"
+                },
+                "materialName": {
+                  "example": "any"
+                },
+                "materialPrice": {
+                  "example": "any"
+                },
+                "materialAmount": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "新增初始原料成功"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "409": {
+            "description": "原料名稱已存在"
+          }
+        }
+      }
+    },
+    "/material/deleteMaterial": {
+      "post": {
+        "tags": [
+          "Material"
+        ],
+        "description": "",
+        "parameters": [],
+        "responses": {}
+      }
+    },
+    "/material/updateAmount": {
+      "post": {
+        "tags": [
+          "Material"
+        ],
+        "description": "",
+        "parameters": [],
+        "responses": {}
+      }
+    },
     "/product/": {
       "get": {
         "tags": [
@@ -207,6 +279,46 @@
       }
     },
     "/product/getAllProducts": {
+      "post": {
+        "tags": [
+          "Product"
+        ],
+        "description": "",
+        "parameters": [],
+        "responses": {}
+      }
+    },
+    "/product/getProduct": {
+      "post": {
+        "tags": [
+          "Product"
+        ],
+        "description": "",
+        "parameters": [],
+        "responses": {}
+      }
+    },
+    "/product/newProduct": {
+      "post": {
+        "tags": [
+          "Product"
+        ],
+        "description": "",
+        "parameters": [],
+        "responses": {}
+      }
+    },
+    "/product/deleteProduct": {
+      "post": {
+        "tags": [
+          "Product"
+        ],
+        "description": "",
+        "parameters": [],
+        "responses": {}
+      }
+    },
+    "/product/updateAmount": {
       "post": {
         "tags": [
           "Product"
