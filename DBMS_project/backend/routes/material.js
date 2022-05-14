@@ -17,6 +17,49 @@ router.post("/getMaterialHistory", function (req, res, next) {
   // #swagger.tags = ['Material']
 });
 
+router.post("/getMaterialDict", function (req, res, next) {
+  /* 
+  #swagger.tags = ['Material']
+  #swagger.responses[200] = {
+    description: '取得成功',
+  }
+  #swagger.responses[409] = {
+    description: '使用者不存在',
+  }
+  */
+  const mysqlPoolQuery = req.pool;
+  const userId = req.body.userId;
+  mysqlPoolQuery(
+    "SELECT * FROM user WHERE user_id = ?",
+    userId,
+    function (err, rows) {
+      if (err) {
+        res.status(404).json({ success: false, err: err });
+      } else if (rows.length > 0) {
+        mysqlPoolQuery(
+          "SELECT material_name, material_id FROM material WHERE user_id = ? ",
+          userId,
+          function (err, rows) {
+            if (err) {
+              res.status(404).json({ success: false, err: err });
+            } else {
+              let materialDict = {};
+              for (let i = 0; i < rows.length; i++) {
+                materialDict[rows[i].material_name] = rows[i].material_id;
+              }
+              res
+                .status(200)
+                .json({ success: true, materialDict: materialDict });
+            }
+          }
+        );
+      } else {
+        res.status(409).json({ success: false, err: "使用者不存在" });
+      }
+    }
+  );
+});
+
 router.post("/newMaterial", function (req, res, next) {
   /*
   #swagger.tags = ['Material']
