@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 
 import OriginalTable from "./Components/Table"
-import getAllProduct from "./APIs"
+import { getAllProduct } from "./APIs"
 
 const headCells = [
   {
@@ -31,12 +31,13 @@ const headCells = [
 ];
 
 export default function Product() {
-  var [allProduct, setAllProduct] = useState([
+  const [allProduct, setAllProduct] = useState([
     { id: 'testproductid', name: '可牛奶', price: 30, amount: 5 }
   ])
+
   useEffect(() => {
     const fetchData = async () => {
-      const result = await getAllProduct("6cc4a5be-08ba-41de-946d-a2e5c6ed43c2")
+      let result = await getAllProduct("6cc4a5be-08ba-41de-946d-a2e5c6ed43c2")
       setAllProduct(result)
     }
 
