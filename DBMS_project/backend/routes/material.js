@@ -10,7 +10,43 @@ router.get("/", function (req, res, next) {
 });
 
 router.post("/getAllMaterials", function (req, res, next) {
-  // #swagger.tags = ['Unfinished']
+  /*
+   #swagger.tags = ['Material']
+   #swagger.responses[409] = {
+    description: '使用者或原料不存在'
+   }
+  */
+  const mysqlPoolQuery = req.pool;
+  const userId = req.body.userId;
+  mysqlPoolQuery(
+    "SELECT * FROM user WHERE user_id = ?",
+    userId,
+    function (err, rows) {
+      if (err) {
+        res.status(404).json({ success: false, err: err });
+      } else if (rows.length == 0) {
+        res.status(409).json({ success: false, err: "使用者不存在" });
+      } else {
+        mysqlPoolQuery(
+          "SELECT material_id AS materialId, material_name AS name, material_amount AS amount FROM material WHERE user_id = ?",
+          userId,
+          function (err, rows) {
+            if (err) {
+              res.status(404).json({ success: false, err: err });
+            } else {
+              if (rows.length == 0) {
+                res.status(409).json({ success: false, err: "尚無原料" });
+              } else {
+                res
+                  .status(200)
+                  .json({ success: true, allMaterialInformation: rows });
+              }
+            }
+          }
+        );
+      }
+    }
+  );
 });
 
 router.post("/getMaterialHistory", function (req, res, next) {
