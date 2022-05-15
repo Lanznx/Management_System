@@ -38,7 +38,7 @@ export const mainListItems = (
       </ListItemIcon>
       <ListItemText primary="損益表"/>
     </ListItemButton>
-    <ListItemButton disabled="true">
+    <ListItemButton disabled={true}>
       <ListItemIcon>
         <LayersIcon />
       </ListItemIcon>
