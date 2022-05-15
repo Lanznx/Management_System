@@ -395,11 +395,34 @@
     "/product/getAllProducts": {
       "post": {
         "tags": [
-          "Unfinished"
+          "Product"
         ],
         "description": "",
-        "parameters": [],
-        "responses": {}
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "userId": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "409": {
+            "description": "使用者或商品不存在"
+          }
+        }
       }
     },
     "/product/getProduct": {
