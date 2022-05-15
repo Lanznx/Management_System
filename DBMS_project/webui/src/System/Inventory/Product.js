@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 
 import OriginalTable from "./Components/Table"
-import { getAllProduct } from "./APIs"
+import { getAllProducts } from "./APIs"
 
 const headCells = [
   {
@@ -22,22 +22,16 @@ const headCells = [
     disablePadding: false,
     label: "數量",
   },
-  // {
-  //   id: "expDate",
-  //   numeric: true,
-  //   disablePadding: false,
-  //   label: "剩幾天到期",
-  // },
 ];
 
 export default function Product() {
-  const [allProduct, setAllProduct] = useState([
-    { id: 'testproductid', name: '可牛奶', price: 30, amount: 5 }
+  const [allProducts, setAllProduct] = useState([
+    {id: 'chou\'s butt', name: '邱德晏的屁股努力加載中....', price: 50, amount: 1}
   ])
 
   useEffect(() => {
     const fetchData = async () => {
-      let result = await getAllProduct("6cc4a5be-08ba-41de-946d-a2e5c6ed43c2")
+      let result = await getAllProducts("6cc4a5be-08ba-41de-946d-a2e5c6ed43c2")
       setAllProduct(result)
     }
 
@@ -46,8 +40,7 @@ export default function Product() {
 
   return (
     <React.Fragment>
-      <div> "asdasd" { allProduct[0].name }</div>
-      <OriginalTable label="Product" rows={allProduct} head={headCells}/>
+      <OriginalTable label="Product" rows={allProducts} head={headCells}/>
     </React.Fragment>
   );
 }
