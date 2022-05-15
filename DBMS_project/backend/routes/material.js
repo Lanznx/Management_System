@@ -14,7 +14,15 @@ router.post("/getAllMaterials", function (req, res, next) {
 });
 
 router.post("/getMaterialHistory", function (req, res, next) {
-  // #swagger.tags = ['Unfinished']
+  /*
+  #swagger.tags = ['Material']
+  #swagger.response[409] = {
+    description: '使用者或原料不存在',
+  }
+  #swagger.response[200] = {
+    description: '取得成功',
+  }
+  */
   const mysqlPoolQuery = req.pool;
   const userId = req.body.userId;
   const materialId = req.body.materialId;
@@ -46,12 +54,12 @@ router.post("/getMaterialHistory", function (req, res, next) {
                 }
               );
             } else {
-              res.status(404).json({ success: false, err: "原料不存在" });
+              res.status(409).json({ success: false, err: "原料不存在" });
             }
           }
         );
       } else {
-        res.status(404).json({ success: false, err: "使用者不存在" });
+        res.status(409).json({ success: false, err: "使用者不存在" });
       }
     }
   );

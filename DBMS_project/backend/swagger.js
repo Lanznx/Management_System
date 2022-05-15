@@ -4,7 +4,7 @@ const doc = {
   info: {
     title: "DBMS Project API",
   },
-  host: "nccu-team11-dbms.herokuapp.com",
+  host: "nccu-dbms-team11.herokuapp.com",
   schemes: ["https"],
   tags: [
     {

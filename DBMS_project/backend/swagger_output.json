@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "description": ""
   },
-  "host": "nccu-team11-dbms.herokuapp.com",
+  "host": "nccu-dbms-team11.herokuapp.com",
   "basePath": "/",
   "tags": [
     {
@@ -25,12 +25,16 @@
       "description": "Product router"
     }
   ],
-  "schemes": ["https"],
+  "schemes": [
+    "https"
+  ],
   "securityDefinitions": {},
   "paths": {
     "/": {
       "get": {
-        "tags": ["Index"],
+        "tags": [
+          "Index"
+        ],
         "description": "",
         "parameters": [],
         "responses": {}
@@ -38,7 +42,9 @@
     },
     "/users/": {
       "get": {
-        "tags": ["User"],
+        "tags": [
+          "User"
+        ],
         "description": "",
         "parameters": [],
         "responses": {
@@ -50,7 +56,9 @@
     },
     "/users/signup": {
       "post": {
-        "tags": ["User"],
+        "tags": [
+          "User"
+        ],
         "description": "",
         "parameters": [
           {
@@ -90,7 +98,9 @@
     },
     "/users/login": {
       "post": {
-        "tags": ["User"],
+        "tags": [
+          "User"
+        ],
         "description": "",
         "parameters": [
           {
@@ -127,7 +137,9 @@
     },
     "/users/getInformation": {
       "post": {
-        "tags": ["User"],
+        "tags": [
+          "User"
+        ],
         "description": "",
         "parameters": [
           {
@@ -158,7 +170,9 @@
     },
     "/material/": {
       "get": {
-        "tags": ["Material"],
+        "tags": [
+          "Material"
+        ],
         "description": "",
         "parameters": [],
         "responses": {
@@ -170,7 +184,9 @@
     },
     "/material/getAllMaterials": {
       "post": {
-        "tags": ["Unfinished"],
+        "tags": [
+          "Unfinished"
+        ],
         "description": "",
         "parameters": [],
         "responses": {}
@@ -178,15 +194,45 @@
     },
     "/material/getMaterialHistory": {
       "post": {
-        "tags": ["Unfinished"],
+        "tags": [
+          "Material"
+        ],
         "description": "",
-        "parameters": [],
-        "responses": {}
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "userId": {
+                  "example": "any"
+                },
+                "materialId": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "409": {
+            "description": "Conflict"
+          }
+        }
       }
     },
     "/material/getMaterialDict": {
       "post": {
-        "tags": ["Material"],
+        "tags": [
+          "Material"
+        ],
         "description": "",
         "parameters": [
           {
@@ -215,9 +261,11 @@
         }
       }
     },
-    "/material/newMaterial": {
+    "/material/addNewMaterial": {
       "post": {
-        "tags": ["Material"],
+        "tags": [
+          "Material"
+        ],
         "description": "",
         "parameters": [
           {
@@ -257,7 +305,9 @@
     },
     "/material/deleteMaterial": {
       "post": {
-        "tags": ["Material"],
+        "tags": [
+          "Material"
+        ],
         "description": "",
         "parameters": [
           {
@@ -288,7 +338,9 @@
     },
     "/material/updateAmount": {
       "post": {
-        "tags": ["Unfinished"],
+        "tags": [
+          "Unfinished"
+        ],
         "description": "",
         "parameters": [],
         "responses": {}
@@ -296,7 +348,9 @@
     },
     "/product/": {
       "get": {
-        "tags": ["Product"],
+        "tags": [
+          "Product"
+        ],
         "description": "",
         "parameters": [],
         "responses": {
@@ -308,7 +362,9 @@
     },
     "/product/getAllProducts": {
       "post": {
-        "tags": ["Unfinished"],
+        "tags": [
+          "Unfinished"
+        ],
         "description": "",
         "parameters": [],
         "responses": {}
@@ -316,15 +372,19 @@
     },
     "/product/getProduct": {
       "post": {
-        "tags": ["Unfinished"],
+        "tags": [
+          "Unfinished"
+        ],
         "description": "",
         "parameters": [],
         "responses": {}
       }
     },
-    "/product/newProduct": {
+    "/product/addNewProduct": {
       "post": {
-        "tags": ["Unfinished"],
+        "tags": [
+          "Unfinished"
+        ],
         "description": "",
         "parameters": [],
         "responses": {}
@@ -332,7 +392,9 @@
     },
     "/product/deleteProduct": {
       "post": {
-        "tags": ["Unfinished"],
+        "tags": [
+          "Unfinished"
+        ],
         "description": "",
         "parameters": [],
         "responses": {}
@@ -340,7 +402,9 @@
     },
     "/product/updateAmount": {
       "post": {
-        "tags": ["Unfinished"],
+        "tags": [
+          "Unfinished"
+        ],
         "description": "",
         "parameters": [],
         "responses": {}
