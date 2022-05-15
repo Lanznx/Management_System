@@ -1,4 +1,4 @@
-const mysqlPoolQuery = require("./mysql");
+const { mysqlPoolQuery } = require("./mysql");
 
 const checkUserId = (userId, callback) => {
   mysqlPoolQuery(
@@ -32,4 +32,20 @@ const checkMaterialId = (materialId, callback) => {
   );
 };
 
-module.exports = { checkUserId, checkMaterialId };
+const checkProductId = (productId, callback) => {
+  mysqlPoolQuery(
+    "SELECT * FROM product WHERE product_id = ?",
+    productId,
+    function (err, rows) {
+      if (err) {
+        callback(err, null);
+      } else if (rows.length == 0) {
+        callback(null, false);
+      } else {
+        callback(null, true);
+      }
+    }
+  );
+};
+
+module.exports = { checkUserId, checkMaterialId, checkProductId };

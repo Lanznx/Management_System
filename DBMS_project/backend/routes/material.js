@@ -27,7 +27,7 @@ router.post("/getAllMaterials", function (req, res, next) {
       res.status(409).json({ success: false, err: "使用者不存在" });
     } else {
       mysqlPoolQuery(
-        "SELECT material_id AS materialId, material_name AS name, material_price AS price, material_amount AS amount FROM material WHERE user_id = ?",
+        "SELECT material_id AS materialId, material_name AS name, material_amount AS amount FROM material WHERE user_id = ?",
         userId,
         function (err, rows) {
           if (err) {

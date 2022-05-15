@@ -3,7 +3,7 @@ var router = express.Router();
 
 const { v4: uuidv4 } = require("uuid");
 
-const { checkUserId, checkMaterialId } = require("../src/checkExisted");
+const { checkUserId, checkProductId } = require("../src/checkExisted");
 
 /* GET product listening. */
 router.get("/", function (req, res, next) {
