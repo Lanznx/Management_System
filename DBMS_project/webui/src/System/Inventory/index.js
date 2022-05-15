@@ -6,8 +6,8 @@ import Container from '@mui/material/Container';
 
 import { Route, Routes, Link } from 'react-router-dom';
 
-import ProductTable from './ProductTable'
-import MaterialTable from './MaterialTable'
+import ProductTable from './Product'
+import MaterialTable from './Material'
 
 function LinkTab(props) {
   return (

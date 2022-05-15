@@ -1,16 +1,10 @@
 import * as React from "react";
 
-
-
-
 // To-do
 // delete 剩幾天到期
 // 新增 materialHistory dialog 
   // dialog 可以更動數量
-
-
-
-
+  
 // Table 要用的
 import PropTypes from "prop-types";
 import { alpha } from "@mui/material/styles";
@@ -51,26 +45,14 @@ import DialogTitle from "@mui/material/DialogTitle";
 // const [amount, setAmount] = React.useState(0)
 // const [expDate, setExpDate] = React.useState(0)
 
-function createData(name, price, amount, expDate) {
-  return {
-    name,
-    price,
-    amount,
-    expDate,
-  };
-}
-
-const rows = [
-  createData("卡片 No.1", 305, 37, 67),
-  createData("卡片 No.2", 452, 250, 51),
-  createData("卡片 No.3", 262, 160, 24),
-  createData("卡片 No.4", 159, 60, 24),
-  createData("卡片 No.5", 305, 37, 67),
-  createData("卡片 No.6", 452, 250, 51),
-  createData("卡片 No.7", 26200, 160, 24),
-  createData("卡片 No.8", 159, 60, 24),
-  createData("卡片 No.9", 305, 37, 67),
-];
+// function createData(name, price, amount, expDate) {
+//   return {
+//     name,
+//     price,
+//     amount,
+//     expDate,
+//   };
+// }
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -88,32 +70,6 @@ function getComparator(order, orderBy) {
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
-const headCells = [
-  {
-    id: "name",
-    numeric: false,
-    disablePadding: true,
-    label: "名稱",
-  },
-  {
-    id: "price",
-    numeric: true,
-    disablePadding: false,
-    label: "售價",
-  },
-  {
-    id: "amount",
-    numeric: true,
-    disablePadding: false,
-    label: "數量",
-  },
-  {
-    id: "expDate",
-    numeric: true,
-    disablePadding: false,
-    label: "剩幾天到期",
-  },
-];
 
 function EnhancedTableHead(props) {
   const {
@@ -142,7 +98,7 @@ function EnhancedTableHead(props) {
             }}
           />
         </TableCell>
-        {headCells.map((headCell) => (
+        {props.head.map((headCell) => (
           <TableCell
             key={headCell.id}
             align={headCell.numeric ? "right" : "left"}
@@ -173,15 +129,10 @@ export default function EnhancedTable(props) {
   const [orderBy, setOrderBy] = React.useState("price");
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
-  const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
   function handleDelete() {
-    // rows.splice(0, 1)
-    selected.map((x) => {
-      rows.splice(x.index,1)
-    });
-    console.log(rows)
+    // 到時候 call API 刪除
   }
 
   function FormDialog(props) {
@@ -206,7 +157,7 @@ export default function EnhancedTable(props) {
           <AddCircleIcon />
         </IconButton>
         <Dialog open={open} onClose={handleClose}>
-          <DialogTitle>加入您的 {props.tableType}</DialogTitle>
+          <DialogTitle>加入您的 {props.label}</DialogTitle>
           <DialogContent>
             <DialogContentText>加了也沒用，就跟系學會一樣</DialogContentText>
             <TextField
@@ -265,9 +216,10 @@ export default function EnhancedTable(props) {
             <Button onClick={handleClose}>取消</Button>
             <Button
               onClick={() => {
-                rows.push(createData(name, price, amount, expDate));
-                setOpen(false);
-                console.log(rows);
+                // 到時候接 API 加入
+                // rows.push(createData(name, price, amount, expDate));
+                // setOpen(false);
+                // console.log(rows);
               }}
             >
               送出
@@ -311,7 +263,7 @@ export default function EnhancedTable(props) {
             id="tableTitle"
             component="div"
           >
-            {props.tableType}
+            {props.label}
           </Typography>
         )}
 
@@ -330,7 +282,7 @@ export default function EnhancedTable(props) {
         )}
 
         {/*  這裡是 Dialog */}
-        <FormDialog tableType={props.tableType} />
+        <FormDialog tableType={props.label} />
       </Toolbar>
     );
   };
@@ -346,7 +298,7 @@ export default function EnhancedTable(props) {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n.name);
+      const newSelecteds = props.rows.map((n) => n.name);
       setSelected(newSelecteds);
       return;
     }
@@ -382,28 +334,24 @@ export default function EnhancedTable(props) {
     setPage(0);
   };
 
-  const handleChangeDense = (event) => {
-    setDense(event.target.checked);
-  };
-
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - props.rows.length) : 0;
 
   return (
     <Box sx={{ width: "100%" }}>
       <Paper sx={{ width: "100%", mb: 2 }}>
         <EnhancedTableToolbar
-          tableType={props.tableType}
+          label={props.label}
           numSelected={selected.length}
+          rows={props.rows}
         />
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
             aria-labelledby="tableTitle"
-            size={dense ? "small" : "medium"}
           >
             <EnhancedTableHead
               numSelected={selected.length}
@@ -411,12 +359,13 @@ export default function EnhancedTable(props) {
               orderBy={orderBy}
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
-              rowCount={rows.length}
+              rowCount={props.rows.length}
+              head={props.head}
             />
-            <TableBody>
-              {/* if you don't need to support IE11, you can replace the `stableSort` call with:
-                 rows.slice().sort(getComparator(order, orderBy)) */}
-              {rows
+            <TableBody
+              rows={props.rows}
+            >
+              {props.rows
                 .slice()
                 .sort(getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
@@ -453,16 +402,11 @@ export default function EnhancedTable(props) {
                       </TableCell>
                       <TableCell align="right">{row.price}</TableCell>
                       <TableCell align="right">{row.amount}</TableCell>
-                      <TableCell align="right">{row.expDate}</TableCell>{" "}
                     </TableRow>
                   );
                 })}
               {emptyRows > 0 && (
-                <TableRow
-                  style={{
-                    height: (dense ? 33 : 53) * emptyRows,
-                  }}
-                >
+                <TableRow>
                   <TableCell colSpan={6} />
                 </TableRow>
               )}
@@ -472,17 +416,13 @@ export default function EnhancedTable(props) {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={rows.length}
+          count={props.rows.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
-      <FormControlLabel
-        control={<Switch checked={dense} onChange={handleChangeDense} />}
-        label="Dense padding"
-      />
     </Box>
   );
 }
