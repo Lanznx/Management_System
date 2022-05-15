@@ -205,7 +205,76 @@ router.post("/deleteMaterial", function (req, res, next) {
 });
 
 router.post("/updateAmount", function (req, res, next) {
-  // #swagger.tags = ['Unfinished']
+  /*
+  #swagger.tags = ['Material']
+  #swagger.responses[409] = {
+    description: '使用者或原料不存在',
+  }
+  #swagger.responses[201] = {
+    description: '更新原料成功',
+  }
+  */
+  const mysqlPoolQuery = req.pool;
+  const userId = req.body.userId;
+  const materialId = req.body.materialId;
+  const amountChange = req.body.amountChange;
+  const price = req.body.price || 0;
+  let insertMaterialHistory = {
+    mh_id: uuidv4(),
+    user_id: userId,
+    material_id: materialId,
+    amount: amountChange,
+    price: price,
+    cost: amountChange * price,
+    time: new Date(Date.now()),
+  };
+  mysqlPoolQuery(
+    "SELECT * FROM user WHERE user_id = ?",
+    userId,
+    function (err, rows) {
+      if (err) {
+        res.status(404).json({ success: false, err: err });
+      } else if (rows.length > 0) {
+        mysqlPoolQuery(
+          "SELECT * FROM material WHERE material_id = ?",
+          materialId,
+          function (err, rows) {
+            if (err) {
+              res.status(404).json({ success: false, err: err });
+            } else if (rows.length > 0) {
+              mysqlPoolQuery(
+                "UPDATE material SET material_amount = material_amount + ? WHERE material_id = ? AND user_id = ?",
+                [amountChange, materialId, userId],
+                function (err, rows) {
+                  if (err) {
+                    res.status(404).json({ success: false, err: err });
+                  } else {
+                    mysqlPoolQuery(
+                      "INSERT INTO material_history SET ?",
+                      insertMaterialHistory,
+                      function (err, rows) {
+                        if (err) {
+                          res.status(404).json({ success: false, err: err });
+                        } else {
+                          res
+                            .status(201)
+                            .json({ success: true, message: "更新原料成功" });
+                        }
+                      }
+                    );
+                  }
+                }
+              );
+            } else {
+              res.status(409).json({ success: false, err: "原料不存在" });
+            }
+          }
+        );
+      } else {
+        res.status(409).json({ success: false, err: "使用者不存在" });
+      }
+    }
+  );
 });
 
 module.exports = router;

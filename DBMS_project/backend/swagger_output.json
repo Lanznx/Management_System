@@ -339,11 +339,43 @@
     "/material/updateAmount": {
       "post": {
         "tags": [
-          "Unfinished"
+          "Material"
         ],
         "description": "",
-        "parameters": [],
-        "responses": {}
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "userId": {
+                  "example": "any"
+                },
+                "materialId": {
+                  "example": "any"
+                },
+                "amountChange": {
+                  "example": "any"
+                },
+                "price": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "更新原料成功"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "409": {
+            "description": "使用者或原料不存在"
+          }
+        }
       }
     },
     "/product/": {
