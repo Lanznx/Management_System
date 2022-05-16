@@ -14,17 +14,17 @@ export default function Order() {
         userId: "6cc4a5be-08ba-41de-946d-a2e5c6ed43c2",
       },
     }).then((response) => {
-      let allProduct = response.data.allProductInformation
-      setProductInfos(allProduct)
+      let allProduct = response.data.allProductInformation;
+      setProductInfos(allProduct);
     });
   }, []);
   return (
     <Grid container>
-        {productInfos.map((productInfo) => (
-            <Grid item md={6}>
-                <ProductCard productInfo={productInfo} />
-            </Grid>
-        ))}
+      {productInfos.map((productInfo) => (
+        <Grid key={productInfo.productId} item md={6}>
+          <ProductCard productInfo={productInfo} />
+        </Grid>
+      ))}
     </Grid>
   );
 }

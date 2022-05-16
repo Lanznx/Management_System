@@ -35,7 +35,7 @@ export function ProductCard({ productInfo }) {
               setAmount(amount + 1);
             }
           }}
-          fullWidth="auto"
+          fullWidth={true}
           variant="contained"
         >
           +
@@ -47,7 +47,7 @@ export function ProductCard({ productInfo }) {
               setAmount(amount - 1);
             }
           }}
-          fullWidth="auto"
+          fullWidth={true}
           variant="contained"
         >
           -
