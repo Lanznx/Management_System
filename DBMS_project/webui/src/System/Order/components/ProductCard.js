@@ -8,9 +8,11 @@ import Button from "@mui/material/Button";
 export function ProductCard({ productInfo }) {
   const [productAmount, setProductAmount] = React.useState(productInfo.amount);
   const [amount, setAmount] = React.useState(0);
+  const [backColor, setBackColor] = React.useState(true);
   return (
     <Card
       sx={{
+        background: backColor ? "#fff" : "#C4090E",
         maxWidth: 345,
         margin: 3,
         marginTop: 10,
@@ -19,18 +21,38 @@ export function ProductCard({ productInfo }) {
     >
       <CardActionArea>
         <CardContent>
-          <Typography variant="h5" component="div">
+          <Typography
+            variant="h5"
+            component="div"
+            sx={{
+              color: backColor ? "#000" : "#fff",
+            }}
+          >
             {productInfo.name}
           </Typography>
-          <Typography variant="h5" color="text.secondary">
+          <Typography
+            variant="h5"
+            sx={{
+              color: backColor ? "#000" : "#fff",
+            }}
+          >
             {amount}
           </Typography>
         </CardContent>
       </CardActionArea>
       <CardActions>
         <Button
+          sx={{
+            background: backColor ? "primary" : "#C4090E",
+            color: backColor ? "#fff" : "#C4090E",
+            "&:hover": {
+              background: backColor ? "primary" : "#C4090E",
+              color: backColor ? "#fff" : "#C4090E",
+            },
+          }}
           onClick={() => {
             if (amount + 1 > productInfo.amount) {
+              setBackColor(false);
             } else {
               setAmount(amount + 1);
             }
@@ -41,10 +63,18 @@ export function ProductCard({ productInfo }) {
           +
         </Button>
         <Button
+          sx={{
+            background: backColor ? "primary" : "#C4090E",
+            "&:hover": {
+              background: backColor ? "primary" : "#fff",
+              color: backColor ? "#fff" : "#000",
+            },
+          }}
           onClick={() => {
             if (amount - 1 < 0) {
             } else {
               setAmount(amount - 1);
+              setBackColor(true);
             }
           }}
           fullWidth={true}
