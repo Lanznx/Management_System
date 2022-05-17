@@ -225,17 +225,27 @@ router.post("/deleteMaterial", function (req, res, next) {
     } else if (result == false) {
       res.status(409).json({ success: false, err: "使用者不存在" });
     } else {
-      mysqlPoolQuery(
-        "DELETE FROM material WHERE material_id = ? AND user_id = ?",
-        [materialId, userId],
-        function (err, rows) {
-          if (err) {
-            res.status(404).json({ success: false, err: err });
-          } else {
-            res.status(200).json({ success: true, message: "刪除原料成功" });
-          }
+      checkMaterialId(materialId, function (err, result) {
+        if (err) {
+          res.status(404).json({ success: false, err: err });
+        } else if (result == false) {
+          res.status(409).json({ success: false, err: "原料不存在" });
+        } else {
+          mysqlPoolQuery(
+            "DELETE FROM material WHERE material_id = ? AND user_id = ?",
+            [materialId, userId],
+            function (err, rows) {
+              if (err) {
+                res.status(404).json({ success: false, err: err });
+              } else {
+                res
+                  .status(200)
+                  .json({ success: true, message: "刪除原料成功" });
+              }
+            }
+          );
         }
-      );
+      });
     }
   });
 });
