@@ -28,7 +28,6 @@ async function getAllMaterials(userId){
         return {
         id: item.materialId,
         name: item.name,
-        price: item.price,
         amount: item.amount
         }
     })
@@ -36,4 +35,36 @@ async function getAllMaterials(userId){
     return allMaterial
 }
 
-export { getAllProducts, getAllMaterials }
+// function to post data to "https://nccu-dbms-team11.herokuapp.com/product/addNewProduct" by newObj
+async function addNewProduct(newObj){
+    const result = await axios.post("https://nccu-dbms-team11.herokuapp.com/product/addNewProduct", {
+        userId: "6cc4a5be-08ba-41de-946d-a2e5c6ed43c2",
+        productName: newObj.productName,
+        productPrice: newObj.productPrice,
+        productAmount: newObj.productAmount
+    })
+
+    return result.data.message
+}
+
+// function to post data to "https://nccu-dbms-team11.herokuapp.com/material/addNewMaterial" by newObj
+async function addNewMaterial(newObj){
+    console.log({
+        userId: "6cc4a5be-08ba-41de-946d-a2e5c6ed43c2",
+        materialName: newObj.materialName,
+        materialPrice: newObj.materialPrice,
+        materialAmount: newObj.materialAmount
+    })
+
+    const result = await axios.post("https://nccu-dbms-team11.herokuapp.com/material/addNewMaterial", {
+        userId: "6cc4a5be-08ba-41de-946d-a2e5c6ed43c2",
+        materialName: newObj.materialName,
+        materialPrice: newObj.materialPrice,
+        materialAmount: newObj.materialAmount
+    })
+
+    return result.data.message
+}
+
+
+export { getAllProducts, getAllMaterials, addNewProduct, addNewMaterial }
