@@ -5,17 +5,27 @@ import Typography from "@mui/material/Typography";
 import { CardActionArea, CardActions, Grid } from "@mui/material";
 import Button from "@mui/material/Button";
 
-export function ProductCard({ productInfo }) {
-  const [productAmount, setProductAmount] = React.useState(productInfo.amount);
+export default function ProductCard(props) {
+  const productAmount = props.productInfo.amount;
   const [amount, setAmount] = React.useState(0);
   const [backColor, setBackColor] = React.useState(true);
+
+  React.useEffect(() => {
+    console.log("tozeroooo");
+    if (props.toZero) setAmount(0);
+    props.setToZero(false);
+    if (amount > productAmount) {
+      setBackColor(false);
+    } else{
+      setBackColor(true)
+    }
+  }, [props.toZero]);
+
   return (
     <Card
       sx={{
         background: backColor ? "#fff" : "#C4090E",
-        maxWidth: 345,
         margin: 3,
-        marginTop: 10,
         justifyContent: "center",
       }}
     >
@@ -28,7 +38,7 @@ export function ProductCard({ productInfo }) {
               color: backColor ? "#000" : "#fff",
             }}
           >
-            {productInfo.name}
+            {props.productInfo.name}
           </Typography>
           <Typography
             variant="h5"
@@ -51,10 +61,16 @@ export function ProductCard({ productInfo }) {
             },
           }}
           onClick={() => {
-            if (amount + 1 > productInfo.amount) {
+            if (amount + 1 > productAmount) {
               setBackColor(false);
             } else {
               setAmount(amount + 1);
+              props.orderRec(
+                props.productInfo.name,
+                props.productInfo.productId,
+                props.productInfo.price,
+                amount + 1
+              );
             }
           }}
           fullWidth={true}
@@ -75,6 +91,12 @@ export function ProductCard({ productInfo }) {
             } else {
               setAmount(amount - 1);
               setBackColor(true);
+              props.orderRec(
+                props.productInfo.name,
+                props.productInfo.productId,
+                props.productInfo.price,
+                amount - 1
+              );
             }
           }}
           fullWidth={true}
