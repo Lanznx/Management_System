@@ -9,15 +9,14 @@ export default function ProductCard(props) {
   const productAmount = props.productInfo.amount;
   const [amount, setAmount] = React.useState(0);
   const [backColor, setBackColor] = React.useState(true);
-
   React.useEffect(() => {
     console.log("tozeroooo");
     if (props.toZero) setAmount(0);
     props.setToZero(false);
     if (amount > productAmount) {
       setBackColor(false);
-    } else{
-      setBackColor(true)
+    } else {
+      setBackColor(true);
     }
   }, [props.toZero]);
 
@@ -25,12 +24,16 @@ export default function ProductCard(props) {
     <Card
       sx={{
         background: backColor ? "#fff" : "#C4090E",
-        margin: 3,
+        margin: 1.5,
         justifyContent: "center",
       }}
     >
       <CardActionArea>
-        <CardContent>
+        <CardContent
+          sx={{
+            height: "130px",
+          }}
+        >
           <Typography
             variant="h5"
             component="div"
@@ -40,19 +43,30 @@ export default function ProductCard(props) {
           >
             {props.productInfo.name}
           </Typography>
+
           <Typography
-            variant="h5"
+            variant="h7"
+            component="div"
             sx={{
               color: backColor ? "#000" : "#fff",
             }}
           >
-            {amount}
+            <i>$.{props.productInfo.price}</i>
           </Typography>
         </CardContent>
       </CardActionArea>
-      <CardActions>
+      <CardActions
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          "&.MuiCardActions-root>:not(:first-of-type)": {
+            marginLeft: 0,
+          },
+        }}
+      >
         <Button
           sx={{
+            alignContent: "baseline",
             background: backColor ? "primary" : "#C4090E",
             color: backColor ? "#fff" : "#C4090E",
             "&:hover": {
@@ -73,11 +87,18 @@ export default function ProductCard(props) {
               );
             }
           }}
-          fullWidth={true}
           variant="contained"
         >
           +
         </Button>
+        <Typography
+          variant="h5"
+          sx={{
+            color: backColor ? "#000" : "#fff",
+          }}
+        >
+          {amount}
+        </Typography>
         <Button
           sx={{
             background: backColor ? "primary" : "#C4090E",
@@ -99,7 +120,6 @@ export default function ProductCard(props) {
               );
             }
           }}
-          fullWidth={true}
           variant="contained"
         >
           -
