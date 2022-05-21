@@ -30,6 +30,19 @@ export default function ProductCard(props) {
     >
       <CardActionArea>
         <CardContent
+          onClick={() => {
+            if (amount + 1 > productAmount) {
+              setBackColor(false);
+            } else {
+              setAmount(amount + 1);
+              props.orderRec(
+                props.productInfo.name,
+                props.productInfo.productId,
+                props.productInfo.price,
+                amount + 1
+              );
+            }
+          }}
           sx={{
             height: "130px",
           }}
@@ -58,7 +71,7 @@ export default function ProductCard(props) {
       <CardActions
         sx={{
           display: "flex",
-          justifyContent: "space-between",
+          justifyContent: "space-around",
           "&.MuiCardActions-root>:not(:first-of-type)": {
             marginLeft: 0,
           },
@@ -66,6 +79,7 @@ export default function ProductCard(props) {
       >
         <Button
           sx={{
+            minHeight: "30px",
             alignContent: "baseline",
             background: backColor ? "primary" : "#C4090E",
             color: backColor ? "#fff" : "#C4090E",
@@ -101,6 +115,7 @@ export default function ProductCard(props) {
         </Typography>
         <Button
           sx={{
+            minHeight: "30px",
             background: backColor ? "primary" : "#C4090E",
             "&:hover": {
               background: backColor ? "primary" : "#fff",
