@@ -25,23 +25,15 @@ router.post("/getAllMaterials", async function (req, res, next) {
     if (!userExisted) {
       res.status(409).json({ success: false, err: "使用者不存在" });
     } else {
-      mysqlPoolQuery(
+      let rows = await mysqlPoolQuery(
         "SELECT material_id AS materialId, material_name AS name, material_amount AS amount FROM material WHERE user_id = ?",
-        userId,
-        function (err, rows) {
-          if (err) {
-            res.status(404).json({ success: false, err: err });
-          } else {
-            if (rows.length == 0) {
-              res.status(409).json({ success: false, err: "尚無原料" });
-            } else {
-              res
-                .status(200)
-                .json({ success: true, allMaterialInformation: rows });
-            }
-          }
-        }
+        userId
       );
+      if (rows.length == 0) {
+        res.status(409).json({ success: false, err: "尚無原料" });
+      } else {
+        res.status(200).json({ success: true, allMaterialInformation: rows });
+      }
     }
   } catch (err) {
     res.status(404).json({ success: false, err: err });
@@ -69,17 +61,11 @@ router.post("/getMaterialHistory", async function (req, res, next) {
     } else if (!materialExisted) {
       res.status(409).json({ success: false, err: "原料不存在" });
     } else {
-      mysqlPoolQuery(
+      let rows = await mysqlPoolQuery(
         "SELECT price, amount, cost, time FROM material_history WHERE user_id = ? AND material_id = ?",
-        [userId, materialId],
-        function (err, rows) {
-          if (err) {
-            res.status(404).json({ success: false, err: err });
-          } else {
-            res.status(200).json({ success: true, materialInformation: rows });
-          }
-        }
+        [userId, materialId]
       );
+      res.status(200).json({ success: true, materialInformation: rows });
     }
   } catch (err) {
     res.status(404).json({ success: false, err: err });
@@ -104,21 +90,15 @@ router.post("/getMaterialDict", async function (req, res, next) {
     if (!userExisted) {
       res.status(409).json({ success: false, err: "使用者不存在" });
     } else {
-      mysqlPoolQuery(
+      let rows = await mysqlPoolQuery(
         "SELECT material_name, material_id FROM material WHERE user_id = ? ",
-        userId,
-        function (err, rows) {
-          if (err) {
-            res.status(404).json({ success: false, err: err });
-          } else {
-            let materialDict = {};
-            for (let i = 0; i < rows.length; i++) {
-              materialDict[rows[i].material_name] = rows[i].material_id;
-            }
-            res.status(200).json({ success: true, materialDict: materialDict });
-          }
-        }
+        userId
       );
+      let materialDict = {};
+      for (let i = 0; i < rows.length; i++) {
+        materialDict[rows[i].material_name] = rows[i].material_id;
+      }
+      res.status(200).json({ success: true, materialDict: materialDict });
     }
   } catch (err) {
     res.status(404).json({ success: false, err: err });
@@ -153,53 +133,32 @@ router.post("/addNewMaterial", async function (req, res, next) {
       res.status(409).json({ success: false, err: "使用者不存在" });
     } else {
       // insert new material
-      mysqlPoolQuery(
-        "SELECT material_name FROM material WHERE material_name = ?",
-        materialName,
-        function (err, rows) {
-          if (rows.length > 0) {
-            res.status(409).json({ success: false, err: "原料名稱已存在" });
-          } else {
-            mysqlPoolQuery(
-              "INSERT INTO material SET ?",
-              insertMaterial,
-              function (err, rows) {
-                if (err) {
-                  res.status(404).json({ success: false, err: err });
-                } else if (materialAmount > 0) {
-                  // 若有初始數量，則新增原料記錄
-                  let insertMaterialHistory = {
-                    mh_id: uuidv4(),
-                    user_id: userId,
-                    material_id: materialId,
-                    amount: materialAmount,
-                    price: materialPrice,
-                    cost: materialAmount * materialPrice,
-                    time: new Date(Date.now()),
-                  };
-                  mysqlPoolQuery(
-                    "INSERT INTO material_history SET ?",
-                    insertMaterialHistory,
-                    function (err, rows) {
-                      if (err) {
-                        res.status(404).json({ success: false, err: err });
-                      } else {
-                        res
-                          .status(201)
-                          .json({ success: true, message: "新增初始原料成功" });
-                      }
-                    }
-                  );
-                } else {
-                  res
-                    .status(201)
-                    .json({ success: true, message: "新增初始原料成功" });
-                }
-              }
-            );
-          }
-        }
+      let rows = await mysqlPoolQuery(
+        "SELECT material_name FROM material WHERE material_name = ? AND user_id = ?",
+        [materialName, userId]
       );
+      if (rows.length > 0) {
+        res.status(409).json({ success: false, err: "原料名稱已存在" });
+      } else {
+        await mysqlPoolQuery("INSERT INTO material SET ?", insertMaterial);
+        if (materialAmount > 0) {
+          // 若有初始數量，則新增原料記錄
+          let insertMaterialHistory = {
+            mh_id: uuidv4(),
+            user_id: userId,
+            material_id: materialId,
+            amount: materialAmount,
+            price: materialPrice,
+            cost: materialAmount * materialPrice,
+            time: new Date(Date.now()),
+          };
+          await mysqlPoolQuery(
+            "INSERT INTO material_history SET ?",
+            insertMaterialHistory
+          );
+        }
+        res.status(201).json({ success: true, message: "新增初始原料成功" });
+      }
     }
   } catch (err) {
     res.status(404).json({ success: false, err: err });
@@ -224,17 +183,11 @@ router.post("/deleteMaterial", async function (req, res, next) {
     } else if (!materialExisted) {
       res.status(409).json({ success: false, err: "原料不存在" });
     } else {
-      mysqlPoolQuery(
+      await mysqlPoolQuery(
         "DELETE FROM material WHERE material_id = ? AND user_id = ?",
-        [materialId, userId],
-        function (err, rows) {
-          if (err) {
-            res.status(404).json({ success: false, err: err });
-          } else {
-            res.status(200).json({ success: true, message: "刪除原料成功" });
-          }
-        }
+        [materialId, userId]
       );
+      res.status(200).json({ success: true, message: "刪除原料成功" });
     }
   } catch (err) {
     res.status(404).json({ success: false, err: err });
@@ -273,29 +226,15 @@ router.post("/updateAmount", async function (req, res, next) {
     } else if (!materialExisted) {
       res.status(409).json({ success: false, err: "原料不存在" });
     } else {
-      mysqlPoolQuery(
+      await mysqlPoolQuery(
         "UPDATE material SET material_amount = material_amount + ? WHERE material_id = ? AND user_id = ?",
-        [amountChange, materialId, userId],
-        function (err, rows) {
-          if (err) {
-            res.status(404).json({ success: false, err: err });
-          } else {
-            mysqlPoolQuery(
-              "INSERT INTO material_history SET ?",
-              insertMaterialHistory,
-              function (err, rows) {
-                if (err) {
-                  res.status(404).json({ success: false, err: err });
-                } else {
-                  res
-                    .status(201)
-                    .json({ success: true, message: "更新原料成功" });
-                }
-              }
-            );
-          }
-        }
+        [amountChange, materialId, userId]
       );
+      await mysqlPoolQuery(
+        "INSERT INTO material_history SET ?",
+        insertMaterialHistory
+      );
+      res.status(201).json({ success: true, message: "更新原料成功" });
     }
   } catch (err) {
     res.status(404).json({ success: false, err: err });

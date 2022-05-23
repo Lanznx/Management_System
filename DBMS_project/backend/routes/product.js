@@ -29,23 +29,15 @@ router.post("/getAllProducts", async function (req, res, next) {
     if (!userExisted) {
       res.status(409).json({ success: false, err: "使用者不存在" });
     } else {
-      mysqlPoolQuery(
+      let rows = await mysqlPoolQuery(
         "SELECT product_id AS productId, product_name AS name, product_price AS price, product_amount AS amount FROM product WHERE user_id = ?",
-        userId,
-        function (err, rows) {
-          if (err) {
-            res.status(404).json({ success: false, err: err });
-          } else {
-            if (rows.length == 0) {
-              res.status(409).json({ success: false, err: "尚無商品" });
-            } else {
-              res
-                .status(200)
-                .json({ success: true, allProductInformation: rows });
-            }
-          }
-        }
+        userId
       );
+      if (rows.length == 0) {
+        res.status(409).json({ success: false, err: "尚無商品" });
+      } else {
+        res.status(200).json({ success: true, allProductInformation: rows });
+      }
     }
   } catch (err) {
     res.status(404).json({ success: false, err: err });
@@ -70,17 +62,11 @@ router.post("/getProduct", async function (req, res, next) {
     } else if (!productExisted) {
       res.status(409).json({ success: false, err: "存貨不存在" });
     } else {
-      mysqlPoolQuery(
+      let rows = await mysqlPoolQuery(
         "SELECT product_id AS productId, product_name AS name, product_price AS price, product_amount AS amount FROM product WHERE user_id = ? AND product_id = ?",
-        [userId, productId],
-        function (err, rows) {
-          if (err) {
-            res.status(404).json({ success: false, err: err });
-          } else {
-            res.status(200).json({ success: true, productInformation: rows });
-          }
-        }
+        [userId, productId]
       );
+      res.status(200).json({ success: true, productInformation: rows });
     }
   } catch (err) {
     res.status(404).json({ success: false, err: err });
@@ -108,62 +94,43 @@ router.post("/addNewProduct", async function (req, res, next) {
     if (!userExisted) {
       res.status(409).json({ success: false, err: "使用者不存在" });
     } else {
-      mysqlPoolQuery(
-        "SELECT product_name FROM product WHERE product_name = ?",
-        productName,
-        function (err, rows) {
-          if (rows.length > 0) {
-            res.status(409).json({ success: false, err: "存貨名稱已存在" });
-          } else {
-            mysqlPoolQuery(
-              "INSERT INTO product SET ?",
-              insertProduct,
-              async function (err, rows) {
-                if (err) {
-                  res.status(404).json({ success: false, err: err });
-                } else {
-                  let allMaterialExisted = true;
-                  for (let i = 0; i < materialId.length; i++) {
-                    const materialExisted = await checkMaterialId(
-                      materialId[i]
-                    );
-                    if (!materialExisted) {
-                      allMaterialExisted = false;
-                    }
-                  }
-                  if (!allMaterialExisted) {
-                    res.status(409).json({
-                      success: false,
-                      err: "原料不存在",
-                    });
-                  } else {
-                    for (let i = 0; i < materialId.length; i++) {
-                      let insertProductMaterial = {
-                        product_id: productId,
-                        material_id: materialId[i],
-                      };
-                      mysqlPoolQuery(
-                        "INSERT INTO product_material SET ?",
-                        insertProductMaterial,
-                        function (err, rows) {
-                          if (err) {
-                            res.status(404).json({ success: false, err: err });
-                          } else {
-                            res.status(200).json({
-                              success: true,
-                              message: "新增初始存貨成功",
-                            });
-                          }
-                        }
-                      );
-                    }
-                  }
-                }
-              }
-            );
+      let rows = await mysqlPoolQuery(
+        "SELECT product_name FROM product WHERE product_name = ? AND user_id = ?",
+        [productName, userId]
+      );
+      if (rows.length > 0) {
+        res.status(409).json({ success: false, err: "存貨名稱已存在" });
+      } else {
+        await mysqlPoolQuery("INSERT INTO product SET ?", insertProduct);
+        let allMaterialExisted = true;
+        for (let i = 0; i < materialId.length; i++) {
+          let materialExisted = await checkMaterialId(materialId[i]);
+          if (!materialExisted) {
+            allMaterialExisted = false;
           }
         }
-      );
+        if (!allMaterialExisted) {
+          res.status(409).json({
+            success: false,
+            err: "原料不存在",
+          });
+        } else {
+          for (let i = 0; i < materialId.length; i++) {
+            let insertProductMaterial = {
+              product_id: productId,
+              material_id: materialId[i],
+            };
+            await mysqlPoolQuery(
+              "INSERT INTO product_material SET ?",
+              insertProductMaterial
+            );
+          }
+          res.status(200).json({
+            success: true,
+            message: "新增初始存貨成功",
+          });
+        }
+      }
     }
   } catch (err) {
     res.status(404).json({ success: false, err: err });
@@ -188,17 +155,11 @@ router.post("/deleteProduct", async function (req, res, next) {
     } else if (!productExisted) {
       res.status(409).json({ success: false, err: "存貨不存在" });
     } else {
-      mysqlPoolQuery(
+      await mysqlPoolQuery(
         "DELETE FROM product WHERE product_id = ? AND user_id = ?",
-        [productId, userId],
-        function (err, rows) {
-          if (err) {
-            res.status(404).json({ success: false, err: err });
-          } else {
-            res.status(200).json({ success: true, message: "刪除存貨成功" });
-          }
-        }
+        [productId, userId]
       );
+      res.status(200).json({ success: true, message: "刪除存貨成功" });
     }
   } catch (err) {
     res.status(404).json({ success: false, err: err });
@@ -224,17 +185,11 @@ router.post("/updateAmount", async function (req, res, next) {
     } else if (!productExisted) {
       res.status(409).json({ success: false, err: "存貨不存在" });
     } else {
-      mysqlPoolQuery(
+      await mysqlPoolQuery(
         "UPDATE product SET product_amount = product_amount + ? WHERE product_id = ? AND user_id = ?",
-        [amountChange, productId, userId],
-        function (err, rows) {
-          if (err) {
-            res.status(404).json({ success: false, err: err });
-          } else {
-            res.status(200).json({ success: true, message: "更新存貨成功" });
-          }
-        }
+        [amountChange, productId, userId]
       );
+      res.status(200).json({ success: true, message: "更新存貨成功" });
     }
   } catch (err) {
     res.status(404).json({ success: false, err: err });
