@@ -93,7 +93,44 @@ router.post("/addNewProduct", function (req, res, next) {
 });
 
 router.post("/deleteProduct", function (req, res, next) {
-  // #swagger.tags = ['Unfinished']
+  /*
+  #swagger.tags = ['Product']
+  #swagger.responses[409] = {
+    description: '使用者或商品不存在'
+  }
+  */
+  const mysqlPoolQuery = req.pool;
+  const userId = req.body.userId;
+  const productId = req.body.productId;
+  checkUserId(userId, function (err, result) {
+    if (err) {
+      res.status(404).json({ success: false, err: err });
+    } else if (result == false) {
+      res.status(409).json({ success: false, err: "使用者不存在" });
+    } else {
+      checkProductId(productId, function (err, result) {
+        if (err) {
+          res.status(404).json({ success: false, err: err });
+        } else if (result == false) {
+          res.status(409).json({ success: false, err: "存貨不存在" });
+        } else {
+          mysqlPoolQuery(
+            "DELETE FROM product WHERE product_id = ? AND user_id = ?",
+            [productId, userId],
+            function (err, rows) {
+              if (err) {
+                res.status(404).json({ success: false, err: err });
+              } else {
+                res
+                  .status(200)
+                  .json({ success: true, message: "刪除存貨成功" });
+              }
+            }
+          );
+        }
+      });
+    }
+  });
 });
 
 router.post("/updateAmount", function (req, res, next) {
