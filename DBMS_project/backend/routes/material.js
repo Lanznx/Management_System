@@ -11,7 +11,7 @@ router.get("/", function (req, res, next) {
   res.send("In Material!!");
 });
 
-router.post("/getAllMaterials", function (req, res, next) {
+router.post("/getAllMaterials", async function (req, res, next) {
   /*
    #swagger.tags = ['Material']
    #swagger.responses[409] = {
@@ -20,10 +20,9 @@ router.post("/getAllMaterials", function (req, res, next) {
   */
   const mysqlPoolQuery = req.pool;
   const userId = req.body.userId;
-  checkUserId(userId, function (err, result) {
-    if (err) {
-      res.status(404).json({ success: false, err: err });
-    } else if (result == false) {
+  try {
+    const userExisted = await checkUserId(userId);
+    if (!userExisted) {
       res.status(409).json({ success: false, err: "使用者不存在" });
     } else {
       mysqlPoolQuery(
@@ -44,10 +43,12 @@ router.post("/getAllMaterials", function (req, res, next) {
         }
       );
     }
-  });
+  } catch (err) {
+    res.status(404).json({ success: false, err: err });
+  }
 });
 
-router.post("/getMaterialHistory", function (req, res, next) {
+router.post("/getMaterialHistory", async function (req, res, next) {
   /*
   #swagger.tags = ['Material']
   #swagger.response[409] = {
@@ -60,39 +61,33 @@ router.post("/getMaterialHistory", function (req, res, next) {
   const mysqlPoolQuery = req.pool;
   const userId = req.body.userId;
   const materialId = req.body.materialId;
-  checkUserId(userId, function (err, result) {
-    if (err) {
-      res.status(404).json({ success: false, err: err });
-    } else if (result == false) {
+  try {
+    const userExisted = await checkUserId(userId);
+    const materialExisted = await checkMaterialId(materialId);
+    if (!userExisted) {
       res.status(409).json({ success: false, err: "使用者不存在" });
+    } else if (!materialExisted) {
+      res.status(409).json({ success: false, err: "原料不存在" });
     } else {
-      checkMaterialId(materialId, function (err, result) {
-        if (err) {
-          res.status(404).json({ success: false, err: err });
-        } else if (result == false) {
-          res.status(409).json({ success: false, err: "原料不存在" });
-        } else {
-          mysqlPoolQuery(
-            "SELECT price, amount, cost, time FROM material_history WHERE user_id = ? AND material_id = ?",
-            [userId, materialId],
-            function (err, rows) {
-              if (err) {
-                res.status(404).json({ success: false, err: err });
-              } else {
-                res
-                  .status(200)
-                  .json({ success: true, materialInformation: rows });
-              }
-            }
-          );
+      mysqlPoolQuery(
+        "SELECT price, amount, cost, time FROM material_history WHERE user_id = ? AND material_id = ?",
+        [userId, materialId],
+        function (err, rows) {
+          if (err) {
+            res.status(404).json({ success: false, err: err });
+          } else {
+            res.status(200).json({ success: true, materialInformation: rows });
+          }
         }
-      });
+      );
     }
-  });
+  } catch (err) {
+    res.status(404).json({ success: false, err: err });
+  }
 });
 
 // 取得原料name與id的dictionary
-router.post("/getMaterialDict", function (req, res, next) {
+router.post("/getMaterialDict", async function (req, res, next) {
   /* 
   #swagger.tags = ['Material']
   #swagger.responses[200] = {
@@ -104,10 +99,9 @@ router.post("/getMaterialDict", function (req, res, next) {
   */
   const mysqlPoolQuery = req.pool;
   const userId = req.body.userId;
-  checkUserId(userId, function (err, result) {
-    if (err) {
-      res.status(404).json({ success: false, err: err });
-    } else if (result == false) {
+  try {
+    const userExisted = await checkUserId(userId);
+    if (!userExisted) {
       res.status(409).json({ success: false, err: "使用者不存在" });
     } else {
       mysqlPoolQuery(
@@ -126,10 +120,12 @@ router.post("/getMaterialDict", function (req, res, next) {
         }
       );
     }
-  });
+  } catch (err) {
+    res.status(404).json({ success: false, err: err });
+  }
 });
 
-router.post("/addNewMaterial", function (req, res, next) {
+router.post("/addNewMaterial", async function (req, res, next) {
   /*
   #swagger.tags = ['Material']
   #swagger.responses[201] = {
@@ -151,13 +147,12 @@ router.post("/addNewMaterial", function (req, res, next) {
     material_amount: materialAmount,
     user_id: userId,
   };
-  // insert new material
-  checkUserId(userId, function (err, result) {
-    if (err) {
-      res.status(404).json({ success: false, err: err });
-    } else if (result == false) {
+  try {
+    const userExisted = await checkUserId(userId);
+    if (!userExisted) {
       res.status(409).json({ success: false, err: "使用者不存在" });
     } else {
+      // insert new material
       mysqlPoolQuery(
         "SELECT material_name FROM material WHERE material_name = ?",
         materialName,
@@ -206,10 +201,12 @@ router.post("/addNewMaterial", function (req, res, next) {
         }
       );
     }
-  });
+  } catch (err) {
+    res.status(404).json({ success: false, err: err });
+  }
 });
 
-router.post("/deleteMaterial", function (req, res, next) {
+router.post("/deleteMaterial", async function (req, res, next) {
   /* 
   #swagger.tags = ['Material']
   #swagger.responses[200] = {
@@ -219,38 +216,32 @@ router.post("/deleteMaterial", function (req, res, next) {
   const mysqlPoolQuery = req.pool;
   const userId = req.body.userId;
   const materialId = req.body.materialId;
-  checkUserId(userId, function (err, result) {
-    if (err) {
-      res.status(404).json({ success: false, err: err });
-    } else if (result == false) {
+  try {
+    const userExisted = await checkUserId(userId);
+    const materialExisted = await checkMaterialId(materialId);
+    if (!userExisted) {
       res.status(409).json({ success: false, err: "使用者不存在" });
+    } else if (!materialExisted) {
+      res.status(409).json({ success: false, err: "原料不存在" });
     } else {
-      checkMaterialId(materialId, function (err, result) {
-        if (err) {
-          res.status(404).json({ success: false, err: err });
-        } else if (result == false) {
-          res.status(409).json({ success: false, err: "原料不存在" });
-        } else {
-          mysqlPoolQuery(
-            "DELETE FROM material WHERE material_id = ? AND user_id = ?",
-            [materialId, userId],
-            function (err, rows) {
-              if (err) {
-                res.status(404).json({ success: false, err: err });
-              } else {
-                res
-                  .status(200)
-                  .json({ success: true, message: "刪除原料成功" });
-              }
-            }
-          );
+      mysqlPoolQuery(
+        "DELETE FROM material WHERE material_id = ? AND user_id = ?",
+        [materialId, userId],
+        function (err, rows) {
+          if (err) {
+            res.status(404).json({ success: false, err: err });
+          } else {
+            res.status(200).json({ success: true, message: "刪除原料成功" });
+          }
         }
-      });
+      );
     }
-  });
+  } catch (err) {
+    res.status(404).json({ success: false, err: err });
+  }
 });
 
-router.post("/updateAmount", function (req, res, next) {
+router.post("/updateAmount", async function (req, res, next) {
   /*
   #swagger.tags = ['Material']
   #swagger.responses[409] = {
@@ -274,45 +265,41 @@ router.post("/updateAmount", function (req, res, next) {
     cost: amountChange * price,
     time: new Date(Date.now()),
   };
-  checkUserId(userId, function (err, result) {
-    if (err) {
-      res.status(404).json({ success: false, err: err });
-    } else if (result == false) {
+  try {
+    const userExisted = await checkUserId(userId);
+    const materialExisted = await checkMaterialId(materialId);
+    if (!userExisted) {
       res.status(409).json({ success: false, err: "使用者不存在" });
+    } else if (!materialExisted) {
+      res.status(409).json({ success: false, err: "原料不存在" });
     } else {
-      checkMaterialId(materialId, function (err, result) {
-        if (err) {
-          res.status(404).json({ success: false, err: err });
-        } else if (result == false) {
-          res.status(409).json({ success: false, err: "原料不存在" });
-        } else {
-          mysqlPoolQuery(
-            "UPDATE material SET material_amount = material_amount + ? WHERE material_id = ? AND user_id = ?",
-            [amountChange, materialId, userId],
-            function (err, rows) {
-              if (err) {
-                res.status(404).json({ success: false, err: err });
-              } else {
-                mysqlPoolQuery(
-                  "INSERT INTO material_history SET ?",
-                  insertMaterialHistory,
-                  function (err, rows) {
-                    if (err) {
-                      res.status(404).json({ success: false, err: err });
-                    } else {
-                      res
-                        .status(201)
-                        .json({ success: true, message: "更新原料成功" });
-                    }
-                  }
-                );
+      mysqlPoolQuery(
+        "UPDATE material SET material_amount = material_amount + ? WHERE material_id = ? AND user_id = ?",
+        [amountChange, materialId, userId],
+        function (err, rows) {
+          if (err) {
+            res.status(404).json({ success: false, err: err });
+          } else {
+            mysqlPoolQuery(
+              "INSERT INTO material_history SET ?",
+              insertMaterialHistory,
+              function (err, rows) {
+                if (err) {
+                  res.status(404).json({ success: false, err: err });
+                } else {
+                  res
+                    .status(201)
+                    .json({ success: true, message: "更新原料成功" });
+                }
               }
-            }
-          );
+            );
+          }
         }
-      });
+      );
     }
-  });
+  } catch (err) {
+    res.status(404).json({ success: false, err: err });
+  }
 });
 
 module.exports = router;
