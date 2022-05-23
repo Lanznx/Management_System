@@ -48,7 +48,44 @@ router.post("/getAllProducts", function (req, res, next) {
 });
 
 router.post("/getProduct", function (req, res, next) {
-  // #swagger.tags = ['Unfinished']
+  /* 
+  #swagger.tags = ['Product']
+  #swagger.responses[409] = {
+    description: '使用者或商品不存在'
+  }
+  */
+  const mysqlPoolQuery = req.pool;
+  const userId = req.body.userId;
+  const productId = req.body.productId;
+  checkUserId(userId, function (err, result) {
+    if (err) {
+      res.status(404).json({ success: false, err: err });
+    } else if (result == false) {
+      res.status(409).json({ success: false, err: "使用者不存在" });
+    } else {
+      checkProductId(productId, function (err, result) {
+        if (err) {
+          res.status(404).json({ success: false, err: err });
+        } else if (result == false) {
+          res.status(409).json({ success: false, err: "存貨不存在" });
+        } else {
+          mysqlPoolQuery(
+            "SELECT product_id AS productId, product_name AS name, product_price AS price, product_amount AS amount FROM product WHERE user_id = ? AND product_id = ?",
+            [userId, productId],
+            function (err, rows) {
+              if (err) {
+                res.status(404).json({ success: false, err: err });
+              } else {
+                res
+                  .status(200)
+                  .json({ success: true, productInformation: rows });
+              }
+            }
+          );
+        }
+      });
+    }
+  });
 });
 
 router.post("/addNewProduct", function (req, res, next) {
