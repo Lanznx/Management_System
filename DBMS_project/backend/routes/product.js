@@ -74,7 +74,12 @@ router.post("/getProduct", async function (req, res, next) {
 });
 
 router.post("/addNewProduct", async function (req, res, next) {
-  // #swagger.tags = ['Unfinished']
+  /* 
+  #swagger.tags = ['Product']
+  #swagger.responses[409] = {
+    description: '使用者或原料不存在、商品已存在'
+  }
+  */
   const mysqlPoolQuery = req.pool;
   const userId = req.body.userId;
   const productName = req.body.productName;

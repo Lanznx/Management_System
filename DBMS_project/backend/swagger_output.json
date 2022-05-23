@@ -490,11 +490,46 @@
     "/product/addNewProduct": {
       "post": {
         "tags": [
-          "Unfinished"
+          "Product"
         ],
         "description": "",
-        "parameters": [],
-        "responses": {}
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "userId": {
+                  "example": "any"
+                },
+                "productName": {
+                  "example": "any"
+                },
+                "productPrice": {
+                  "example": "any"
+                },
+                "amount": {
+                  "example": "any"
+                },
+                "materialId": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "409": {
+            "description": "使用者或原料不存在、商品已存在"
+          }
+        }
       }
     },
     "/product/deleteProduct": {
