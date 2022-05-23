@@ -97,7 +97,45 @@ router.post("/deleteProduct", function (req, res, next) {
 });
 
 router.post("/updateAmount", function (req, res, next) {
-  // #swagger.tags = ['Unfinished']
+  /* 
+  #swagger.tags = ['Product']
+  #swagger.responses[409] = {
+    description: '使用者或商品不存在'
+  }
+  */
+  const mysqlPoolQuery = req.pool;
+  const userId = req.body.userId;
+  const productId = req.body.productId;
+  const amountChange = req.body.amountChange;
+  checkUserId(userId, function (err, result) {
+    if (err) {
+      res.status(404).json({ success: false, err: err });
+    } else if (result == false) {
+      res.status(409).json({ success: false, err: "使用者不存在" });
+    } else {
+      checkProductId(productId, function (err, result) {
+        if (err) {
+          res.status(404).json({ success: false, err: err });
+        } else if (result == false) {
+          res.status(409).json({ success: false, err: "存貨不存在" });
+        } else {
+          mysqlPoolQuery(
+            "UPDATE product SET product_amount = product_amount + ? WHERE product_id = ? AND user_id = ?",
+            [amountChange, productId, userId],
+            function (err, rows) {
+              if (err) {
+                res.status(404).json({ success: false, err: err });
+              } else {
+                res
+                  .status(200)
+                  .json({ success: true, message: "更新存貨成功" });
+              }
+            }
+          );
+        }
+      });
+    }
+  });
 });
 
 module.exports = router;
