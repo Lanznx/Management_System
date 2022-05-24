@@ -23,6 +23,14 @@
     {
       "name": "Product",
       "description": "Product router"
+    },
+    {
+      "name": "Order",
+      "description": "Order router"
+    },
+    {
+      "name": "Schedule",
+      "description": "Schedule router"
     }
   ],
   "schemes": [
@@ -605,6 +613,154 @@
             "description": "使用者或商品不存在"
           }
         }
+      }
+    },
+    "/order/": {
+      "get": {
+        "tags": [
+          "Order"
+        ],
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/order/getTagDict": {
+      "post": {
+        "tags": [
+          "Unfinished"
+        ],
+        "description": "",
+        "parameters": [],
+        "responses": {}
+      }
+    },
+    "/order/addNewTag": {
+      "post": {
+        "tags": [
+          "Unfinished"
+        ],
+        "description": "",
+        "parameters": [],
+        "responses": {}
+      }
+    },
+    "/order/addNewOrder": {
+      "post": {
+        "tags": [
+          "Unfinished"
+        ],
+        "description": "",
+        "parameters": [],
+        "responses": {}
+      }
+    },
+    "/order/getAllOrders": {
+      "post": {
+        "tags": [
+          "Unfinished"
+        ],
+        "description": "",
+        "parameters": [],
+        "responses": {}
+      }
+    },
+    "/schedule/": {
+      "get": {
+        "tags": [
+          "Schedule"
+        ],
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/schedule/addNewEmployee": {
+      "post": {
+        "tags": [
+          "Unfinished"
+        ],
+        "description": "",
+        "parameters": [],
+        "responses": {}
+      }
+    },
+    "/schedule/updateEmployee": {
+      "post": {
+        "tags": [
+          "Unfinished"
+        ],
+        "description": "",
+        "parameters": [],
+        "responses": {}
+      }
+    },
+    "/schedule/deleteEmployee": {
+      "post": {
+        "tags": [
+          "Unfinished"
+        ],
+        "description": "",
+        "parameters": [],
+        "responses": {}
+      }
+    },
+    "/schedule/getAllEmployee": {
+      "post": {
+        "tags": [
+          "Unfinished"
+        ],
+        "description": "",
+        "parameters": [],
+        "responses": {}
+      }
+    },
+    "/schedule/addNewTimeblock": {
+      "post": {
+        "tags": [
+          "Unfinished"
+        ],
+        "description": "",
+        "parameters": [],
+        "responses": {}
+      }
+    },
+    "/schedule/updateTimeblock": {
+      "post": {
+        "tags": [
+          "Unfinished"
+        ],
+        "description": "",
+        "parameters": [],
+        "responses": {}
+      }
+    },
+    "/schedule/deleteTimeblock": {
+      "post": {
+        "tags": [
+          "Unfinished"
+        ],
+        "description": "",
+        "parameters": [],
+        "responses": {}
+      }
+    },
+    "/schedule/getAllTimeblock": {
+      "post": {
+        "tags": [
+          "Unfinished"
+        ],
+        "description": "",
+        "parameters": [],
+        "responses": {}
       }
     }
   }

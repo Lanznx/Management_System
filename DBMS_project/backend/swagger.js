@@ -23,6 +23,14 @@ const doc = {
       name: "Product",
       description: "Product router",
     },
+    {
+      name: "Order",
+      description: "Order router",
+    },
+    {
+      name: "Schedule",
+      description: "Schedule router",
+    },
   ],
   securityDefinitions: {}, // by default: empty object
   definitions: {}, // by default: empty object
