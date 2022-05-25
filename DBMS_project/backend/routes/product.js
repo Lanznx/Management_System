@@ -36,7 +36,27 @@ router.post("/getAllProducts", async function (req, res, next) {
       if (rows.length == 0) {
         res.status(409).json({ success: false, err: "尚無商品" });
       } else {
-        res.status(200).json({ success: true, allProductInformation: rows });
+        let allProductInformation = [];
+        for (let i = 0; i < rows.length; i++) {
+          let productId = rows[i].productId;
+          let materialRows = await mysqlPoolQuery(
+            "SELECT m.material_id AS materialId, m.material_name AS materialName \
+            FROM material AS m, product_material AS pm \
+            WHERE m.material_id = pm.material_id AND product_id = ?",
+            productId
+          );
+          allProductInformation.push({
+            productId: productId,
+            name: rows[i].name,
+            price: rows[i].price,
+            amount: rows[i].amount,
+            materials: materialRows,
+          });
+        }
+        res.status(200).json({
+          success: true,
+          allProductInformation: allProductInformation,
+        });
       }
     }
   } catch (err) {
@@ -66,7 +86,22 @@ router.post("/getProduct", async function (req, res, next) {
         "SELECT product_id AS productId, product_name AS name, product_price AS price, product_amount AS amount FROM product WHERE user_id = ? AND product_id = ?",
         [userId, productId]
       );
-      res.status(200).json({ success: true, productInformation: rows });
+      let materialRows = await mysqlPoolQuery(
+        "SELECT m.material_id AS materialId, m.material_name AS materialName \
+        FROM material AS m, product_material AS pm \
+        WHERE m.material_id = pm.material_id AND product_id = ?",
+        productId
+      );
+      res.status(200).json({
+        success: true,
+        productInformation: {
+          productId: rows[0].productId,
+          name: rows[0].name,
+          price: rows[0].price,
+          amount: rows[0].amount,
+          materials: materialRows,
+        },
+      });
     }
   } catch (err) {
     res.status(404).json({ success: false, err: err });
