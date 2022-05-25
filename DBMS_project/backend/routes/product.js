@@ -119,14 +119,14 @@ router.post("/addNewProduct", async function (req, res, next) {
   const userId = req.body.userId;
   const productName = req.body.productName;
   const productPrice = req.body.productPrice;
-  const amount = req.body.amount || 0;
-  const materialId = req.body.materialId;
+  const productAmount = req.body.productAmount || 0;
+  const materialIds = req.body.materialIds;
   const productId = uuidv4();
   let insertProduct = {
     product_id: productId,
     product_name: productName,
     product_price: productPrice,
-    product_amount: amount,
+    product_amount: productAmount,
     user_id: userId,
   };
   try {
@@ -144,7 +144,7 @@ router.post("/addNewProduct", async function (req, res, next) {
         await mysqlPoolQuery("INSERT INTO product SET ?", insertProduct);
         let allMaterialExisted = true;
         for (let i = 0; i < materialId.length; i++) {
-          let materialExisted = await checkMaterialId(materialId[i]);
+          let materialExisted = await checkMaterialId(materialIds[i]);
           if (!materialExisted) {
             allMaterialExisted = false;
           }
@@ -155,10 +155,10 @@ router.post("/addNewProduct", async function (req, res, next) {
             err: "原料不存在",
           });
         } else {
-          for (let i = 0; i < materialId.length; i++) {
+          for (let i = 0; i < materialIds.length; i++) {
             let insertProductMaterial = {
               product_id: productId,
-              material_id: materialId[i],
+              material_id: materialIds[i],
             };
             await mysqlPoolQuery(
               "INSERT INTO product_material SET ?",

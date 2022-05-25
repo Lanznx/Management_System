@@ -517,10 +517,10 @@
                 "productPrice": {
                   "example": "any"
                 },
-                "amount": {
+                "productAmount": {
                   "example": "any"
                 },
-                "materialId": {
+                "materialIds": {
                   "example": "any"
                 }
               }
