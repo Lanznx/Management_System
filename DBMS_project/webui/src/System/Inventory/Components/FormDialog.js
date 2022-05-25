@@ -3,6 +3,7 @@ import { useState, useEffect } from "react"
 
 import Button from "@mui/material/Button"
 import TextField from "@mui/material/TextField"
+import MultipleSelectChip from "./MultipleSelectChip"
 import Dialog from "@mui/material/Dialog"
 import DialogActions from "@mui/material/DialogActions"
 import DialogContent from "@mui/material/DialogContent"
@@ -40,21 +41,35 @@ export default function FormDialog(props) {
           <DialogContent>
             <DialogContentText>加了也沒用，就跟系學會一樣</DialogContentText>
             {/* use props.new to dynamically create a TextField input form */}
-            {props.new.attribute.map((item, index) => {
-              return (
-                <TextField
-                  key={index}
-                  autoFocus
-                  margin="dense"
-                  label={item.label}
-                  type={item.type}
-                  fullWidth
-                  onChange={(e) => {
-                    setNewObj({ ...newObj, [item.id]: e.target.value })
-                  }}
-                />
-              )}
-            )}
+            {
+              props.attribute.map((item, index) => {
+                if(item.type == "chip"){
+                  return(
+                    <MultipleSelectChip
+                      id = {item.id}
+                      label={item.label}
+                      options={item.options}
+                      setNewObj={setNewObj}
+                      newObj={newObj}
+                    />
+                  )
+                }
+
+                return (
+                  <TextField
+                    key={index}
+                    autoFocus
+                    margin="dense"
+                    label={item.label}
+                    type={item.type}
+                    fullWidth
+                    onChange={(e) => {
+                      setNewObj({ ...newObj, [item.id]: e.target.value })
+                    }}
+                  />
+                )
+              })
+            }
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose}>取消</Button>
@@ -62,11 +77,11 @@ export default function FormDialog(props) {
               onClick={async() => {
                 setProgressing(true)
 
+                console.log(newObj)
                 // use props.new.api to add newObj to the database
-                setResp(await props.new.api(newObj))
+                setResp(await props.APIs.addApi(newObj))
                 setProgressing(false)
-
-
+                await props.refresh()
               }}
             >
               送出

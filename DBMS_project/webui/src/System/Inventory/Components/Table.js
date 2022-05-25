@@ -23,6 +23,7 @@ import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FeedIcon from "@mui/icons-material/Feed";
 import { visuallyHidden } from "@mui/utils";
+import { Backdrop, CircularProgress } from "@mui/material";
 
 import FormDialog from "./FormDialog";
 
@@ -91,9 +92,16 @@ export default function EnhancedTable(props) {
   const [orderBy, setOrderBy] = React.useState("price");
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [isBackdropOpen, setIsBackdropOpen] = React.useState(false);
 
-  function handleDelete() {
+  async function handleDelete(id) {
     // 到時候 call API 刪除
+    console.log("delete", id);
+    setIsBackdropOpen(true);
+    let resp = await props.APIs.delApi(id);
+    console.log("delete resp: ", resp);
+    await props.refresh();
+    setIsBackdropOpen(false);
   }
 
   const EnhancedTableToolbar = (props) => {
@@ -117,7 +125,7 @@ export default function EnhancedTable(props) {
         )}
 
         {/*  這裡是 Dialog */}
-        <FormDialog label={props.label} new={props.new}/>
+        <FormDialog label={props.label} APIs={props.APIs} attribute={props.attribute} refresh={props.refresh}/>
       </Toolbar>
     );
   }
@@ -142,11 +150,19 @@ export default function EnhancedTable(props) {
 
   return (
     <Box sx={{ width: "100%" }}>
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={isBackdropOpen}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
       <Paper sx={{ width: "100%", mb: 2 }}>
         <EnhancedTableToolbar
           label={props.label}
           rows={props.rows}
-          new={props.new}
+          attribute={props.attribute}
+          APIs={props.APIs}
+          refresh={props.refresh}
         />
         <TableContainer>
           <Table
@@ -196,7 +212,7 @@ export default function EnhancedTable(props) {
                         <Button variant="outlined" startIcon={<FeedIcon />}>
                          詳細資料
                         </Button>
-                        <IconButton aria-label="delete" onClick={handleDelete}>
+                        <IconButton aria-label="delete" onClick={ () => {handleDelete(row.id)} }>
                           <DeleteIcon />
                         </IconButton>
                       </TableCell>
