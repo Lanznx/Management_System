@@ -12,15 +12,32 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 
+import { logIn } from './APIs';
+import { login } from '../store/actions/index';
+
 export default function SignIn() {
-  const handleSubmit = (event) => {
+  const [open, setOpen] = React.useState(false);
+  const [message, setMessage] = React.useState('');
+
+  const handleSubmit = async(event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     console.log({
       email: data.get('email'),
       password: data.get('password'),
     });
-  };
+
+    const userId = await logIn(data.get('email'), data.get('password'))
+    console.log(userId);
+
+    if (userId) {
+      login(userId);
+      
+    }else{
+      setOpen(true);
+      setMessage('Invalid username or password');
+    }
+  }
 
   return (
     <Container component="main" maxWidth="xs">
@@ -87,6 +104,25 @@ export default function SignIn() {
           </Grid>
         </Box>
       </Box>
+      <Collapse in={open}>
+        <Alert
+          action={
+            <IconButton
+              aria-label="close"
+              color="inherit"
+              size="small"
+              onClick={() => {
+                setOpen(false);
+              }}
+            >
+              <CloseIcon fontSize="inherit" />
+            </IconButton>
+          }
+          sx={{ mb: 2 }}
+        >
+          <AlertTitle>{ message }</AlertTitle>
+        </Alert>
+      </Collapse>
     </Container>
   );
 }
