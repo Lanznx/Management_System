@@ -5,20 +5,18 @@ const useAuth = () => {
     return user && user.loggedIn;
 };
 
-const ProtectedRoute = ({ children, ...rest }) => {
+const ProtectedRoute = () => {
     const isLoggedIn = useAuth();
     return (
         <Route
-            {...rest}
-            render={({ location }) =>
+            render={() =>
                 isLoggedIn ? (
-                    children
+                    <Navigate to="/sys/dashboard" />
                 ) : (
-                    <Navigate to={{ pathname: "/signin", state: { from: location } }} />
+                    <Navigate to="/signin" />
                 )
-            }
+            } 
         />
-    );
 }
 
 export default ProtectedRoute;
