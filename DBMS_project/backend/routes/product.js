@@ -143,7 +143,8 @@ router.post("/addNewProduct", async function (req, res, next) {
       } else {
         await mysqlPoolQuery("INSERT INTO product SET ?", insertProduct);
         let allMaterialExisted = true;
-        for (let i = 0; i < materialId.length; i++) {
+        for (let i = 0; i < materialIds.length; i++) {
+          console.log(materialIds[i]);
           let materialExisted = await checkMaterialId(materialIds[i]);
           if (!materialExisted) {
             allMaterialExisted = false;
