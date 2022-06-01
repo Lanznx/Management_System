@@ -34,7 +34,7 @@ router.post("/getAllProducts", async function (req, res, next) {
         userId
       );
       if (rows.length == 0) {
-        res.status(409).json({ success: false, err: "尚無商品" });
+        res.status(200).json({ success: true, message: "尚無商品" });
       } else {
         let allProductInformation = [];
         for (let i = 0; i < rows.length; i++) {

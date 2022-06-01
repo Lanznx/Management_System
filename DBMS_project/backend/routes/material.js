@@ -30,7 +30,7 @@ router.post("/getAllMaterials", async function (req, res, next) {
         userId
       );
       if (rows.length == 0) {
-        res.status(409).json({ success: false, err: "尚無原料" });
+        res.status(200).json({ success: true, message: "尚無原料" });
       } else {
         res.status(200).json({ success: true, allMaterialInformation: rows });
       }
