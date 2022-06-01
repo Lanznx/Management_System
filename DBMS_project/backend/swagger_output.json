@@ -665,11 +665,40 @@
     "/order/addNewTag": {
       "post": {
         "tags": [
-          "Unfinished"
+          "Order"
         ],
         "description": "",
-        "parameters": [],
-        "responses": {}
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "userId": {
+                  "example": "any"
+                },
+                "tagName": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "取得成功"
+          },
+          "201": {
+            "description": "Created"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "409": {
+            "description": "使用者不存在或標籤已存在"
+          }
+        }
       }
     },
     "/order/addNewOrder": {
