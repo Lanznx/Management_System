@@ -150,7 +150,7 @@ router.post("/addNewMaterial", async function (req, res, next) {
             amount: materialAmount,
             price: materialPrice,
             cost: materialAmount * materialPrice,
-            time: new Date(Date.now()),
+            time: new Date(),
           };
           await mysqlPoolQuery(
             "INSERT INTO material_history SET ?",
@@ -216,7 +216,7 @@ router.post("/updateAmount", async function (req, res, next) {
     amount: amountChange,
     price: price,
     cost: amountChange * price,
-    time: new Date(Date.now()),
+    time: new Date(),
   };
   try {
     const userExisted = await checkUserId(userId);
