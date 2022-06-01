@@ -76,7 +76,7 @@ router.post("/getProduct", async function (req, res, next) {
   const productId = req.body.productId;
   try {
     const userExisted = await checkUserId(userId);
-    const productExisted = await checkProductId(productId);
+    const productExisted = await checkProductId(productId, userId);
     if (!userExisted) {
       res.status(409).json({ success: false, err: "使用者不存在" });
     } else if (!productExisted) {
@@ -145,7 +145,7 @@ router.post("/addNewProduct", async function (req, res, next) {
         let allMaterialExisted = true;
         for (let i = 0; i < materialIds.length; i++) {
           console.log(materialIds[i]);
-          let materialExisted = await checkMaterialId(materialIds[i]);
+          let materialExisted = await checkMaterialId(materialIds[i], userId);
           if (!materialExisted) {
             allMaterialExisted = false;
           }
@@ -190,7 +190,7 @@ router.post("/deleteProduct", async function (req, res, next) {
   const productId = req.body.productId;
   try {
     const userExisted = await checkUserId(userId);
-    const productExisted = await checkProductId(productId);
+    const productExisted = await checkProductId(productId, userId);
     if (!userExisted) {
       res.status(409).json({ success: false, err: "使用者不存在" });
     } else if (!productExisted) {
@@ -220,7 +220,7 @@ router.post("/updateAmount", async function (req, res, next) {
   const amountChange = req.body.amountChange;
   try {
     const userExisted = await checkUserId(userId);
-    const productExisted = await checkProductId(productId);
+    const productExisted = await checkProductId(productId, userId);
     if (!userExisted) {
       res.status(409).json({ success: false, err: "使用者不存在" });
     } else if (!productExisted) {

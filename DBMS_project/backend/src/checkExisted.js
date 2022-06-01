@@ -16,9 +16,12 @@ const checkUserId = (userId) => {
   });
 };
 
-const checkMaterialId = (materialId) => {
+const checkMaterialId = (materialId, userId) => {
   return new Promise((resolve, reject) => {
-    mysqlPoolQuery("SELECT * FROM material WHERE material_id = ?", materialId)
+    mysqlPoolQuery(
+      "SELECT * FROM material WHERE material_id = ? AND user_id = ?",
+      [materialId, userId]
+    )
       .then((rows) => {
         if (rows.length == 0) {
           resolve(false);
@@ -32,9 +35,12 @@ const checkMaterialId = (materialId) => {
   });
 };
 
-const checkProductId = (productId) => {
+const checkProductId = (productId, userId) => {
   return new Promise((resolve, reject) => {
-    mysqlPoolQuery("SELECT * FROM product WHERE product_id = ?", productId)
+    mysqlPoolQuery(
+      "SELECT * FROM product WHERE product_id = ? AND user_id = ?",
+      [productId, userId]
+    )
       .then((rows) => {
         if (rows.length == 0) {
           resolve(false);
@@ -48,4 +54,23 @@ const checkProductId = (productId) => {
   });
 };
 
-module.exports = { checkUserId, checkMaterialId, checkProductId };
+const checkTagId = (tagId, userId) => {
+  return new Promise((resolve, reject) => {
+    mysqlPoolQuery("SELECT * FROM tag WHERE tag_id = ? AND user_id = ?", [
+      tagId,
+      userId,
+    ])
+      .then((rows) => {
+        if (rows.length == 0) {
+          resolve(false);
+        } else {
+          resolve(true);
+        }
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+};
+
+module.exports = { checkUserId, checkMaterialId, checkProductId, checkTagId };

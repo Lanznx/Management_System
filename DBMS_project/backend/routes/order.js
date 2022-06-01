@@ -3,7 +3,11 @@ var router = express.Router();
 
 const { v4: uuidv4 } = require("uuid");
 
-const { checkUserId, checkProductId } = require("../src/checkExisted");
+const {
+  checkUserId,
+  checkProductId,
+  checkTagId,
+} = require("../src/checkExisted");
 
 /* GET order listening. */
 router.get("/", function (req, res, next) {
@@ -86,8 +90,76 @@ router.post("/addNewTag", async function (req, res, next) {
 
 router.post("/addNewOrder", async function (req, res, next) {
   /*
-  #swagger.tags = ['Unfinished']
+  #swagger.tags = ['Order']
+  #swagger.responses[409] = {
+    description: '使用者不存在或存貨或標籤不存在'
+  }
   */
+  const mysqlPoolQuery = req.pool;
+  const userId = req.body.userId;
+  const orderData = req.body.orderData;
+  const totalPrice = req.body.totalPrice;
+  const tagId = req.body.tagId;
+  const orderId = uuidv4();
+  let insertOrderSQL = {
+    order_id: orderId,
+    create_time: new Date(),
+    total_price: totalPrice,
+    user_id: userId,
+  };
+
+  try {
+    const userExisted = await checkUserId(userId);
+    if (!userExisted) {
+      res.status(409).json({ success: false, err: "使用者不存在" });
+    } else {
+      let allProductExisted = true;
+      for ([productId] of Object.entries(orderData)) {
+        let productExisted = await checkProductId(productId, userId);
+        if (!productExisted) {
+          allProductExisted = false;
+        }
+      }
+      if (!allProductExisted) {
+        res.status(409).json({ success: false, err: "存貨不存在" });
+      } else {
+        await mysqlPoolQuery("INSERT INTO `order` SET ?", insertOrderSQL);
+        let allTagsExisted = true;
+        for (let i = 0; i < tagId.length; i++) {
+          let tagExisted = await checkTagId(tagId[i], userId);
+          if (!tagExisted) {
+            allTagsExisted = false;
+            break;
+          }
+        }
+        if (!allTagsExisted) {
+          res.status(409).json({ success: false, err: "標籤不存在" });
+        } else {
+          for (let i = 0; i < tagId.length; i++) {
+            let insertOTSQL = {
+              order_id: orderId,
+              tag_id: tagId[i],
+            };
+            await mysqlPoolQuery("INSERT INTO `order_tag` SET ?", insertOTSQL);
+          }
+          for ([productId, amount] of Object.entries(orderData)) {
+            let insertOPSQL = {
+              order_id: orderId,
+              product_id: productId,
+              amount: amount,
+            };
+            await mysqlPoolQuery(
+              "INSERT INTO `order_product` SET ?",
+              insertOPSQL
+            );
+          }
+          res.status(201).json({ success: true, message: "新增訂單成功" });
+        }
+      }
+    }
+  } catch (err) {
+    res.status(404).json({ success: false, err: err });
+  }
 });
 
 router.post("/getAllOrders", async function (req, res, next) {

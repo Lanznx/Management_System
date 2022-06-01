@@ -55,7 +55,7 @@ router.post("/getMaterialHistory", async function (req, res, next) {
   const materialId = req.body.materialId;
   try {
     const userExisted = await checkUserId(userId);
-    const materialExisted = await checkMaterialId(materialId);
+    const materialExisted = await checkMaterialId(materialI, userId);
     if (!userExisted) {
       res.status(409).json({ success: false, err: "使用者不存在" });
     } else if (!materialExisted) {
@@ -177,7 +177,7 @@ router.post("/deleteMaterial", async function (req, res, next) {
   const materialId = req.body.materialId;
   try {
     const userExisted = await checkUserId(userId);
-    const materialExisted = await checkMaterialId(materialId);
+    const materialExisted = await checkMaterialId(materialId, userId);
     if (!userExisted) {
       res.status(409).json({ success: false, err: "使用者不存在" });
     } else if (!materialExisted) {
@@ -220,7 +220,7 @@ router.post("/updateAmount", async function (req, res, next) {
   };
   try {
     const userExisted = await checkUserId(userId);
-    const materialExisted = await checkMaterialId(materialId);
+    const materialExisted = await checkMaterialId(materialId, userId);
     if (!userExisted) {
       res.status(409).json({ success: false, err: "使用者不存在" });
     } else if (!materialExisted) {
