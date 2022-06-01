@@ -164,8 +164,50 @@ router.post("/addNewOrder", async function (req, res, next) {
 
 router.post("/getAllOrders", async function (req, res, next) {
   /*
-  #swagger.tags = ['Unfinished']
+  #swagger.tags = ['Order']
+  #swagger.responses[409] = {
+    description: '使用者不存在'
+  }
   */
+  const mysqlPoolQuery = req.pool;
+  const userId = req.body.userId;
+  try {
+    const userExisted = await checkUserId(userId);
+    if (!userExisted) {
+      res.status(409).json({ success: false, err: "使用者不存在" });
+    } else {
+      let rows = await mysqlPoolQuery(
+        "SELECT order_id AS orderId, create_time AS createTime, total_price AS totalPrice FROM `order` WHERE user_id = ? ",
+        userId
+      );
+      if (rows.length == 0) {
+        res.status(200).json({ success: true, message: "尚無訂單" });
+      } else {
+        for (let i = 0; i < rows.length; i++) {
+          //get orderProducts
+          let productRows = await mysqlPoolQuery(
+            "SELECT p.product_id AS productId, p.product_name AS productName, p.product_price AS productPrice, op.amount AS productAmount \
+            FROM product p, `order` o, order_product op \
+            WHERE p.product_id = op.product_id AND o.order_id = op.order_id AND o.order_id = ?",
+            rows[i].orderId
+          );
+          rows[i].orderProducts = productRows;
+          //get tags
+          let tagRows = await mysqlPoolQuery(
+            "SELECT t.tag_id AS tagId, t.tag_name AS tagName \
+            FROM tag t, `order` o, order_tag ot \
+            WHERE t.tag_id = ot.tag_id AND o.order_id = ot.order_id AND o.order_id = ?",
+            rows[i].orderId
+          );
+          rows[i].tags = tagRows;
+        }
+
+        res.status(200).json({ success: true, allOrdersData: rows });
+      }
+    }
+  } catch (err) {
+    res.status(404).json({ success: false, err: err });
+  }
 });
 
 module.exports = router;
