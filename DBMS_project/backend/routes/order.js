@@ -13,8 +13,34 @@ router.get("/", function (req, res, next) {
 
 router.post("/getTagDict", async function (req, res, next) {
   /*
-  #swagger.tags = ['Unfinished']
+  #swagger.tags = ['Order']
+  #swagger.responses[409] = {
+    description: '使用者不存在'
+  }
+  #swagger.responses[200] = {
+    description: '取得成功',
+  }
   */
+  const mysqlPoolQuery = req.pool;
+  const userId = req.body.userId;
+  try {
+    const userExisted = await checkUserId(userId);
+    if (!userExisted) {
+      res.status(409).json({ success: false, err: "使用者不存在" });
+    } else {
+      let rows = await mysqlPoolQuery(
+        "SELECT tag_id AS tagId, tag_name AS tagName FROM tag WHERE user_id = ?",
+        userId
+      );
+      let tagDict = {};
+      for (let i = 0; i < rows.length; i++) {
+        tagDict[rows[i].tagId] = rows[i].tagName;
+      }
+      res.status(200).json({ success: true, tagDict: tagDict });
+    }
+  } catch (err) {
+    res.status(404).json({ success: false, err: err });
+  }
 });
 
 router.post("/addNewTag", async function (req, res, next) {
