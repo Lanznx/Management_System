@@ -12,8 +12,8 @@ import { getAllProducts } from "./API.js";
 const axios = require("axios");
 
 
-
-export default function Order() {
+// this is the main component of the system
+export default function Order() { 
   const [productInfos, setProductInfos] = useState([]);
   const [canSend, setCanSend] = useState(false);
   const [orders, setOrders] = useState([]);
