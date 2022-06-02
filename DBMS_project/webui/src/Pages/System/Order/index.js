@@ -8,9 +8,8 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import { FormControl } from "@mui/material";
 import InputLabel from "@mui/material/InputLabel";
 import { MenuItem, Select } from "@mui/material";
-import {BASE_URL} from "../../../baseUrl";
+import { getAllProducts } from "./API.js";
 const axios = require("axios");
-const baseUrl = process.env.REACT_APP_BASE_URL;
 
 
 
@@ -23,16 +22,8 @@ export default function Order() {
   const [tags, setTags] = useState(["製作中", "未完成", "已完成"]);
 
   useEffect(() => {
-    axios({
-      method: "post",
-      url: "https://nccu-dbms-team11.herokuapp.com/product/getAllProducts",
-      data: {
-        userId: "6cc4a5be-08ba-41de-946d-a2e5c6ed43c2",
-      },
-    }).then((response) => {
-      let allProduct = response.data.allProductInformation;
-      setProductInfos(allProduct);
-    });
+    let allProduct = getAllProducts()
+    setProductInfos(allProduct);
   }, []);
 
   function createTag() {

@@ -1,15 +1,12 @@
 const axios = require('axios')
 const baseUrl = process.env.REACT_APP_BASE_URL;
 
-async function getAllProducts(username, password, email, phoneNumber){
-    const result = await axios.post(baseUrl + "/user/signup", {
-        username: username,
-        password: password,
-        email: email,
-        phoneNumber: phoneNumber
+async function getAllProducts(){
+    const result = await axios.post(baseUrl + "/product/getAllProducts", {
+        userId: "6cc4a5be-08ba-41de-946d-a2e5c6ed43c2",
     })
-    
-    return result.data.message
+    console.log(result.data);
+    return result.data.allProductInformation
 }
 
 async function logIn(username, password){
