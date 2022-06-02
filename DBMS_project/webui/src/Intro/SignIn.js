@@ -11,18 +11,11 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import Collapse from '@mui/material/Collapse';
-import Alert from '@mui/material/Alert';
-import IconButton from '@mui/material/IconButton';
-import CloseIcon from '@mui/icons-material/Close';
-import AlertTitle from '@mui/material/AlertTitle';
 
-import { logIn } from './APIs'; 
-import { useDispatch } from 'react-redux';
-import { login, logout } from '../../Store/userSlice'
+import { logIn } from './APIs';
+import { login } from '../store/actions/index';
 
 export default function SignIn() {
-  const dispatch = useDispatch();
   const [open, setOpen] = React.useState(false);
   const [message, setMessage] = React.useState('');
 
@@ -38,7 +31,8 @@ export default function SignIn() {
     console.log(userId);
 
     if (userId) {
-      dispatch( login(userId) );
+      login(userId);
+      
     }else{
       setOpen(true);
       setMessage('Invalid username or password');

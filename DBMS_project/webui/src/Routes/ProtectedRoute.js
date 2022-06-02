@@ -1,4 +1,4 @@
-import { Navigate, Outlet, Route} from "react-router-dom";
+import { Navigate,  } from "react-router-dom";
 
 const useAuth = () => {
     const user = { loggedIn: false, userId: null };
@@ -8,12 +8,15 @@ const useAuth = () => {
 const ProtectedRoute = () => {
     const isLoggedIn = useAuth();
     return (
-        isLoggedIn ? (
-            <Outlet />
-        ) : (
-            <Navigate to="/signin" />
-        )
-    );
+        <Route
+            render={() =>
+                isLoggedIn ? (
+                    <Navigate to="/sys/dashboard" />
+                ) : (
+                    <Navigate to="/signin" />
+                )
+            } 
+        />
 }
 
 export default ProtectedRoute;
