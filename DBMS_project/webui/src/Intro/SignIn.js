@@ -35,7 +35,7 @@ export default function SignIn() {
     console.log(userId);
 
     if (userId) {
-      window.alert("登入成功");
+      window.alert("登入成功 meow meow");
       window.location.href = '/sys';
     }else{
       setOpen(true);
