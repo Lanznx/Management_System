@@ -1,7 +1,7 @@
 import { Navigate,  } from "react-router-dom";
 
 const useAuth = () => {
-    const user = { loggedIn: false, userId: null };
+    const user = { loggedIn: true, userId: "pinyan" };
     return user && user.loggedIn;
 };
 

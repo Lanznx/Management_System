@@ -10,7 +10,6 @@ export default function ProductCard(props) {
   const [amount, setAmount] = React.useState(0);
   const [backColor, setBackColor] = React.useState(true);
   React.useEffect(() => {
-    console.log("tozeroooo");
     if (props.toZero) setAmount(0);
     props.setToZero(false);
     if (amount > productAmount) {
@@ -83,6 +82,7 @@ export default function ProductCard(props) {
             alignContent: "baseline",
             background: backColor ? "primary" : "#C4090E",
             color: backColor ? "#fff" : "#C4090E",
+            minWidth: "5px",
             "&:hover": {
               background: backColor ? "primary" : "#C4090E",
               color: backColor ? "#fff" : "#C4090E",
@@ -117,6 +117,7 @@ export default function ProductCard(props) {
           sx={{
             minHeight: "30px",
             background: backColor ? "primary" : "#C4090E",
+            minWidth: "5px",
             "&:hover": {
               background: backColor ? "primary" : "#fff",
               color: backColor ? "#fff" : "#000",

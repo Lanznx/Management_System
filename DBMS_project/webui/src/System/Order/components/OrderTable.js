@@ -9,7 +9,6 @@ import Paper from "@mui/material/Paper";
 
 export default function OrderTable(props) {
   const [totalAmount, setTotalAmount] = React.useState(0);
-  const [totalPrice, setTotalPrice] = React.useState(0);
 
   React.useEffect(() => {
     let subTotalAmount = 0;
@@ -19,13 +18,13 @@ export default function OrderTable(props) {
       subTotalAmount += order.amount;
       subTotalPrice += order.price * order.amount;
       setTotalAmount(subTotalAmount);
-      setTotalPrice(subTotalPrice);
+      props.setTotalPrice(subTotalPrice);
     });
   }, [props.orders]);
 
   React.useEffect(() => {
     setTotalAmount(0);
-    setTotalPrice(0);
+    props.setTotalPrice(0);
   }, [props.toZero]);
 
   return (
@@ -46,7 +45,6 @@ export default function OrderTable(props) {
             </TableCell>
           </TableRow>
         </TableHead>
-
         <TableBody>
           {props.orders.map((order) => (
             <TableRow
@@ -69,7 +67,7 @@ export default function OrderTable(props) {
               {totalAmount}
             </TableCell>
             <TableCell align="right" sx={{ fontWeight: "bold" }}>
-              {totalPrice}
+              {props.totalPrice}
             </TableCell>
           </TableRow>
         </TableBody>

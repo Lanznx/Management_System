@@ -5,12 +5,23 @@ import { useEffect, useState } from "react";
 import SendIcon from "@mui/icons-material/Send";
 import IconButton from "@mui/material/IconButton";
 import CancelIcon from "@mui/icons-material/Cancel";
+import { FormControl } from "@mui/material";
+import InputLabel from "@mui/material/InputLabel";
+import { MenuItem, Select } from "@mui/material";
+import {BASE_URL} from "../../../baseUrl";
 const axios = require("axios");
+const baseUrl = process.env.REACT_APP_BASE_URL;
+
+
+
 export default function Order() {
   const [productInfos, setProductInfos] = useState([]);
   const [canSend, setCanSend] = useState(false);
   const [orders, setOrders] = useState([]);
   const [toZero, setToZero] = useState(false);
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [tags, setTags] = useState(["製作中", "未完成", "已完成"]);
+
   useEffect(() => {
     axios({
       method: "post",
@@ -23,6 +34,42 @@ export default function Order() {
       setProductInfos(allProduct);
     });
   }, []);
+
+  function createTag() {
+    axios({
+      method: "post",
+      url: "https://nccu-dbms-team11.herokuapp.com/product/addNewTag",
+      data: {
+        userId: "6cc4a5be-08ba-41de-946d-a2e5c6ed43c2",
+        tagName: tags[tags.length - 1],
+      },
+    })
+      .then((response) => {
+        window.alert(`新增標籤 ${tags[tags.length - 1]} 成功`);
+      })
+      .catch((error) => {
+        window.alert(error);
+      });
+  }
+  function sendOrder() {
+    axios({
+      method: "post",
+      url: "https://nccu-dbms-team11.herokuapp.com/order/addNewOrder",
+      data: {
+        userId: "6cc4a5be-08ba-41de-946d-a2e5c6ed43c2",
+        order: orders,
+        totalPrice: totalPrice,
+        tagId: [""],
+      },
+    })
+      .then((response) => {
+        console.log(response);
+        window.alert("訂單已送出");
+      })
+      .catch((error) => {
+        window.alert(error);
+      });
+  }
 
   function orderRec(name, productId, price, amount) {
     console.log("first");
@@ -43,6 +90,12 @@ export default function Order() {
     orders.map((order) => {
       if (order.amount > 0) {
         setCanSend(true);
+      } else if (order.amount === 0) {
+        // const newOrders = [
+        //   ...orders.filter((item) => item.productId !== productId),
+        //   order,
+        // ];
+        // setOrders(newOrders);
       }
     });
   }, [orders]);
@@ -64,7 +117,31 @@ export default function Order() {
       </Grid>
 
       <Grid item md={6}>
-        <OrderTable orders={orders} toZero={toZero} setToZero={setToZero} />
+        <FormControl>
+          <InputLabel id="demo-simple-select-label">收件人</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={10}
+            onChange={(e) => {
+              console.log(e.target.value);
+            }}
+          >
+            {tags.map((tag) => (
+              <MenuItem key={tag} value={tag}>
+                {tag}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        <OrderTable
+          orders={orders}
+          toZero={toZero}
+          setToZero={setToZero}
+          totalPrice={totalPrice}
+          setTotalPrice={setTotalPrice}
+        />
         <Grid item md={12}>
           <IconButton
             disabled={!canSend}
@@ -86,6 +163,7 @@ export default function Order() {
             onClick={() => {
               if (canSend) {
                 setOrders(orders.filter((item) => item.productId === 0));
+                sendOrder();
                 setToZero(true);
                 setCanSend(false);
               }
