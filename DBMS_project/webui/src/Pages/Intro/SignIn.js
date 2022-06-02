@@ -39,6 +39,8 @@ export default function SignIn() {
 
     if (userId) {
       dispatch( login(userId) );
+      window.alert("登入成功");
+      window.location.href = '/sys';
     }else{
       setOpen(true);
       setMessage('Invalid username or password');
