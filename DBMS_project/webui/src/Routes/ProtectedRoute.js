@@ -1,4 +1,4 @@
-import { Navigate, Outlet, Route} from "react-router-dom";
+import { Navigate, Outlet,  } from "react-router-dom";
 
 const useAuth = () => {
     const user = { loggedIn: true, userId: "pinyan" };

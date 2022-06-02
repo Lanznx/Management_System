@@ -62,6 +62,42 @@ export default function Order() {
       });
   }
 
+  function createTag() {
+    axios({
+      method: "post",
+      url: "https://nccu-dbms-team11.herokuapp.com/product/addNewTag",
+      data: {
+        userId: "6cc4a5be-08ba-41de-946d-a2e5c6ed43c2",
+        tagName: tags[tags.length - 1],
+      },
+    })
+      .then((response) => {
+        window.alert(`新增標籤 ${tags[tags.length - 1]} 成功`);
+      })
+      .catch((error) => {
+        window.alert(error);
+      });
+  }
+  function sendOrder() {
+    axios({
+      method: "post",
+      url: "https://nccu-dbms-team11.herokuapp.com/order/addNewOrder",
+      data: {
+        userId: "6cc4a5be-08ba-41de-946d-a2e5c6ed43c2",
+        order: orders,
+        totalPrice: totalPrice,
+        tagId: [""],
+      },
+    })
+      .then((response) => {
+        console.log(response);
+        window.alert("訂單已送出");
+      })
+      .catch((error) => {
+        window.alert(error);
+      });
+  }
+
   function orderRec(name, productId, price, amount) {
     console.log("first");
     let order = {
