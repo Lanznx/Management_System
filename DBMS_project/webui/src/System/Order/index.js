@@ -1,105 +1,71 @@
-import { Grid } from "@mui/material";
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Grid,
+  TextField,
+  Button,
+  Stack,
+} from "@mui/material";
 import ProductCard from "./components/ProductCard.js";
 import OrderTable from "./components/OrderTable";
+import Tag from "./components/tag.js";
 import { useEffect, useState } from "react";
 import SendIcon from "@mui/icons-material/Send";
 import IconButton from "@mui/material/IconButton";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
-import { FormControl } from "@mui/material";
-import InputLabel from "@mui/material/InputLabel";
-import { MenuItem, Select } from "@mui/material";
-import { getAllProducts } from "./API.js";
-const axios = require("axios");
+import {
+  getAllProducts,
+  updateAmount,
+  sendOrder,
+  createTag,
+  getTagDict,
+} from "./APIs.js";
 
-
-// this is the main component of the system
-export default function Order() { 
+export default function Order() {
   const [productInfos, setProductInfos] = useState([]);
   const [canSend, setCanSend] = useState(false);
   const [orders, setOrders] = useState([]);
+  const [orderDatas, setOrderDatas] = useState([]);
   const [toZero, setToZero] = useState(false);
   const [totalPrice, setTotalPrice] = useState(0);
-  const [tags, setTags] = useState(["製作中", "未完成", "已完成"]);
+  const [tags, setTags] = useState({});
+  const [chosedTags, setChosedTags] = useState([]);
+  const [open, setOpen] = useState(false);
+
+
+  console.log("========Orders==========");
+  console.log(orders)
 
   useEffect(() => {
-    let allProduct = getAllProducts()
+    orders.map((order) => {
+      if (order.amount > 0) setCanSend(true);
+    });
+  }, [orders]);
+
+  useEffect(() => {
+    handleGetProducts();
+  }, [toZero, canSend]);
+
+
+  async function handleGetProducts() {
+    let allProduct = await getAllProducts();
     setProductInfos(allProduct);
-  }, []);
+    if (allProduct.length === 0)
+      setProductInfos({
+        name: "暫時沒有商品，可以趕快去新增呦！",
+        productId: "",
+        price: 0,
+        amount: 0,
+      });
 
-  function createTag() {
-    axios({
-      method: "post",
-      url: "https://nccu-dbms-team11.herokuapp.com/product/addNewTag",
-      data: {
-        userId: "6cc4a5be-08ba-41de-946d-a2e5c6ed43c2",
-        tagName: tags[tags.length - 1],
-      },
-    })
-      .then((response) => {
-        window.alert(`新增標籤 ${tags[tags.length - 1]} 成功`);
-      })
-      .catch((error) => {
-        window.alert(error);
-      });
-  }
-  function sendOrder() {
-    axios({
-      method: "post",
-      url: "https://nccu-dbms-team11.herokuapp.com/order/addNewOrder",
-      data: {
-        userId: "6cc4a5be-08ba-41de-946d-a2e5c6ed43c2",
-        order: orders,
-        totalPrice: totalPrice,
-        tagId: [""],
-      },
-    })
-      .then((response) => {
-        console.log(response);
-        window.alert("訂單已送出");
-      })
-      .catch((error) => {
-        window.alert(error);
-      });
-  }
-
-  function createTag() {
-    axios({
-      method: "post",
-      url: "https://nccu-dbms-team11.herokuapp.com/product/addNewTag",
-      data: {
-        userId: "6cc4a5be-08ba-41de-946d-a2e5c6ed43c2",
-        tagName: tags[tags.length - 1],
-      },
-    })
-      .then((response) => {
-        window.alert(`新增標籤 ${tags[tags.length - 1]} 成功`);
-      })
-      .catch((error) => {
-        window.alert(error);
-      });
-  }
-  function sendOrder() {
-    axios({
-      method: "post",
-      url: "https://nccu-dbms-team11.herokuapp.com/order/addNewOrder",
-      data: {
-        userId: "6cc4a5be-08ba-41de-946d-a2e5c6ed43c2",
-        order: orders,
-        totalPrice: totalPrice,
-        tagId: [""],
-      },
-    })
-      .then((response) => {
-        console.log(response);
-        window.alert("訂單已送出");
-      })
-      .catch((error) => {
-        window.alert(error);
-      });
+    let tagDict = await getTagDict();
+    setTags(tagDict);
   }
 
   function orderRec(name, productId, price, amount) {
-    console.log("first");
     let order = {
       name: name,
       productId: productId,
@@ -111,21 +77,53 @@ export default function Order() {
       order,
     ];
     setOrders(newOrders);
+    // add order to new orderDatas by productId and amount
+    let newOrderDatas = {};
+    for (let i = 0; i < newOrders.length; i++) {
+      let order = newOrders[i];
+      if (newOrderDatas[order.productId]) {
+        newOrderDatas[order.productId] += order.amount;
+      } else {
+        newOrderDatas[order.productId] = order.amount;
+      }
+    }
+    setOrderDatas(newOrderDatas);
   }
 
-  useEffect(() => {
-    orders.map((order) => {
-      if (order.amount > 0) {
-        setCanSend(true);
-      } else if (order.amount === 0) {
-        // const newOrders = [
-        //   ...orders.filter((item) => item.productId !== productId),
-        //   order,
-        // ];
-        // setOrders(newOrders);
-      }
-    });
-  }, [orders]);
+  async function handleSendOrder() {
+    const canChangeAmount = await sendOrder(
+      orderDatas,
+      totalPrice,
+      chosedTags
+    );
+    console.log(canChangeAmount);
+    if(canChangeAmount) {
+      orders.map((orders) => {
+        updateAmount(orders.productId, -orders.amount);
+      });
+    } else {
+      window.alert("Not enough amount");
+    }
+  }
+
+  async function handleCreateTag() {
+    let tag = document.getElementById("tag").value;
+    let tagDict = await getTagDict();
+    let tagId = Object.keys(tagDict).find(
+      (key) => tagDict[key] === tag
+    );
+    if (tagDict[tagId]) {
+      window.alert("此標籤已存在");
+    } else if (!tag) {
+      window.alert("您必須輸入標籤名稱");
+    } else {
+      await createTag(tag);
+      let tagDict = await getTagDict();
+      setTags(tagDict);
+      window.alert("新增標籤成功");
+      setOpen(false);
+    }
+  }
 
   return (
     <Grid container spacing={2} sx={{ display: "flex" }}>
@@ -143,24 +141,57 @@ export default function Order() {
         ))}
       </Grid>
 
-      <Grid item md={6}>
-        <FormControl>
-          <InputLabel id="demo-simple-select-label">收件人</InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            value={10}
-            onChange={(e) => {
-              console.log(e.target.value);
+      <Grid container md={6}>
+        <Stack
+          md={11}
+          alignItems="center"
+          spacing={1}
+          direction="row"
+          flexWrap="wrap"
+        >
+          <IconButton
+            onClick={() => {
+              setOpen(true);
             }}
           >
-            {tags.map((tag) => (
-              <MenuItem key={tag} value={tag}>
-                {tag}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+            <AddCircleIcon />
+          </IconButton>
+          <Dialog open={open} onClose={() => setOpen(false)}>
+            <DialogTitle>請輸入標籤</DialogTitle>
+            <DialogContent>
+              <TextField
+                autoFocus
+                id="tag"
+                label="Tag"
+                type="text"
+                fullWidth
+                variant="standard"
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={() => setOpen(false)}>取消</Button>
+              <Button
+                onClick={() => {
+                  handleCreateTag();
+                }}
+              >
+                提交
+              </Button>
+            </DialogActions>
+          </Dialog>
+
+          {Object.values(tags).map((tag) => (
+            <Tag
+              toZero={toZero}
+              setToZero={setToZero}
+              key={tag}
+              tag={tag}
+              tags={tags}
+              chosedTags={chosedTags}
+              setChosedTags={setChosedTags}
+            />
+          ))}
+        </Stack>
 
         <OrderTable
           orders={orders}
@@ -177,7 +208,8 @@ export default function Order() {
               "&:hover": { color: "#C4090E" },
             }}
             onClick={() => {
-              setOrders(orders.filter((item) => item.productId === 0));
+              setOrders([]);
+              setOrderDatas([]);
               setToZero(true);
               setCanSend(false);
             }}
@@ -188,11 +220,13 @@ export default function Order() {
             disabled={!canSend}
             sx={{ color: canSend ? "#1976d2" : "grey" }}
             onClick={() => {
+
               if (canSend) {
-                setOrders(orders.filter((item) => item.productId === 0));
-                sendOrder();
+                setOrders([]);
+                setOrderDatas([]);
                 setToZero(true);
                 setCanSend(false);
+                handleSendOrder();
               }
             }}
           >

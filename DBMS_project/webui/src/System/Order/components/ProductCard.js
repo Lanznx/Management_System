@@ -12,7 +12,7 @@ export default function ProductCard(props) {
   React.useEffect(() => {
     if (props.toZero) setAmount(0);
     props.setToZero(false);
-    if (amount > productAmount) {
+    if (amount >= productAmount) {
       setBackColor(false);
     } else {
       setBackColor(true);

@@ -14,7 +14,6 @@ export default function OrderTable(props) {
     let subTotalAmount = 0;
     let subTotalPrice = 0;
     props.orders.map((order) => {
-      console.log(order);
       subTotalAmount += order.amount;
       subTotalPrice += order.price * order.amount;
       setTotalAmount(subTotalAmount);
