@@ -80,7 +80,9 @@ router.post("/addNewTag", async function (req, res, next) {
         res.status(409).json({ success: false, err: "標籤名稱已存在" });
       } else {
         await mysqlPoolQuery("INSERT INTO tag SET ?", insertTag);
-        res.status(201).json({ success: true, message: "新增標籤成功" });
+        res
+          .status(201)
+          .json({ success: true, message: "新增標籤成功", tagId: tagId });
       }
     }
   } catch (err) {
