@@ -55,7 +55,7 @@ router.post("/getMaterialHistory", async function (req, res, next) {
   const materialId = req.body.materialId;
   try {
     const userExisted = await checkUserId(userId);
-    const materialExisted = await checkMaterialId(materialI, userId);
+    const materialExisted = await checkMaterialId(materialId, userId);
     if (!userExisted) {
       res.status(409).json({ success: false, err: "使用者不存在" });
     } else if (!materialExisted) {
@@ -68,6 +68,7 @@ router.post("/getMaterialHistory", async function (req, res, next) {
       res.status(200).json({ success: true, materialInformation: rows });
     }
   } catch (err) {
+    console.log(err);
     res.status(404).json({ success: false, err: err });
   }
 });
