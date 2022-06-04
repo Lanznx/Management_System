@@ -62,7 +62,7 @@ export default function Product() {
 
   return (
     <React.Fragment>
-      <OriginalTable label="Product" rows={allProducts} head={headCells} attribute={productAttribute} APIs={APIs} refresh={fetchData}/>
+      {/* <OriginalTable label="Product" rows={allProducts} head={headCells} attribute={productAttribute} APIs={APIs} refresh={fetchData}/> */}
     </React.Fragment>
   );
 }

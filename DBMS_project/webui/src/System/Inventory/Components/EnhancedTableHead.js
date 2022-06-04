@@ -1,3 +1,4 @@
+import * as React from "react";
 import { TableHead,
          TableRow,
          TableCell,
@@ -15,10 +16,12 @@ function EnhancedTableHead(props) {
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
+  
 
   return (
     <TableHead>
       <TableRow>
+        <TableCell padding="checkbox" />
         {props.head.map((headCell) => (
           <TableCell
             key={headCell.id}

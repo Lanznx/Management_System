@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
-import OriginalTable from "./Components/Table"
 
 import { getAllMaterials, addNewMaterial, deleteMaterial } from "./APIs"
+
+import MaterialTable from './Components/MaterialTable/MaterialTable'
 
 const headCells = [
   {
@@ -29,12 +30,12 @@ const attribute = [
     {id: "materialAmount", label: "數量", type: "number"}
   ]
 
-export default function MaterialTable(){
+export default function Material(){
   const [allMaterials, setAllMaterials] = useState([])
 
   const fetchData = async () => {
-    let result = await getAllMaterials("6cc4a5be-08ba-41de-946d-a2e5c6ed43c2")
-    console.log("getAllMaterial: ", result)
+    let result = await getAllMaterials()
+    console.log("[Material.js fetchData] getAllMaterial: ", result)
     setAllMaterials(result)
   }
 
@@ -43,6 +44,6 @@ export default function MaterialTable(){
   }, [])
 
   return (
-    <OriginalTable label="Material" rows={allMaterials} head={headCells} APIs={APIs} attribute={attribute} refresh={fetchData}/>
+    <MaterialTable rows={allMaterials} head={headCells} APIs={APIs} attribute={attribute} refresh={fetchData}/>
   )
 }

@@ -73,7 +73,7 @@ export default function EnhancedTable(props) {
     <Box sx={{ width: "100%" }}>
       <Backdrop
         sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={isBackdropOpen}x
+        open={isBackdropOpen}
       >
         <CircularProgress color="inherit" />
       </Backdrop>

@@ -45,6 +45,25 @@ async function getMaterialDict(){
     return materialDict
 }
 
+async function getMaterialHistory(materialId){
+    const result = await axios.post("https://nccu-dbms-team11.herokuapp.com/material/getMaterialHistory", {
+        userId: localStorage.getItem("id_token"),
+        materialId: materialId
+    })
+
+    // API 應該要要把 time 改成 date，並且 cost 不需要
+    let materialHistory = result.data.materialInformation.map(item => {
+        return {
+            price: item.price,
+            amount: item.amount,
+            date: item.time,
+            cost: item.cost
+        }
+    })
+
+    return materialHistory
+}
+
 // function to post data to "https://nccu-dbms-team11.herokuapp.com/product/addNewProduct" by newObj
 async function addNewProduct(newObj){
     const result = await axios.post("https://nccu-dbms-team11.herokuapp.com/product/addNewProduct", {
@@ -88,4 +107,4 @@ async function deleteMaterial(materialId){
     return result.data.message
 }
 
-export { getAllProducts, getAllMaterials, addNewProduct, addNewMaterial, getMaterialDict, deleteProduct, deleteMaterial }
+export { getAllProducts, getAllMaterials, addNewProduct, addNewMaterial, getMaterialDict, getMaterialHistory, deleteProduct, deleteMaterial }

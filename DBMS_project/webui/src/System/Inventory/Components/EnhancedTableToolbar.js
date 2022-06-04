@@ -21,7 +21,7 @@ const EnhancedTableToolbar = (props) => {
       )}
 
       {/*  這裡是 Dialog */}
-      <FormDialog label={props.label} APIs={props.APIs} attribute={props.attribute} refresh={props.refresh}/>
+      <FormDialog label={props.label} addAPI={props.addAPI} attribute={props.attribute} refresh={props.refresh}/>
     </Toolbar>
   );
 }

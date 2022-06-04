@@ -79,7 +79,7 @@ export default function FormDialog(props) {
 
                 console.log(newObj)
                 // use props.new.api to add newObj to the database
-                setResp(await props.APIs.addApi(newObj))
+                setResp(await props.addAPI(newObj))
                 setProgressing(false)
                 await props.refresh()
               }}
