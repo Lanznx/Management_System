@@ -73,4 +73,49 @@ const checkTagId = (tagId, userId) => {
   });
 };
 
-module.exports = { checkUserId, checkMaterialId, checkProductId, checkTagId };
+const checkEmployeeId = (employeeId, userId) => {
+  return new Promise((resolve, reject) => {
+    mysqlPoolQuery(
+      "SELECT * FROM employee WHERE employee_id = ? AND user_id = ?",
+      [employeeId, userId]
+    )
+      .then((rows) => {
+        if (rows.length == 0) {
+          resolve(false);
+        } else {
+          resolve(true);
+        }
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+};
+
+const checkTimeblockId = (timeblockId, userId) => {
+  return new Promise((resolve, reject) => {
+    mysqlPoolQuery(
+      "SELECT * FROM timeblock WHERE timeblock_id = ? AND user_id = ?",
+      [timeblockId, userId]
+    )
+      .then((rows) => {
+        if (rows.length == 0) {
+          resolve(false);
+        } else {
+          resolve(true);
+        }
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+};
+
+module.exports = {
+  checkUserId,
+  checkMaterialId,
+  checkProductId,
+  checkTagId,
+  checkEmployeeId,
+  checkTimeblockId,
+};
