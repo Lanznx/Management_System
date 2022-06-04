@@ -125,7 +125,6 @@ router.post("/addNewOrder", async function (req, res, next) {
       if (!allProductExisted) {
         res.status(409).json({ success: false, err: "存貨不存在" });
       } else {
-        await mysqlPoolQuery("INSERT INTO `order` SET ?", insertOrderSQL);
         let allTagsExisted = true;
         for (let i = 0; i < tagId.length; i++) {
           let tagExisted = await checkTagId(tagId[i], userId);
@@ -137,6 +136,7 @@ router.post("/addNewOrder", async function (req, res, next) {
         if (!allTagsExisted) {
           res.status(409).json({ success: false, err: "標籤不存在" });
         } else {
+          await mysqlPoolQuery("INSERT INTO `order` SET ?", insertOrderSQL);
           for (let i = 0; i < tagId.length; i++) {
             let insertOTSQL = {
               order_id: orderId,
@@ -156,6 +156,75 @@ router.post("/addNewOrder", async function (req, res, next) {
             );
           }
           res.status(201).json({ success: true, message: "新增訂單成功" });
+        }
+      }
+    }
+  } catch (err) {
+    res.status(404).json({ success: false, err: err });
+  }
+});
+
+router.post("/updateOrder", async function (req, res, next) {
+  /*
+  #swagger.tags = ['Order']
+  #swagger.responses[409] = {
+    description: '使用者不存在或存貨或標籤不存在'
+  }
+  */
+  const mysqlPoolQuery = req.pool;
+  const userId = req.body.userId;
+  const orderData = req.body.orderData;
+  const totalPrice = req.body.totalPrice;
+  const tagId = req.body.tagId;
+  const orderId = req.body.orderId;
+  let updateOrderSQL = {
+    create_time: new Date(),
+    total_price: totalPrice,
+    user_id: userId,
+  };
+  try {
+    const userExisted = await checkUserId(userId);
+    if (!userExisted) {
+      res.status(409).json({ success: false, err: "使用者不存在" });
+    } else {
+      let allProductExisted = true;
+      for ([productId] of Object.entries(orderData)) {
+        let productExisted = await checkProductId(productId, userId);
+        if (!productExisted) {
+          allProductExisted = false;
+        }
+      }
+      if (!allProductExisted) {
+        res.status(409).json({ success: false, err: "存貨不存在" });
+      } else {
+        let allTagsExisted = true;
+        for (let i = 0; i < tagId.length; i++) {
+          let tagExisted = await checkTagId(tagId[i], userId);
+          if (!tagExisted) {
+            allTagsExisted = false;
+            break;
+          }
+        }
+        if (!allTagsExisted) {
+          res.status(409).json({ success: false, err: "標籤不存在" });
+        } else {
+          await mysqlPoolQuery("UPDATE `order` SET ? WHERE order_id = ?", [
+            updateOrderSQL,
+            orderId,
+          ]);
+          for (let i = 0; i < tagId.length; i++) {
+            await mysqlPoolQuery(
+              "UPDATE `order_tag` SET tag_id = ? WHERE order_id = ?",
+              [tagId[i], orderId]
+            );
+          }
+          for ([productId, amount] of Object.entries(orderData)) {
+            await mysqlPoolQuery(
+              "UPDATE `order_product` SET amount = ? WHERE order_id = ? AND product_id = ?",
+              [amount, orderId, productId]
+            );
+          }
+          res.status(200).json({ success: true, message: "更新訂單成功" });
         }
       }
     }
