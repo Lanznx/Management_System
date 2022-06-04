@@ -3,7 +3,7 @@ import { Box, TableContainer, Paper } from "@mui/material";
 import { Table, TableBody, TablePagination } from "@mui/material";
 import { Backdrop, CircularProgress } from "@mui/material";
 
-import CollapsibleRow from "./CollapsibleRow";
+import MaterialRow from "./MaterialRow";
 import EnhancedTableToolbar from '../EnhancedTableToolbar';
 import EnhancedTableHead from "../EnhancedTableHead";
 
@@ -100,7 +100,7 @@ export default function MaterialTable(props){
                         .sort(getComparator(order, orderBy))
                         .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                         .map((row, index) => (
-                            <CollapsibleRow
+                            <MaterialRow
                                 key={index}
                                 row={row}
                                 refresh={props.refresh}

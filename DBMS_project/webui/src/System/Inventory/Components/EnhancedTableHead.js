@@ -25,7 +25,7 @@ function EnhancedTableHead(props) {
         {props.head.map((headCell) => (
           <TableCell
             key={headCell.id}
-            align="left"
+            align={headCell.numeric ? "right" : "left"}
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel

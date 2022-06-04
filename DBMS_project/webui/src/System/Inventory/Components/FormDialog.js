@@ -46,6 +46,7 @@ export default function FormDialog(props) {
                 if(item.type === "chip"){
                   return(
                     <MultipleSelectChip
+                      key={index}
                       id = {item.id}
                       label={item.label}
                       options={item.options}

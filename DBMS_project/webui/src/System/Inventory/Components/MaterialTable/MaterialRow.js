@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { IconButton } from "@mui/material";
 import { Table, TableHead, TableBody, TableRow, TableCell } from "@mui/material";
 import { Box } from "@mui/material";
 import { Collapse } from "@mui/material";
+import { IconButton } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
@@ -58,7 +58,7 @@ export default function Row(props){
                     </IconButton>
                 </TableCell>
                 <TableCell> {row.name} </TableCell>
-                <TableCell> {row.amount} </TableCell>
+                <TableCell align="right"> {row.amount} </TableCell>
                 <TableCell align="right">
                     <IconButton aria-label="delete" onClick={ () => {handleDelete(row.id)} }>
                         <DeleteIcon />
