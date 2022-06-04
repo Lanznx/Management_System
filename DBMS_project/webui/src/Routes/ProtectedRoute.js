@@ -1,12 +1,8 @@
 import { Navigate, Outlet,  } from "react-router-dom";
 
-const useAuth = () => {
-    const user = { loggedIn: true, userId: "pinyan" };
-    return user && user.loggedIn;
-};
-
 const ProtectedRoute = () => {
-    const isLoggedIn = useAuth();
+    const isLoggedIn = localStorage.getItem('id_token') !== null;
+    // const isLoggedIn = user && user.loggedIn;
     return (
         isLoggedIn ? (
             <Outlet />

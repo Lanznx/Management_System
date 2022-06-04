@@ -43,7 +43,7 @@ export default function FormDialog(props) {
             {/* use props.new to dynamically create a TextField input form */}
             {
               props.attribute.map((item, index) => {
-                if(item.type == "chip"){
+                if(item.type === "chip"){
                   return(
                     <MultipleSelectChip
                       id = {item.id}
@@ -87,7 +87,7 @@ export default function FormDialog(props) {
               送出
             </Button>
           </DialogActions>
-          <Collapse in={ resp != ""}>
+          <Collapse in={ resp !== ""}>
             <Alert severity="info" onClose={ ()=> { setResp("") } }> { resp } </Alert>
           </Collapse>
           <Collapse in={progressing}>

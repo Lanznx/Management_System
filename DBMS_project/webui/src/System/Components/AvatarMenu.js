@@ -5,12 +5,23 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { IconButton } from '@mui/material';
 
+// import { logOut } from './APIs';
+
 export default function AvatarMenu(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
+  const handleLogOut = async() => {
+    // logOut();
+    localStorage.removeItem('id_token');
+    window.alert("登出成功 meow meow");
+    window.location.href = '/';
+  }
+
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -38,7 +49,7 @@ export default function AvatarMenu(props) {
       >
         <MenuItem onClick={handleClose}>Profile</MenuItem>
         <MenuItem onClick={handleClose}>My account</MenuItem>
-        <MenuItem onClick={handleClose}>Logout</MenuItem>
+        <MenuItem onClick={handleLogOut}>Logout</MenuItem>
       </Menu>
     </div>
   );

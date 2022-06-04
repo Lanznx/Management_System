@@ -23,24 +23,32 @@ export default function SignIn() {
   const [open, setOpen] = React.useState(false);
   const [message, setMessage] = React.useState('');
 
-  const handleSubmit = async(event) => {
+  const handleLogIn = async(event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     console.log({
-      email: data.get('email'),
+      username: data.get('username'),
       password: data.get('password'),
     });
 
-    const userId = await logIn(data.get('email'), data.get('password'))
-    console.log(userId);
+    try{
+      const idToken = await logIn(data.get('username'), data.get('password'))
+      console.log(idToken);
 
-    if (userId) {
-      window.alert("登入成功 meow meow");
-      window.location.href = '/sys';
-    }else{
+      if (idToken) {
+        localStorage.setItem('id_token', idToken);
+        window.alert("登入成功 meow meow");
+        window.location.href = '/sys';
+      }else{
+        setOpen(true);
+        setMessage('Invalid username or password');
+      }
+    } catch(err){
+      console.log(err);
+      setMessage(err.message);
       setOpen(true);
-      setMessage('Invalid username or password');
     }
+
   }
 
   return (
@@ -60,15 +68,15 @@ export default function SignIn() {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+        <Box component="form" onSubmit={handleLogIn} noValidate sx={{ mt: 1 }}>
           <TextField
             margin="normal"
             required
             fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
+            id="username"
+            label="User Name"
+            name="username"
+            autoComplete="username"
             autoFocus
           />
           <TextField

@@ -1,31 +1,20 @@
 import * as React from "react";
-
-// To-do
-// delete 剩幾天到期
-// 新增 materialHistory dialog 
-  // dialog 可以更動數量
-
-// Table 要用的
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
-import TableSortLabel from "@mui/material/TableSortLabel";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import Paper from "@mui/material/Paper";
-import IconButton from "@mui/material/IconButton";
-import DeleteIcon from "@mui/icons-material/Delete";
 import FeedIcon from "@mui/icons-material/Feed";
-import { visuallyHidden } from "@mui/utils";
+import { Paper } from "@mui/material";
+import { IconButton } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { Backdrop, CircularProgress } from "@mui/material";
 
-import FormDialog from "./FormDialog";
+import EnhancedTableHead from "./EnhancedTableHead";
+import EnhancedTableToolbar from "./EnhancedTableToolbar";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -43,91 +32,23 @@ function getComparator(order, orderBy) {
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
-
-function EnhancedTableHead(props) {
-  const {
-    order,
-    orderBy,
-    onRequestSort,
-  } = props;
-  const createSortHandler = (property) => (event) => {
-    onRequestSort(event, property);
-  };
-
-  return (
-    <TableHead>
-      <TableRow>
-        {props.head.map((headCell) => (
-          <TableCell
-            key={headCell.id}
-            align="left"
-            sortDirection={orderBy === headCell.id ? order : false}
-          >
-            <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : "asc"}
-              onClick={createSortHandler(headCell.id)}
-            >
-              {headCell.label}
-              {orderBy === headCell.id ? (
-                <Box component="span" sx={visuallyHidden}>
-                  {order === "desc" ? "sorted descending" : "sorted ascending"}
-                </Box>
-              ) : null}
-            </TableSortLabel>
-          </TableCell>
-        ))}
-        <TableCell
-          align="right"
-        >
-          動作
-        </TableCell>
-      </TableRow>
-    </TableHead>
-  );
-}
-
 export default function EnhancedTable(props) {
+  // orderBy 可以改變
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("price");
+  // rowsPerPage 可以改變
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  // backdrop 可以改變
   const [isBackdropOpen, setIsBackdropOpen] = React.useState(false);
 
   async function handleDelete(id) {
-    // 到時候 call API 刪除
     console.log("delete", id);
     setIsBackdropOpen(true);
     let resp = await props.APIs.delApi(id);
     console.log("delete resp: ", resp);
     await props.refresh();
     setIsBackdropOpen(false);
-  }
-
-  const EnhancedTableToolbar = (props) => {
-
-    return (
-      <Toolbar
-        sx={{
-          pl: { sm: 2 },
-          pr: { xs: 1, sm: 1 }
-        }}
-      >
-        {props.label && (
-          <Typography
-            sx={{ flex: "1 1 100%" }}
-            variant="h6"
-            id="tableTitle"
-            component="div"
-          >
-            {props.label}
-          </Typography>
-        )}
-
-        {/*  這裡是 Dialog */}
-        <FormDialog label={props.label} APIs={props.APIs} attribute={props.attribute} refresh={props.refresh}/>
-      </Toolbar>
-    );
   }
 
   const handleRequestSort = (event, property) => {
@@ -152,7 +73,7 @@ export default function EnhancedTable(props) {
     <Box sx={{ width: "100%" }}>
       <Backdrop
         sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={isBackdropOpen}
+        open={isBackdropOpen}x
       >
         <CircularProgress color="inherit" />
       </Backdrop>

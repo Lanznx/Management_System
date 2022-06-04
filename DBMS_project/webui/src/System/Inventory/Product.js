@@ -37,7 +37,6 @@ const attribute = [
   ]
 
 export default function Product() {
-  // state
   const [allProducts, setAllProduct] = useState([
     {id: 'chou\'s butt', name: '邱德晏的屁股努力加載中....', price: 50, amount: 1}
   ])
@@ -45,19 +44,13 @@ export default function Product() {
   
   const fetchData = async () => {
     let result
-
-    // get product data from API
-    result = await getAllProducts("6cc4a5be-08ba-41de-946d-a2e5c6ed43c2")
+    result = await getAllProducts()
     console.log("getAllProduct: ", result)
-    // set product data to state
     setAllProduct(result)
 
-    // get material dictionary from API
-    result = await getMaterialDict("6cc4a5be-08ba-41de-946d-a2e5c6ed43c2")
+    result = await getMaterialDict()
     console.log("getMaterialDict: ", result)
-    // set productInfo.attribute.options to state
     attribute[3].options = result
-    // set productInfo to state
     setProductAttribute(attribute)
   }
 
