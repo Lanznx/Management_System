@@ -24,20 +24,26 @@ import {
   getTagDict,
 } from "./APIs.js";
 
-export default function Order() {
-  const [productInfos, setProductInfos] = useState([]);
+export default function CreateOrder() {
+  const [productInfos, setProductInfos] = useState([
+    {
+      name: "邱德晏的屁股努力加載中",
+      productId: "",
+      price: 50,
+      amount: 2,
+    },
+  ]);
   const [canSend, setCanSend] = useState(false);
   const [orders, setOrders] = useState([]);
   const [orderDatas, setOrderDatas] = useState([]);
   const [toZero, setToZero] = useState(false);
   const [totalPrice, setTotalPrice] = useState(0);
-  const [tags, setTags] = useState({});
+  const [tags, setTags] = useState({0: "邱德晏的屁股努力加載中"});
   const [chosedTags, setChosedTags] = useState([]);
   const [open, setOpen] = useState(false);
 
-
   console.log("========Orders==========");
-  console.log(orders)
+  console.log(orders);
 
   useEffect(() => {
     orders.map((order) => {
@@ -48,7 +54,6 @@ export default function Order() {
   useEffect(() => {
     handleGetProducts();
   }, [toZero, canSend]);
-
 
   async function handleGetProducts() {
     let allProduct = await getAllProducts();
@@ -91,13 +96,9 @@ export default function Order() {
   }
 
   async function handleSendOrder() {
-    const canChangeAmount = await sendOrder(
-      orderDatas,
-      totalPrice,
-      chosedTags
-    );
+    const canChangeAmount = await sendOrder(orderDatas, totalPrice, chosedTags);
     console.log(canChangeAmount);
-    if(canChangeAmount) {
+    if (canChangeAmount) {
       orders.map((orders) => {
         updateAmount(orders.productId, -orders.amount);
       });
@@ -109,9 +110,7 @@ export default function Order() {
   async function handleCreateTag() {
     let tag = document.getElementById("tag").value;
     let tagDict = await getTagDict();
-    let tagId = Object.keys(tagDict).find(
-      (key) => tagDict[key] === tag
-    );
+    let tagId = Object.keys(tagDict).find((key) => tagDict[key] === tag);
     if (tagDict[tagId]) {
       window.alert("此標籤已存在");
     } else if (!tag) {
@@ -220,7 +219,6 @@ export default function Order() {
             disabled={!canSend}
             sx={{ color: canSend ? "#1976d2" : "grey" }}
             onClick={() => {
-
               if (canSend) {
                 setOrders([]);
                 setOrderDatas([]);
