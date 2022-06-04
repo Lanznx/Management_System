@@ -19,7 +19,8 @@ import { mainListItems, secondaryListItems } from './Components/listItems';
 import AvatarMenu from './Components/AvatarMenu';
 
 import Inventory from './Inventory';
-import Order from './Order';
+import CreateOrder from './Order/CreateOrder';
+import OrderList from './Order/OrderList';
 import Schedule from './Schedule';
 import Statement from './Statement';
 import Copyright from './Components/Copyright';
@@ -79,7 +80,7 @@ function DashboardContent() {
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const handleProfileMenuOpen = (event) => {
-      setAnchorEl(event.currentTarget);
+    setAnchorEl(event.currentTarget);
   };
 
 
@@ -136,7 +137,7 @@ function DashboardContent() {
             component="div"
             sx={{ display: { xs: 'none', sm: 'block' } }}
             >
-                市集小助手
+                BeeVendor
             </Typography>
             <IconButton onClick={toggleDrawer}>
               <ChevronLeftIcon />
@@ -162,10 +163,11 @@ function DashboardContent() {
           }}
         >
           <Toolbar />
-          <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+          <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
             <Routes>
                 <Route path="/*" element={<Inventory />} />
-                <Route path="order/*" element={<Order />} />
+                <Route path="createOrder/*" element={<CreateOrder />} />
+                <Route path="orderList/*" element={<OrderList />} />
                 <Route path="schedule/*" element={<Schedule />} />
                 <Route path="statement/*" element={<Statement />} />
             </Routes>

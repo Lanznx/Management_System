@@ -11,16 +11,45 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
+import Collapse from '@mui/material/Collapse';
+import Alert from '@mui/material/Alert';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
+import AlertTitle from '@mui/material/AlertTitle';
+
+import { logIn } from './APIs';
 
 export default function SignIn() {
-  const handleSubmit = (event) => {
+  const [open, setOpen] = React.useState(false);
+  const [message, setMessage] = React.useState('');
+
+  const handleLogIn = async(event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     console.log({
-      email: data.get('email'),
+      username: data.get('username'),
       password: data.get('password'),
     });
-  };
+
+    try{
+      const idToken = await logIn(data.get('username'), data.get('password'))
+      console.log(idToken);
+
+      if (idToken) {
+        localStorage.setItem('id_token', idToken);
+        window.alert("登入成功 meow meow");
+        window.location.href = '/sys';
+      }else{
+        setOpen(true);
+        setMessage('Invalid username or password');
+      }
+    } catch(err){
+      console.log(err);
+      setMessage(err.message);
+      setOpen(true);
+    }
+
+  }
 
   return (
     <Container component="main" maxWidth="xs">
@@ -39,15 +68,15 @@ export default function SignIn() {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+        <Box component="form" onSubmit={handleLogIn} noValidate sx={{ mt: 1 }}>
           <TextField
             margin="normal"
             required
             fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
+            id="username"
+            label="User Name"
+            name="username"
+            autoComplete="username"
             autoFocus
           />
           <TextField
@@ -87,6 +116,25 @@ export default function SignIn() {
           </Grid>
         </Box>
       </Box>
+      <Collapse in={open}>
+        <Alert
+          action={
+            <IconButton
+              aria-label="close"
+              color="inherit"
+              size="small"
+              onClick={() => {
+                setOpen(false);
+              }}
+            >
+              <CloseIcon fontSize="inherit" />
+            </IconButton>
+          }
+          sx={{ mb: 2 }}
+        >
+          <AlertTitle>{ message }</AlertTitle>
+        </Alert>
+      </Collapse>
     </Container>
   );
 }

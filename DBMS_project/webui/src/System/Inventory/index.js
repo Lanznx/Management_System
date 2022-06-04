@@ -6,8 +6,8 @@ import Container from '@mui/material/Container';
 
 import { Route, Routes, Link } from 'react-router-dom';
 
-import ProductTable from './ProductTable'
-import MaterialTable from './MaterialTable'
+import ProductTable from './Product'
+import MaterialTable from './Material'
 
 function LinkTab(props) {
   return (
@@ -18,7 +18,8 @@ function LinkTab(props) {
   );
 }
 
-export default function NavTabs() {
+
+export default function NavTabs(props) {
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
@@ -26,7 +27,7 @@ export default function NavTabs() {
   };
 
   return (
-      <Box>
+  <Box>
     <Box sx={{ width: '100%' }}>
       <Tabs value={value} onChange={handleChange} aria-label="nav tabs example">
         <LinkTab label="存貨管理" to="product" />
