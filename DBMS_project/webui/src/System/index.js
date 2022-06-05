@@ -147,7 +147,7 @@ function DashboardContent() {
         <Drawer variant="permanent" open={open}
           PaperProps={{
             sx: {
-              backgroundImage: 'url(//www.gstatic.com/mobilesdk/190424_mobilesdk/nav_nachos@2x.png)', 
+              backgroundImage: 'url(/asidebg.png)', 
               backgroundPosition: 'left 0 bottom 0', 
               backgroundRepeat: 'no-repeat', 
               backgroundSize: '256px 500px', 
