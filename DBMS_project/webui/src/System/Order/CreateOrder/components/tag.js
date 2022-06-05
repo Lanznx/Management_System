@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Chip, useForkRef } from "@mui/material";
+import { Chip } from "@mui/material";
 
 export default function Tag(props) {
   const [clicked, setClicked] = useState(false);
