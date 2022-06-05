@@ -24,7 +24,7 @@ import OrderList from './Order/OrderList';
 import Schedule from './Schedule';
 import Statement from './Statement';
 import Copyright from './Components/Copyright';
-import { Route, Routes } from 'react-router';
+import { Route, Routes, useLocation, matchRoutes } from 'react-router';
 
 const drawerWidth = 240;
 
@@ -83,6 +83,27 @@ function DashboardContent() {
     setAnchorEl(event.currentTarget);
   };
 
+  const location = useLocation()
+  const [navTitle, setNavTitle] = React.useState("");
+  React.useEffect(() => {
+    console.log("[index.js] location", location)
+    const routes = [{ path: "/sys/:func" }]
+    const matched = matchRoutes(routes, location.pathname)
+    const routePage = matched !== null ? matched[0].params.func : ""
+    console.log("[index.js] routePage", routePage)
+
+    if(routePage === '' || routePage === 'product' || routePage === 'material') {
+      setNavTitle("倉儲管理")
+    }else if(routePage === 'createOrder'){
+      setNavTitle("新增訂單")
+    }else if(routePage === 'OrderList'){
+      setNavTitle("訂單列表")
+    }else if(routePage === 'schedule'){
+      setNavTitle("排班表")
+    }else if(routePage === 'statement'){
+      setNavTitle("損益表")
+    }
+  }, [location])
 
   return (
       <Box sx={{ display: 'flex' }}>
@@ -91,6 +112,7 @@ function DashboardContent() {
           <Toolbar
             sx={{
               pr: '24px', // keep right padding when drawer closed
+              backgroundImage: 'linear-gradient(to right, rgb(239 124 29), rgb(255 184 94))',
             }}
           >
             <IconButton
@@ -110,19 +132,29 @@ function DashboardContent() {
               variant="h6"
               color="inherit"
               noWrap
-              sx={{ flexGrow: 1 }}
+              sx={{ flexGrow: 1, color: 'white', fontWeight: 'bold' }}
             >
-              Dashboard
+              {navTitle}
             </Typography>
             <IconButton color="inherit">
-              <Badge badgeContent={4} color="secondary">
+              <Badge badgeContent={0} color="secondary" sx={{color: 'rgba(255,255,255,.7)'}}>
                 <NotificationsIcon />
               </Badge>
             </IconButton>
             <AvatarMenu src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJxA5cTf-5dh5Eusm0puHbvAhOrCRPtckzjA&usqp=CAU" />
           </Toolbar>
         </AppBar>
-        <Drawer variant="permanent" open={open}>
+        <Drawer variant="permanent" open={open}
+          PaperProps={{
+            sx: {
+              backgroundImage: 'url(//www.gstatic.com/mobilesdk/190424_mobilesdk/nav_nachos@2x.png)', 
+              backgroundPosition: 'left 0 bottom 0', 
+              backgroundRepeat: 'no-repeat', 
+              backgroundSize: '256px 500px', 
+              opacity: '0.9',
+            }
+          }}
+          >
           <Toolbar
             sx={{
               display: 'flex',
@@ -131,11 +163,30 @@ function DashboardContent() {
               px: [1],
             }}
           >
+            <Box
+                component="img"
+                sx={{
+                  height: 24,
+                  mr: 1,
+                  ml: 2
+                }}
+                alt="Your logo."
+                src='/bee_vendor_christmas.svg'
+            />
             <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ display: { xs: 'none', sm: 'block' } }}
+              variant="h6"
+              noWrap
+              component="a"
+              href="/sys"
+              sx={{
+                mr: 1,
+                display: { xs: 'none', md: 'flex' },
+                fontFamily: 'monospace',
+                fontWeight: 700,
+                letterSpacing: '.1rem',
+                color: 'inherit',
+                textDecoration: 'none',
+              }}
             >
                 BeeVendor
             </Typography>
@@ -160,6 +211,8 @@ function DashboardContent() {
             flexGrow: 1,
             height: '100vh',
             overflow: 'auto',
+            backgroundImage: 'url(/bgimg2.jpg)',
+            backgroundPosition: 'top right'
           }}
         >
           <Toolbar />
