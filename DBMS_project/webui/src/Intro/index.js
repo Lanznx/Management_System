@@ -20,7 +20,7 @@ export default function Intro(){
     return(
         <React.Fragment>
             <Navbar />
-            <Container disableGutters maxWidth="sm" component="main" sx={{ pt: 8, pb: 6 }}>
+            <Container disableGutters maxWidth="sm" component="main" sx={{ pt: 4, pb: 3 }}>
             <Routes>
                 <Route index element={<Feature />} />
                 <Route path="price" element={<Pricing />} />
@@ -39,7 +39,7 @@ export default function Intro(){
                 py: [3, 6],
                 }}
             >
-                <Copyright sx={{ mt: 5 }} />
+                <Copyright sx={{ mt: 2 }} />
             </Container>
             {/* End footer */}
         </React.Fragment>

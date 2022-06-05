@@ -25,19 +25,6 @@ const tiers = [
     buttonVariant: 'outlined',
   },
   {
-    title: 'Pro',
-    subheader: 'Most popular',
-    price: '15',
-    description: [
-      '20 users included',
-      '10 GB of storage',
-      'Help center access',
-      'Priority email support',
-    ],
-    buttonText: 'Get started',
-    buttonVariant: 'contained',
-  },
-  {
     title: 'Enterprise',
     price: '30',
     description: [
@@ -56,10 +43,10 @@ export default function Pricing() {
     <React.Fragment>
       <CssBaseline />
       {/* Hero unit */}
-      <Container disableGutters maxWidth="sm" component="main" sx={{ pt: 8, pb: 6 }}>
+      <Container disableGutters maxWidth="sm" component="main" sx={{ pt: 0, pb: 6 }}>
         <Typography
-          component="h1"
-          variant="h2"
+          component="h2"
+          variant="h3"
           align="center"
           color="text.primary"
           gutterBottom
@@ -82,7 +69,7 @@ export default function Pricing() {
               key={tier.title}
               xs={12}
               sm={tier.title === 'Enterprise' ? 12 : 6}
-              md={4}
+              md={6}
             >
               <Card>
                 <CardHeader
