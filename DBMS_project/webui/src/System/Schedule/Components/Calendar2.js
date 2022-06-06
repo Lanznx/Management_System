@@ -10,6 +10,8 @@ import {
     TodayButton,
     DragDropProvider,
     EditRecurrenceMenu,
+    AppointmentForm,
+    ConfirmationDialog
 } from '@devexpress/dx-react-scheduler-material-ui';
 
 const appointments = [
@@ -29,9 +31,49 @@ const appointments = [
     },
   ];
 
+const BoolEditor = (props) => {
+    return null;
+};
+const LabelComponent = (props) => {
+    if (props.text === 'Details') {
+        return <AppointmentForm.Label
+        { ...props} 
+        text="Precio Modulo"
+        />  
+    } else if (props.text === 'More Information') {
+        return null
+    } else if (props.text === '-') {
+        return <AppointmentForm.Label
+        { ...props}
+        />  
+    }
+};
+const InputComponent = (props) => {
+    console.log("InputComponent props: ", props);
+    if (props.type === 'titleTextEditor') {
+        return <AppointmentForm.TextEditor
+        { ...props}
+        type='numberEditor'
+        placeholder='Precio'
+        />
+    }
+};
+
+// cambio el layout
+const BasicLayout = ({ onFieldChange, appointmentData, ...restProps }) => {
+return (
+    <AppointmentForm.BasicLayout
+    appointmentData={appointmentData}
+    onFieldChange={onFieldChange}
+    {...restProps}   
+    >
+    </AppointmentForm.BasicLayout>
+);
+};
+
 export default function Calendar2() {
     const [data, setData] = React.useState(appointments);
-    const [currentDate, setCurrentDate] = React.useState(new Date(2022, 5, 11));
+    const [currentDate, setCurrentDate] = React.useState(new Date(2022, 5, 8));
 
     React.useEffect(() => {
         console.log(data);
@@ -77,7 +119,18 @@ export default function Calendar2() {
           <DateNavigator />
           <TodayButton />
           <Appointments/>
-          <DragDropProvider/>
+          <ConfirmationDialog
+            ignoreCancel
+          />
+          <AppointmentForm
+            basicLayoutComponent={BasicLayout}
+            booleanEditorComponent={BoolEditor}
+            labelComponent={LabelComponent}
+            textEditorComponent={InputComponent}
+          />
+          <DragDropProvider
+            allowDrag={(e)=>{return e.rRule === undefined}}
+          />
         </Scheduler>
       </Paper>
     );

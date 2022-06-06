@@ -48,7 +48,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <BrowserRouter>
-          {/* <span> token: { localStorage.getItem('id_token') } </span> */}
+          <span> token: { localStorage.getItem('id_token') } </span>
           <GlobalStyles
             styles={{ ul: { margin: 0, padding: 0, listStyle: "none" } }}
           />

@@ -21,7 +21,7 @@ const MenuProps = {
 export default function MultipleSelectChip(props) {
   const [materialTags, setMaterialTags] = useState([]);
 
-  useEffect((props) => {
+  useEffect(() => {
     // create a array of material tags id
     const materialTagsId = materialTags.map(name => props.options[name]);
     console.log(materialTagsId);
