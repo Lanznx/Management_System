@@ -19,17 +19,28 @@ const MenuProps = {
 };
 
 export default function MultipleTags(props) {
-  const { chosedTags, setChosedTags } = props;
+  const { chosedTags, setChosedTags, allTags } = props;
 
-  const handleChange = (event) => {
-    const {
-      target: { value },
-    } = event;
-    setChosedTags(
-      // On autofill we get a stringified value.
-      typeof value === "string" ? value.split(",") : value
-    );
+  const handleChange = (e) => {
+    console.log(e.target.value, "e.target.value");
+    let chosedTagsValues = e.target.value;
+    let chosedTagsKeys = [];
+    Object.keys(allTags).find((key) => {
+      chosedTagsValues.map((value) => {
+        console.log(JSON.stringify(allTags[key]));
+        console.log(JSON.stringify(value));
+        if (JSON.stringify(allTags[key]) == JSON.stringify(value))
+          chosedTagsKeys.push(key);
+      });
+    });
+    let newChosedTags = {};
+    chosedTagsKeys.map((key) => {
+      newChosedTags[key] = allTags[key];
+    });
+    setChosedTags(newChosedTags);
   };
+
+  console.log(chosedTags, "chosedTags");
 
   return (
     <FormControl
@@ -48,15 +59,15 @@ export default function MultipleTags(props) {
         renderValue={(selected) => (
           <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
             {selected.map((value, index) => (
-              <Chip key={index} label={value} color="primary"/>
+              <Chip key={index} label={value} color="primary" />
             ))}
           </Box>
         )}
         MenuProps={MenuProps}
       >
-        {Object.values(props.options).map((name) => (
-          <MenuItem key={name} value={name}>
-            {name}
+        {Object.values(props.options).map((option) => (
+          <MenuItem key={option} value={option}>
+            {option}
           </MenuItem>
         ))}
       </Select>
