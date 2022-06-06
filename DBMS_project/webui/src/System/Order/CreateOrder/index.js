@@ -128,7 +128,7 @@ export default function CreateOrder() {
     <Grid container spacing={2} sx={{ display: "flex" }}>
       <Grid container md={6}>
         {productInfos.map((productInfo) => (
-          <Grid item md={4} key={productInfo.productId}>
+          <Grid item xs={12} md={6} lg={4} key={productInfo.productId}>
             <ProductCard
               toZero={toZero}
               setToZero={setToZero}

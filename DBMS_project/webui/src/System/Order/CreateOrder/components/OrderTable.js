@@ -29,7 +29,7 @@ export default function OrderTable(props) {
   return (
     <TableContainer component={Paper} sx={{ marginTop: "12px" }}>
       <Table sx={{ minWidth: 400 }} aria-label="simple table">
-        <TableHead sx={{ backgroundColor: "#0c2d48" }}>
+        <TableHead sx={{ backgroundColor: "#3A3637" }}>
           <TableRow>
             <TableCell sx={{ color: "#fff", fontWeight: "bold" }}>
               品項
