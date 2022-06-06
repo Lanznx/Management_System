@@ -9,7 +9,7 @@ function Navbar(props) {
     return (
         <AppBar
         position="static"
-        color="secondary"
+        color="default"
         elevation={0}
         sx={{ borderBottom: (theme) => `1px solid ${theme.palette.divider}` }}
         >
@@ -45,7 +45,7 @@ function Navbar(props) {
                 <nav>
                 <Link
                     variant="button"
-                    color="inherit"
+                    color="text.primary"
                     href="/"
                     sx={{ my: 1, mx: 1.5 }}
                 >
@@ -53,14 +53,14 @@ function Navbar(props) {
                 </Link>
                 <Link
                     variant="button"
-                    color="inherit"
+                    color="text.primary"
                     href="/price"
                     sx={{ my: 1, mx: 1.5 }}
                 >
                     Pricing
                 </Link>
                 </nav>
-                <Button href="signin" variant="outlined" sx={{ my: 1, mx: 1.5 }} color="inherit">
+                <Button href="signin" variant="outlined" sx={{ my: 1, mx: 1.5 }}>
                 Login
                 </Button>
             </Toolbar>
