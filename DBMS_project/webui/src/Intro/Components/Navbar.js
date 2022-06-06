@@ -66,7 +66,7 @@ function Navbar(props) {
                 </Link>
                 </nav>
                 <Button href="signin" variant="outlined" sx={{ color: 'gray', borderColor: 'gray', "&:hover": {color: 'white', borderColor: 'white'}, my: 1, mx: 1.5 }}>
-                    Login
+                Login
                 </Button>
             </Toolbar>
         </AppBar>

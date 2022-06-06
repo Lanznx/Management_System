@@ -29,4 +29,40 @@ async function createTag(tag) {
   else if (result.data.status === 409) return "標籤已存在";
 }
 
-export { updateAmount, createTag, getTagDict };
+async function getAllOrders() {
+  const result = await axios.post(baseUrl + "/order/getAllOrders", {
+    userId: userId,
+  });
+
+  if(result.data.success === true) return result.data.allOrdersData;
+  
+  return ["there is an error"];
+}
+
+async function updateOrder(orderId, orderData, tagId, totalPrice) {
+  const result = await axios.post(baseUrl + "/order/updateOrder", {
+    userId: userId,
+    orderId: orderId,
+    orderData: orderData,
+    tagId: tagId,
+    totalPrice: totalPrice,
+  });
+  if(result.data.success === true) return true;
+
+  return false;
+}
+
+
+async function deleteOrder(orderId) {
+  const result = await axios.post(baseUrl + "/order/deleteOrder", {
+    userId: userId,
+    orderId: orderId,
+  });
+  if(result.data.success === true) return true;
+
+  return false;
+}
+
+
+
+export { updateAmount, createTag, getTagDict, getAllOrders, deleteOrder, updateOrder };
