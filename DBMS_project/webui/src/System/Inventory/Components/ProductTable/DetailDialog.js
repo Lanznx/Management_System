@@ -3,15 +3,22 @@ import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, B
 import { Box } from "@mui/system";
 import { TextField } from "@mui/material";
 
+import { updateProductAmount } from '../../APIs';
+
+
 export default function FormDialog(props) {
-    const { open, setIsDialogOpen } = props
+    const { open, setIsDialogOpen, refresh } = props
 
     const [productName, setProductName] = React.useState(props.row.name)
     const [productPrice, setProductPrice] = React.useState(props.row.price)
     const [productAmount, setProductAmount] = React.useState(props.row.amount)
 
-    const handleSubmit = () => {
-        setIsDialogOpen(false)
+    const handleSubmit = async (productId, amountChange) => {
+        console.log("[FormDialog.js handleSubmit] update product: ", productId);
+        const resp = await updateProductAmount(productId, amountChange);
+        console.log("update resp: ", resp);
+        await refresh();
+        setIsDialogOpen(false);
     }
 
     return (
@@ -26,16 +33,24 @@ export default function FormDialog(props) {
                         label="品名"
                         value={productName}
                         type="text"
+                        variant='standard'
                         onChange={(e) => {}}
+                        InputProps={{
+                            readOnly: true,
+                        }}
                     />
                     <TextField
                         autoFocus
                         margin="dense"
                         fullWidth
                         label="售價"
-                        value={productPrice}
+                        value={`$${productPrice}`}
                         type="text"
+                        variant='standard'
                         onChange={(e) => {}}
+                        InputProps={{
+                            readOnly: true,
+                        }}
                     />
                     <TextField
                         autoFocus
@@ -43,16 +58,17 @@ export default function FormDialog(props) {
                         fullWidth
                         label="數量"
                         value={productAmount}
-                        type="text"
-                        onChange={(e) => {}}
+                        type="number"
+                        variant='standard'
+                        onChange={(e)=>{setProductAmount(e.target.value)}}
                     />
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={()=>{setIsDialogOpen(false)}} color="primary">
                         取消
                     </Button>
-                    <Button onClick={handleSubmit} color="primary">
-                        確定
+                    <Button onClick={()=>{handleSubmit(props.row.id, productAmount - props.row.amount)}} color="primary">
+                        更新
                     </Button>
                 </DialogActions>
             </Dialog>

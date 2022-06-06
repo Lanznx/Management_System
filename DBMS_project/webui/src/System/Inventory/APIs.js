@@ -89,6 +89,16 @@ async function addNewMaterial(newObj){
     return result.data.message
 }
 
+async function updateProductAmount(productId, amountChange){
+    const result = await axios.post("https://nccu-dbms-team11.herokuapp.com/product/updateAmount", {
+        userId: localStorage.getItem("id_token"),
+        productId: productId,
+        amountChange: amountChange
+    })
+
+    return result.data.message
+}
+
 async function deleteProduct(productId){
     const result = await axios.post("https://nccu-dbms-team11.herokuapp.com/product/deleteProduct", {
         userId: localStorage.getItem("id_token"),
@@ -107,4 +117,13 @@ async function deleteMaterial(materialId){
     return result.data.message
 }
 
-export { getAllProducts, getAllMaterials, addNewProduct, addNewMaterial, getMaterialDict, getMaterialHistory, deleteProduct, deleteMaterial }
+export { 
+    getAllProducts, 
+    getAllMaterials, 
+    addNewProduct, 
+    addNewMaterial, 
+    getMaterialDict, 
+    getMaterialHistory, 
+    updateProductAmount,
+    deleteProduct, 
+    deleteMaterial }

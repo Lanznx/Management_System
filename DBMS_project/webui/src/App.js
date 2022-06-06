@@ -13,23 +13,53 @@ import GlobalStyles from "@mui/material/GlobalStyles";
 import Intro from "./Intro";
 import System from "./System";
 import ProtectedRoute from "./Routes/ProtectedRoute";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#fb8c00'
+    },
+    secondary: {
+      main: '#FFCD38',
+      contrastText: '#000'
+    },
+  },
+  typography: {
+    allVariants: {
+      fontFamily: [
+        '"Noto Sans TC"',
+        '-apple-system',
+        'BlinkMacSystemFont',
+        '"Segoe UI"',
+        'Roboto',
+        '"Helvetica Neue"',
+        'Arial',
+        'sans-serif',
+        '"Apple Color Emoji"',
+        '"Segoe UI Emoji"',
+        '"Segoe UI Symbol"',
+      ].join(','),
+    }
+  },
+});
 
 function App() {
   return (
-    <BrowserRouter>
-      <div className="App">
-        <span> token: { localStorage.getItem('id_token') } </span>
-        <GlobalStyles
-          styles={{ ul: { margin: 0, padding: 0, listStyle: "none" } }}
-        />
-        <Routes>
-          <Route path="/*" element={<Intro />} />
-          <Route element={<ProtectedRoute/>} >
-            <Route path="sys/*" element={<System />} />
-          </Route>
-        </Routes>
-      </div>
-    </BrowserRouter>
+    <ThemeProvider theme={theme}>
+      <BrowserRouter>
+          {/* <span> token: { localStorage.getItem('id_token') } </span> */}
+          <GlobalStyles
+            styles={{ ul: { margin: 0, padding: 0, listStyle: "none" } }}
+          />
+          <Routes>
+            <Route path="/*" element={<Intro />} />
+            <Route element={<ProtectedRoute/>} >
+              <Route path="sys/*" element={<System />} />
+            </Route>
+          </Routes>
+      </BrowserRouter>
+    </ThemeProvider>
   );
 }
 

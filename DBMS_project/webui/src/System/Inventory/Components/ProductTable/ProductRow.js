@@ -27,7 +27,7 @@ export default function ProductRow(props){
         <TableRow>
             <TableCell padding="checkbox"></TableCell>
             <TableCell>{row.name}</TableCell>
-            <TableCell align="right">{row.price}</TableCell>
+            <TableCell align="right">${row.price}</TableCell>
             <TableCell align="right">{row.amount}</TableCell>
             <TableCell align="right">
                 <Button variant="outlined" startIcon={<FeedIcon />} onClick={ ()=>{setIsDialogOpen(true)} }>
