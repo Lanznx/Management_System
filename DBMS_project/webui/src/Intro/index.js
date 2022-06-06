@@ -34,9 +34,12 @@ export default function Intro(){
                 maxWidth="md"
                 component="footer"
                 sx={{
-                borderTop: (theme) => `1px solid ${theme.palette.divider}`,
-                mt: 8,
-                py: [3, 6],
+                    borderTop: (theme) => `1px solid ${theme.palette.divider}`,
+                    // mt: 3,    
+                    position: 'absolute',
+                    left: '0',
+                    bottom: '30px',
+                    right: '0',
                 }}
             >
                 <Copyright sx={{ mt: 2 }} />

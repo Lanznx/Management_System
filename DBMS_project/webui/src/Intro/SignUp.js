@@ -12,21 +12,46 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 
+import { signUp } from './APIs';
+
 export default function SignUp(){
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        console.log({
+        const obj = {
+            username: data.get('username'),
             email: data.get('email'),
             password: data.get('password'),
-        });
+            confirmPassword: data.get('confirmPassword'),
+            phoneNumber: data.get('phoneNumber'),
+            acceptTerms: data.get('acceptTerms'),
+        }
+
+        if(obj.acceptTerms === null){
+          alert("請勾選同意服務條款");
+          return 
+        }
+
+        if(obj.password != obj.confirmPassword){
+          alert("密碼不一致");
+          return
+        }
+
+        // check if email validation by regular expression
+        if(! /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/.test(obj.email)){
+            alert("請輸入正確的email格式");
+        }
+
+        // if all validation is ok, send data to server
+        let resp = await signUp(obj.username, obj.password, obj.email, obj.phoneNumber);
+        alert(resp);
     };
     return (
      <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
           sx={{
-            marginTop: 8,
+            marginTop: 0,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
@@ -36,29 +61,19 @@ export default function SignUp(){
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign up
+            註冊
           </Typography>
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12}>
                 <TextField
                   autoComplete="given-name"
-                  name="firstName"
+                  name="username"
                   required
                   fullWidth
-                  id="firstName"
-                  label="First Name"
+                  id="username"
+                  label="使用者名稱"
                   autoFocus
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  required
-                  fullWidth
-                  id="lastName"
-                  label="Last Name"
-                  name="lastName"
-                  autoComplete="family-name"
                 />
               </Grid>
               <Grid item xs={12}>
@@ -66,7 +81,7 @@ export default function SignUp(){
                   required
                   fullWidth
                   id="email"
-                  label="Email Address"
+                  label="電子郵件"
                   name="email"
                   autoComplete="email"
                 />
@@ -76,16 +91,36 @@ export default function SignUp(){
                   required
                   fullWidth
                   name="password"
-                  label="Password"
+                  label="密碼"
                   type="password"
                   id="password"
                   autoComplete="new-password"
                 />
               </Grid>
               <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  name="confirmPassword"
+                  label="確認密碼"
+                  type="confirmPassword"
+                  id="confirmPassword"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  name="phoneNumber"
+                  label="手機號碼"
+                  type="number"
+                  id="phoneNumber"
+                />
+              </Grid>
+              <Grid item xs={12}>
                 <FormControlLabel
-                  control={<Checkbox value="allowExtraEmails" color="primary" />}
-                  label="I want to receive inspiration, marketing promotions and updates via email."
+                  control={<Checkbox name="acceptTerms" color="primary" />}
+                  label="確認使用者條款"
                 />
               </Grid>
             </Grid>
@@ -95,12 +130,12 @@ export default function SignUp(){
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign Up
+              註冊
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
                 <Link href="/signin" variant="body2">
-                  Already have an account? Sign in
+                  有帳號了嗎? 按這裡登入
                 </Link>
               </Grid>
             </Grid>

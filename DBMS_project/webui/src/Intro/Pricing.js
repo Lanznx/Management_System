@@ -22,6 +22,7 @@ const tiers = [
       '全部的幹話',
     ],
     buttonText: 'Sign up for free',
+    buttonLink: '/signup',
     buttonVariant: 'outlined',
   },
   {
@@ -115,7 +116,7 @@ export default function Pricing() {
                   </ul>
                 </CardContent>
                 <CardActions>
-                  <Button fullWidth variant={tier.buttonVariant}>
+                  <Button fullWidth variant={tier.buttonVariant} href={tier.buttonLink}>
                     {tier.buttonText}
                   </Button>
                 </CardActions>
