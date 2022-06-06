@@ -112,7 +112,8 @@ function DashboardContent() {
           <Toolbar
             sx={{
               pr: '24px', // keep right padding when drawer closed
-              backgroundImage: 'linear-gradient(to right, rgb(239 124 29), rgb(255 184 94))',
+              // backgroundImage: 'linear-gradient(to right, rgb(239 124 29), rgb(255 184 94))',
+              background: 'secondary'
             }}
           >
             <IconButton

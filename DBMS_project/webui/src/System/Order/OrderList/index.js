@@ -60,16 +60,16 @@ const attribute = [
 export default function OrderList(props) {
   const [sort, setSort] = React.useState("asc"); // asc or desc 排序用
   const [orderBy, setOrderBy] = React.useState("name");
-  const [allTags, setAllTags] = React.useState([
-    { 10: "邱德晏的屁股努力加載中" },
-    { 20: "邱德晏的屁股努力加載中" },
-  ]);
+  const [allTags, setAllTags] = React.useState({
+    10: "邱德晏的屁股努力加載中",
+    20: "邱德晏的屁股努力加載中",
+  });
 
   const [rows, setRows] = React.useState([
     {
       orderId: "努力加載中",
       totalPrice: "000",
-      tags: { 18: "邱德晏的屁股" ,  12: "邱德晏的肚子" },
+      tags: { 18: "邱德晏的屁股", 12: "邱德晏的肚子" },
       createTime: "明天",
       orderProducts: ["努力加載中"],
     },
@@ -121,10 +121,7 @@ export default function OrderList(props) {
       </Backdrop>
       <Paper sx={{ width: "100%", mb: 2 }}>
         <TableContainer element={Paper}>
-          <EnhancedTableToolbar
-            label="訂單"
-            attribute={attribute}
-          />
+          <EnhancedTableToolbar label="訂單" attribute={attribute} />
           <Table aria-label="collapsible table">
             <EnhancedTableHead
               order={sort}
