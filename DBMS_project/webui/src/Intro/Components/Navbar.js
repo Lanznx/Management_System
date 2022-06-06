@@ -13,7 +13,12 @@ function Navbar(props) {
         elevation={0}
         sx={{ borderBottom: (theme) => `1px solid ${theme.palette.divider}` }}
         >
-            <Toolbar sx={{ flexWrap: 'wrap' }}>
+            <Toolbar 
+                sx={{ 
+                    flexWrap: 'wrap',
+                    backgroundImage: 'linear-gradient(to right, rgb(239 124 29), rgb(255 184 94))'
+                }}
+            >
                 <Box
                     component="img"
                     sx={{

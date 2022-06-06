@@ -22,6 +22,7 @@ import Inventory from './Inventory';
 import CreateOrder from './Order/CreateOrder';
 import OrderList from './Order/OrderList';
 import Schedule from './Schedule';
+import Employee from './Employee';
 import Statement from './Statement';
 import Copyright from './Components/Copyright';
 import { Route, Routes, useLocation, matchRoutes } from 'react-router';
@@ -78,11 +79,6 @@ function DashboardContent() {
     setOpen(!open);
   };
 
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const handleProfileMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
   const location = useLocation()
   const [navTitle, setNavTitle] = React.useState("");
   React.useEffect(() => {
@@ -112,8 +108,9 @@ function DashboardContent() {
           <Toolbar
             sx={{
               pr: '24px', // keep right padding when drawer closed
-              // backgroundImage: 'linear-gradient(to right, rgb(239 124 29), rgb(255 184 94))',
-              background: 'secondary'
+              backgroundImage: 'linear-gradient(to right, rgb(239 124 29), rgb(255 184 94))',
+              // backgroundImage: 'linear-gradient(to top, rgb(103, 57, 41), rgb(243, 131, 56))',
+              // background: 'secondary'
             }}
           >
             <IconButton
@@ -223,6 +220,7 @@ function DashboardContent() {
                 <Route path="createOrder/*" element={<CreateOrder />} />
                 <Route path="orderList/*" element={<OrderList />} />
                 <Route path="schedule/*" element={<Schedule />} />
+                <Route path="employee/*" element={<Employee />} />
                 <Route path="statement/*" element={<Statement />} />
             </Routes>
             <Copyright sx={{ pt: 4 }}/>

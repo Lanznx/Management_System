@@ -42,9 +42,7 @@ function EnhancedTableHead(props) {
             </TableSortLabel>
           </TableCell>
         ))}
-        <TableCell
-          align="right"
-        >
+        <TableCell align="right">
           動作
         </TableCell>
       </TableRow>

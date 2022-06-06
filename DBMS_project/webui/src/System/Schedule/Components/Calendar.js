@@ -4,12 +4,12 @@ import { ViewState, EditingState } from "@devexpress/dx-react-scheduler";
 import {
   Scheduler,
   WeekView,
-  MonthView,
-  DayView,
+  // MonthView,
+  // DayView,
   Appointments,
   DragDropProvider,
   EditRecurrenceMenu,
-  AllDayPanel,
+  // AllDayPanel,
   Toolbar,
   DateNavigator,
   TodayButton,
@@ -21,60 +21,28 @@ import {
 const recurrenceAppointments = [
   {
     title: "邱德晏",
-    startDate: new Date(2022, 4, 25, 9, 15),
-    endDate: new Date(2022, 4, 25, 11, 30),
+    startDate: new Date(2022, 6, 25, 9, 15),
+    endDate: new Date(2022, 6, 25, 11, 30),
     id: 100,
     rRule: "FREQ=DAILY;COUNT=3",
   },
   {
-    title: "張簡",
-    startDate: new Date(2022, 4, 25, 12, 11),
-    endDate: new Date(2022, 4, 25, 13, 0),
-    id: 101,
-    rRule: "FREQ=DAILY;COUNT=4",
-  },
-  {
-    title: "呂安",
-    startDate: new Date(2022, 4, 25, 13, 30),
-    endDate: new Date(2022, 4, 25, 14, 35),
-    id: 102,
-  },
-  {
-    title: "鄭宇傑",
-    startDate: new Date(2022, 4, 26, 10, 0),
-    endDate: new Date(2022, 4, 26, 11, 0),
-    id: 3,
-  },
-  {
-    title: "邱品硯",
-    startDate: new Date(2022, 4, 27, 11, 45),
-    endDate: new Date(2022, 4, 27, 13, 20),
-    id: 4,
-  },
-  {
     title: "邱德晏",
-    startDate: new Date(2022, 4, 26, 14, 40),
-    endDate: new Date(2022, 4, 26, 15, 45),
-    id: 5,
-    location: "Room 2",
-  },
-  {
-    title: "邱德晏",
-    startDate: new Date(2022, 4, 28, 9, 45),
-    endDate: new Date(2022, 4, 28, 11, 15),
+    startDate: new Date(2022, 6, 28, 9, 45),
+    endDate: new Date(2022, 6, 28, 11, 15),
     id: 6,
     location: "Room 1",
   },
   {
     title: "邱德晏",
-    startDate: new Date(2022, 4, 29, 11, 45),
-    endDate: new Date(2022, 4, 29, 13, 4),
+    startDate: new Date(2022, 6, 29, 11, 45),
+    endDate: new Date(2022, 6, 29, 13, 4),
     id: 7,
   },
   {
     title: "邱德晏",
-    startDate: new Date(2022, 4, 29, 10, 0),
-    endDate: new Date(2022, 4, 29, 11, 30),
+    startDate: new Date(2022, 6, 29, 10, 0),
+    endDate: new Date(2022, 6, 29, 11, 30),
     id: 12,
   },
 ];
@@ -94,6 +62,56 @@ const appointmentComponent = (props) => {
   );
 };
 
+const BoolEditor = (props) => {
+  return null;
+};
+const LabelComponent = (props) => {
+  if (props.text === 'Details') {
+    return <AppointmentForm.Label
+    { ...props} 
+    text="Precio Modulo"
+    />  
+  } else if (props.text === 'More Information') {
+    return null
+  } else if (props.text === '-') {
+    return <AppointmentForm.Label
+    { ...props}
+    />  
+  }
+};
+const InputComponent = (props) => {
+  console.log("[index.js] props", props)
+  if (props.type === 'titleTextEditor') {
+    // return <AppointmentForm.TextEditor
+    // { ...props}
+    // type='numberEditor'
+    // placeholder='Precio'
+    // />
+    return <AppointmentForm.Select
+            { ...props}
+            value={1}
+            onValueChange={(value) => {console.log(value)} }
+            availableOptions={[
+              { id: 1, text: 'Precio Modulo' },
+              { id: 2, text: 'Precio' },
+            ]}
+          />
+
+  }
+};
+
+// cambio el layout
+const BasicLayout = ({ onFieldChange, appointmentData, ...restProps }) => {
+  return (
+    <AppointmentForm.BasicLayout
+      appointmentData={appointmentData}
+      onFieldChange={onFieldChange}
+      {...restProps}   
+    >
+    </AppointmentForm.BasicLayout>
+  );
+};
+
 export default class Calendar extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -107,26 +125,33 @@ export default class Calendar extends React.PureComponent {
   }
 
   commitChanges({ added, changed, deleted }) {
+    console.log("added: ", added);
+    console.log("changed: ", changed);
+    console.log("deleted: ", deleted);
     this.setState((state) => {
       let { data } = state;
+      console.log("data: ", data);
       if (added) {
         const startingAddedId =
           data.length > 0 ? data[data.length - 1].id + 1 : 0;
         data = [...data, { id: startingAddedId, ...added }];
       }
       if (changed) {
-        data = data.map((appointment) =>
-          changed[appointment.id]
-            ? { ...appointment, ...changed[appointment.id] }
-            : appointment
-        );
+        data.map((timeblock) => {
+          console.log("timeblock: ", timeblock);
+          // changed[timeblock.id]
+          //   ? { ...timeblock, ...changed[timeblock.id] }
+          //   : timeblock
+        });
       }
       if (deleted !== undefined) {
-        data = data.filter((appointment) => appointment.id !== deleted);
+        data = data.filter((timeblock) => timeblock.id !== deleted);
       }
       return { data };
     });
   }
+
+  
 
   render() {
     const {
@@ -150,7 +175,7 @@ export default class Calendar extends React.PureComponent {
           <ViewState defaultCurrentDate={currentDate} />
           <EditingState onCommitChanges={this.onCommitChanges} />
           <EditRecurrenceMenu />
-          <WeekView startDayHour={8.5} endDayHour={21.5} />
+          {/* <WeekView startDayHour={8.5} endDayHour={21.5} /> */}
           <WeekView
             name="work-week"
             displayName="Work Week"
@@ -158,17 +183,23 @@ export default class Calendar extends React.PureComponent {
             startDayHour={9}
             endDayHour={19}
           />
-          <MonthView />
-          <DayView />
-          <Appointments appointmentComponent={appointmentComponent} />
+          {/* <MonthView /> */}
+          {/* <DayView /> */}
+          {/* <Appointments appointmentComponent={appointmentComponent} /> */}
           <Toolbar />
           <DateNavigator />
           <TodayButton />
           <Appointments />
           <AppointmentTooltip showCloseButton showOpenButton showDeleteButton />
-          <AppointmentForm />
+          
+          {/* <AppointmentForm> without recurrence checkbox */}
+          <AppointmentForm
+            basicLayoutComponent={BasicLayout}
+            booleanEditorComponent={BoolEditor}
+            labelComponent={LabelComponent}
+            textEditorComponent={InputComponent}
+          />
 
-          <AllDayPanel />
           <DragDropProvider allowDrag={allowDrag} />
           <CurrentTimeIndicator
             shadePreviousCells={shadePreviousCells}
