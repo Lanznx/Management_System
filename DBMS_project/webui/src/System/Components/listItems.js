@@ -9,6 +9,7 @@ import PeopleIcon from "@mui/icons-material/People";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import LayersIcon from "@mui/icons-material/Layers";
 import AssignmentIcon from "@mui/icons-material/Assignment";
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 
 import { Link } from "react-router-dom";
 
@@ -34,9 +35,15 @@ export const mainListItems = (
     </ListItemButton>
     <ListItemButton component={Link} to="schedule">
       <ListItemIcon>
-        <PeopleIcon />
+        <CalendarTodayIcon />
       </ListItemIcon>
       <ListItemText primary="排班表" />
+    </ListItemButton>
+    <ListItemButton component={Link} to="employee">
+      <ListItemIcon>
+        <PeopleIcon />
+      </ListItemIcon>
+      <ListItemText primary="人員管理" />
     </ListItemButton>
     <ListItemButton component={Link} to="statement">
       <ListItemIcon>
