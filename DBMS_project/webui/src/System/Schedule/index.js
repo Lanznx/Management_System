@@ -1,7 +1,7 @@
-import Calendar from "./Components/Calendar"
+import Calendar2 from "./Components/Calendar2"
 
 export default function Schedule(){
     return (
-        <Calendar/>
+        <Calendar2/>
     )
 }

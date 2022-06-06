@@ -78,11 +78,6 @@ function DashboardContent() {
     setOpen(!open);
   };
 
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const handleProfileMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
   const location = useLocation()
   const [navTitle, setNavTitle] = React.useState("");
   React.useEffect(() => {

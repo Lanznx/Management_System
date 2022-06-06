@@ -49,7 +49,7 @@ export const mainListItems = (
 
 export const secondaryListItems = (
   <React.Fragment>
-    <ListSubheader component="div" inset>
+    <ListSubheader sx={{bgcolor: 'rgba(0, 0, 0, 0)'}} component="div" inset>
       Saved reports
     </ListSubheader>
     <ListItemButton>
