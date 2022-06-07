@@ -25,28 +25,26 @@ export default function OrderRow(props) {
   // history 原料更動紀錄
   // refresh 刷新原料資料 API
   const { row, refresh, allTags } = props;
-  const [chosedTags, setChosedTags] = React.useState([]);
+  const [chosedTags, setChosedTags] = React.useState(
+    row.tags.map((tag) => {
+      if (allTags[tag.tagId]) return tag.tagId;
+    })
+  );
+
   const [orderData, setOrderData] = React.useState([]);
   const [totalPrice, setTotalPrice] = React.useState(row.totalPrice);
   const [canSend, setCanSend] = React.useState(false);
   const [newRow, setNewRow] = React.useState(row);
-  const orderProducts = row.orderProducts || [];
-
+  const [orderProducts, setOrderProducts] = React.useState(row.orderProducts);
   const [expandOpen, setExpandOpen] = React.useState(false);
 
-  React.useEffect(() => {
-    let newOrderData = {};
-    orderProducts.forEach((orderProduct) => {
-      if (orderData[orderProduct.productId]) {
-        orderData[orderProduct.productId] += orderProduct.productAmount;
-      } else {
-        orderData[orderProduct.productId] = orderProduct.productAmount;
-      }
-    });
-    console.log("===============orderData===============");
-    console.log(orderData);
-    setOrderData(newOrderData);
-  }, []);
+    React.useEffect(()=>{
+      let checkChosedTags = row.tags.map((tag) => {
+        if (allTags[tag.tagId]) return tag.tagId;
+      });
+      setChosedTags(checkChosedTags);
+    }, [allTags, row])
+
 
   React.useEffect(() => {
     setNewRow({
@@ -61,17 +59,24 @@ export default function OrderRow(props) {
           productAmount: orderData[orderProduct.productId],
         };
       }),
-      tags: Object.keys(chosedTags),
+      tags: chosedTags,
     });
 
-    console.log(JSON.stringify(row), "row");
-    console.log(JSON.stringify(newRow), "newRow");
+    // console.log(row, "row");
+    // console.log(newRow, "newRow");
 
     if (JSON.stringify(row) !== JSON.stringify(newRow)) {
       setCanSend(true);
-      console.log("!==");
-    } else console.log("===");
+      console.log("row !== newRow");
+    } else console.log("row === newRow");
   }, [orderData, chosedTags, totalPrice]);
+
+  const handleAmountChange = (event) => {
+    const { id, value } = event.target;
+    const newOrderData = { ...orderData };
+    newOrderData[id] = value;
+    setOrderData(newOrderData);
+  };
 
   const handleDelete = async (id) => {
     console.log("[CollapsibleRow.js handleDelete] delete order: ", id);
@@ -86,12 +91,7 @@ export default function OrderRow(props) {
   const handleUpdate = async (id) => {
     console.log("[CollapsibleRow.js handleUpdate] update order: ", id);
     props.setIsBackdropOpen(true);
-    let resp = await updateOrder(
-      id,
-      orderData,
-      Object.keys(chosedTags),
-      totalPrice
-    );
+    let resp = await updateOrder(id, orderData, chosedTags, totalPrice);
     console.log("update resp: ", resp);
     await props.refresh();
     props.setIsBackdropOpen(false);
@@ -121,6 +121,7 @@ export default function OrderRow(props) {
             options={Object.values(allTags).map((tag) => tag)}
             chosedTags={chosedTags}
             setChosedTags={setChosedTags}
+            allTags={allTags}
           />
         </TableCell>
         <TableCell align="right"> {row.createTime} </TableCell>
@@ -176,17 +177,16 @@ export default function OrderRow(props) {
                           value={orderProduct.productAmount}
                           type="number"
                           onChange={(e) => {
-                            console.log(
-                              "[CollapsibleRow.js] orderProduct.productAmount: ",
-                              orderProduct.productAmount
-                            );
-                            let newOrderData = {
-                              ...orderData,
-                              [orderProduct.productId]: e.target.value,
-                            };
-                            console.log(
-                              "[CollapsibleRow.js] newOrderData: ",
-                              newOrderData
+                            handleAmountChange(e);
+                            setOrderProducts(
+                              orderProducts.map((orderProduct) => {
+                                if (orderProduct.productId === e.target.id) {
+                                  return {
+                                    ...orderProduct,
+                                    productAmount: e.target.value,
+                                  };
+                                } else return orderProduct;
+                              })
                             );
                           }}
                         />
