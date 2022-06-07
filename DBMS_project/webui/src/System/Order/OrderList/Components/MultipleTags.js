@@ -37,7 +37,6 @@ export default function MultipleTags(props) {
       // });
       // setChosedTags(newChosedTags); // 以上因應 chosedTags 如果是給 dict 的情況
     };
-    console.log(chosedTags, "chosedTags");
 
   return (
     <FormControl
@@ -54,7 +53,6 @@ export default function MultipleTags(props) {
         onChange={handleChange}
         input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
         renderValue={(selected) => (
-          console.log(selected, "selected"),
           <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
             {selected.map((value, index) => (
               <Chip key={index} label={value} color="primary" />
