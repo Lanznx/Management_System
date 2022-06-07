@@ -25,58 +25,71 @@ export default function OrderRow(props) {
   // history 原料更動紀錄
   // refresh 刷新原料資料 API
   const { row, refresh, allTags } = props;
+
+  const [expandOpen, setExpandOpen] = React.useState(false);
+  const [canSend, setCanSend] = React.useState(false);
   const [chosedTags, setChosedTags] = React.useState(
     row.tags.map((tag) => {
       if (allTags[tag.tagId]) return tag.tagId;
     })
   );
+  //////////////////////////////////////////////
+  const OLD_chosedTags = row.tags.map((tag) => tag.tagId);
+  const OLD_orderProducts = row.orderProducts;
+  //////////////////////////////////////////////
 
-  const [orderData, setOrderData] = React.useState([]);
-  const [totalPrice, setTotalPrice] = React.useState(row.totalPrice);
-  const [canSend, setCanSend] = React.useState(false);
-  const [newRow, setNewRow] = React.useState(row);
   const [orderProducts, setOrderProducts] = React.useState(row.orderProducts);
-  const [expandOpen, setExpandOpen] = React.useState(false);
-
-    React.useEffect(()=>{
-      let checkChosedTags = row.tags.map((tag) => {
-        if (allTags[tag.tagId]) return tag.tagId;
-      });
-      setChosedTags(checkChosedTags);
-    }, [allTags, row])
-
+  const [orderData, setOrderData] = React.useState({});
+  const [totalPrice, setTotalPrice] = React.useState(row.totalPrice);
 
   React.useEffect(() => {
-    setNewRow({
-      orderId: row.orderId,
-      createTime: row.createTime,
-      totalPrice: totalPrice,
-      orderProducts: orderProducts.map((orderProduct) => {
-        return {
-          productId: orderProduct.productId,
-          productName: orderProduct.productName,
-          productPrice: orderProduct.productPrice,
-          productAmount: orderData[orderProduct.productId],
-        };
-      }),
-      tags: chosedTags,
+    let checkChosedTags = row.tags.map((tag) => {
+      if (allTags[tag.tagId]) return tag.tagId;
     });
+    setChosedTags(checkChosedTags);
+  }, [allTags, row]);
 
-    // console.log(row, "row");
-    // console.log(newRow, "newRow");
+  React.useEffect(() => {
+    console.log("===========================");
+    console.log(chosedTags, "chosedTags");
+    console.log(OLD_chosedTags, "OLD_chosedTags");
+    console.log(orderProducts, "orderProducts");
+    console.log(OLD_orderProducts, "OLD_orderProducts");
+    console.log("===========================");
 
-    if (JSON.stringify(row) !== JSON.stringify(newRow)) {
+    if (
+      JSON.stringify(chosedTags) !== JSON.stringify(OLD_chosedTags) ||
+      JSON.stringify(orderProducts) !== JSON.stringify(OLD_orderProducts)
+    ) {
       setCanSend(true);
-      console.log("row !== newRow");
-    } else console.log("row === newRow");
+      console.log("the row is different !!");
+    } else console.log("the row is the same !!");
   }, [orderData, chosedTags, totalPrice]);
 
-  const handleAmountChange = (event) => {
-    const { id, value } = event.target;
-    const newOrderData = { ...orderData };
-    newOrderData[id] = value;
+  const handleAmountChange = (id, event) => {
+    const newOrderProducts = orderProducts.map((orderProduct) => {
+      if (orderProduct.productId === id) {
+        return {
+          ...orderProduct,
+          productAmount: event.target.value,
+        };
+      } else return orderProduct;
+    });
+    setOrderProducts(newOrderProducts);
+
+    let newTotalPrice = 0
+    newOrderProducts.map(o=>{
+      newTotalPrice += o.productAmount * o.productPrice
+    })
+    setTotalPrice(newTotalPrice);
+
+    const newOrderData = {};
+    orderProducts.forEach((orderProduct) => {
+      newOrderData[orderProduct.productId] = orderProduct.productAmount;
+    });
     setOrderData(newOrderData);
   };
+  console.log("orderdata: ", orderData);
 
   const handleDelete = async (id) => {
     console.log("[CollapsibleRow.js handleDelete] delete order: ", id);
@@ -91,11 +104,14 @@ export default function OrderRow(props) {
   const handleUpdate = async (id) => {
     console.log("[CollapsibleRow.js handleUpdate] update order: ", id);
     props.setIsBackdropOpen(true);
-    let resp = await updateOrder(id, orderData, chosedTags, totalPrice);
-    console.log("update resp: ", resp);
-    await props.refresh();
+    // let resp = await updateOrder(id, orderData, chosedTags, totalPrice);
+    // console.log("update resp: ", resp);
+    // await props.refresh();
+    console.log(totalPrice, "totalPrice");
+    console.log(chosedTags, "chosedTags");
+    console.log(orderData, "orderData");
     props.setIsBackdropOpen(false);
-    refresh();
+    // refresh();
   };
 
   return (
@@ -142,7 +158,7 @@ export default function OrderRow(props) {
             color="success"
             aria-label="delete"
             onClick={() => {
-              // handleUpdate(row.id, orderData, Object.keys(chosedTags), totalPrice);
+              handleUpdate(row.id, orderData, Object.keys(chosedTags), totalPrice);
               setCanSend(false);
               console.log(canSend);
             }}
@@ -176,19 +192,9 @@ export default function OrderRow(props) {
                         <TextField
                           value={orderProduct.productAmount}
                           type="number"
-                          onChange={(e) => {
-                            handleAmountChange(e);
-                            setOrderProducts(
-                              orderProducts.map((orderProduct) => {
-                                if (orderProduct.productId === e.target.id) {
-                                  return {
-                                    ...orderProduct,
-                                    productAmount: e.target.value,
-                                  };
-                                } else return orderProduct;
-                              })
-                            );
-                          }}
+                          onChange={(e) =>
+                            handleAmountChange(orderProduct.productId, e)
+                          }
                         />
                       </TableCell>
                       <TableCell align="right">
@@ -202,7 +208,7 @@ export default function OrderRow(props) {
                     </TableCell>
                     <TableCell align="right" sx={{ fontWeight: "bold" }} />
                     <TableCell align="right" sx={{ fontWeight: "bold" }}>
-                      {row.totalPrice}
+                      {totalPrice}
                     </TableCell>
                   </TableRow>
                 </TableBody>

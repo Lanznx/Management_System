@@ -6,7 +6,7 @@ import { Backdrop, CircularProgress } from "@mui/material";
 import OrderRow from "./Components/OrderRow";
 import EnhancedTableToolbar from "./Components/EnhancedTableToolbar";
 import EnhancedTableHead from "./Components/EnhancedTableHead";
-import { getAllOrders, getTagDict } from "./APIs";
+import { getAllOrders, getTagDict, createTag } from "./APIs";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -64,7 +64,7 @@ export default function OrderList(props) {
     10: "邱德晏的屁股努力加載中",
     20: "邱德晏的肚子努力加載中",
   });
-
+  const [open, setOpen] = React.useState(false);
   const [rows, setRows] = React.useState([
     {
       orderId: "努力加載中",
@@ -79,19 +79,34 @@ export default function OrderList(props) {
     },
   ]);
 
+  async function handleCreateTag() {
+    let tag = document.getElementById("tag").value;
+    let tagDict = await getTagDict();
+    let tagId = Object.keys(tagDict).find((key) => tagDict[key] === tag);
+    if (tagDict[tagId]) {
+      window.alert("此標籤已存在");
+    } else if (!tag) {
+      window.alert("您必須輸入標籤名稱");
+    } else {
+      await createTag(tag);
+      let tagDict = await getTagDict();
+      setAllTags(tagDict);
+      window.alert("新增標籤成功");
+      setOpen(false);
+    }
+  }
+
   async function fetchTags() {
     const resp = await getTagDict();
     // console.log("[OrderRow.js fetchTags] resp: ", resp);
     setAllTags(resp);
-    console.log("============================");
-    console.log(allTags);
   }
 
   React.useEffect(() => {
     (async () => {
       const results = await getAllOrders();
       setRows(results);
-      console.log(results, "results");
+      console.log(results, "allOrders");
     })();
     fetchTags();
   }, []);
@@ -125,7 +140,14 @@ export default function OrderList(props) {
       </Backdrop>
       <Paper sx={{ width: "100%", mb: 2 }}>
         <TableContainer element={Paper}>
-          <EnhancedTableToolbar label="訂單" attribute={attribute} />
+          <EnhancedTableToolbar
+            label="訂單"
+            attribute={attribute}
+            open={open}
+            setOpen={setOpen}
+            handleCreateTag={handleCreateTag}
+          />
+
           <Table aria-label="collapsible table">
             <EnhancedTableHead
               order={sort}
