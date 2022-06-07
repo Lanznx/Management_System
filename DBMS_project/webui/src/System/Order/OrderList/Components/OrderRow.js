@@ -19,30 +19,23 @@ import { deleteOrder, updateOrder } from "../APIs";
 import MultipleTags from "./MultipleTags";
 
 export default function OrderRow(props) {
-  console.log("props: ", props);
-
-  // row 原料資料
-  // history 原料更動紀錄
-  // refresh 刷新原料資料 API
   const { row, refresh, allTags } = props;
 
   const [expandOpen, setExpandOpen] = React.useState(false);
   const [canSend, setCanSend] = React.useState(false);
+  const OLD_orderProducts = row.orderProducts;
+  const [orderProducts, setOrderProducts] = React.useState(row.orderProducts);
+  const OLD_chosedTags = row.tags.map((tag) => tag.tagId);
   const [chosedTags, setChosedTags] = React.useState(
     row.tags.map((tag) => {
       if (allTags[tag.tagId]) return tag.tagId;
     })
   );
-  //////////////////////////////////////////////
-  const OLD_chosedTags = row.tags.map((tag) => tag.tagId);
-  const OLD_orderProducts = row.orderProducts;
-  //////////////////////////////////////////////
-
-  const [orderProducts, setOrderProducts] = React.useState(row.orderProducts);
   const [orderData, setOrderData] = React.useState({});
   const [totalPrice, setTotalPrice] = React.useState(row.totalPrice);
 
   React.useEffect(() => {
+    setOrderProducts(row.orderProducts);  // 用來防止 row 的 useState 比 orderProducts 的 useState 跑多一次！！！
     let checkChosedTags = row.tags.map((tag) => {
       if (allTags[tag.tagId]) return tag.tagId;
     });
@@ -50,24 +43,38 @@ export default function OrderRow(props) {
   }, [allTags, row]);
 
   React.useEffect(() => {
-    console.log("===========================");
-    console.log(chosedTags, "chosedTags");
-    console.log(OLD_chosedTags, "OLD_chosedTags");
-    console.log(orderProducts, "orderProducts");
-    console.log(OLD_orderProducts, "OLD_orderProducts");
-    console.log("===========================");
-
     if (
       JSON.stringify(chosedTags) !== JSON.stringify(OLD_chosedTags) ||
       JSON.stringify(orderProducts) !== JSON.stringify(OLD_orderProducts)
     ) {
+      console.log("!!!!!!!!!!!!!NOT EQUAL===========");
       setCanSend(true);
-      console.log("the row is different !!");
-    } else console.log("the row is the same !!");
-  }, [orderData, chosedTags, totalPrice]);
+    } else {
+      setCanSend(false);
+      console.log("============EQUAL============");
+    }
+    console.log("===================================");
+    console.log(row.orderId, "row.orderId");
+    console.log(OLD_chosedTags, "OLD_chosedTags");
+    console.log(chosedTags, "chosedTags");
+    console.log(OLD_orderProducts, "OLD_orderProducts");
+    console.log(orderProducts, "orderProducts");
+    console.log("===================================");
+
+    const newOrderData = {};
+    orderProducts.forEach((orderProduct) => {
+      newOrderData[orderProduct.productId] = orderProduct.productAmount;
+    });
+    setOrderData(newOrderData);
+    // console.log(totalPrice, "totalPrice");
+    // console.log(chosedTags, "chosedTags");
+    // console.log(orderData, "orderData"); // 因為還沒更新，所以他會 render 出上一次的值
+    // console.log("===================================")
+  }, [chosedTags, totalPrice]);
 
   const handleAmountChange = (id, event) => {
     const newOrderProducts = orderProducts.map((orderProduct) => {
+      console.log(event.target.value, "event.target.value");
       if (orderProduct.productId === id) {
         return {
           ...orderProduct,
@@ -77,19 +84,12 @@ export default function OrderRow(props) {
     });
     setOrderProducts(newOrderProducts);
 
-    let newTotalPrice = 0
-    newOrderProducts.map(o=>{
-      newTotalPrice += o.productAmount * o.productPrice
-    })
-    setTotalPrice(newTotalPrice);
-
-    const newOrderData = {};
-    orderProducts.forEach((orderProduct) => {
-      newOrderData[orderProduct.productId] = orderProduct.productAmount;
+    let newTotalPrice = 0;
+    newOrderProducts.map((o) => {
+      newTotalPrice += o.productAmount * o.productPrice;
     });
-    setOrderData(newOrderData);
+    setTotalPrice(newTotalPrice);
   };
-  console.log("orderdata: ", orderData);
 
   const handleDelete = async (id) => {
     console.log("[CollapsibleRow.js handleDelete] delete order: ", id);
@@ -107,11 +107,8 @@ export default function OrderRow(props) {
     // let resp = await updateOrder(id, orderData, chosedTags, totalPrice);
     // console.log("update resp: ", resp);
     // await props.refresh();
-    console.log(totalPrice, "totalPrice");
-    console.log(chosedTags, "chosedTags");
-    console.log(orderData, "orderData");
     props.setIsBackdropOpen(false);
-    // refresh();
+    props.refresh();
   };
 
   return (
@@ -158,7 +155,12 @@ export default function OrderRow(props) {
             color="success"
             aria-label="delete"
             onClick={() => {
-              handleUpdate(row.id, orderData, Object.keys(chosedTags), totalPrice);
+              handleUpdate(
+                row.id,
+                orderData,
+                Object.keys(chosedTags),
+                totalPrice
+              );
               setCanSend(false);
               console.log(canSend);
             }}
@@ -182,7 +184,7 @@ export default function OrderRow(props) {
                 <TableBody>
                   {orderProducts.map((orderProduct) => (
                     <TableRow
-                      key={orderProduct.productName}
+                      key={orderProduct.productId}
                       sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                     >
                       <TableCell component="th" scope="row">
