@@ -22,25 +22,22 @@ export default function MultipleTags(props) {
   const { chosedTags, setChosedTags, allTags } = props;
 
   const handleChange = (e) => {
-    console.log(e.target.value, "e.target.value");
     let chosedTagsValues = e.target.value;
     let chosedTagsKeys = [];
     Object.keys(allTags).find((key) => {
       chosedTagsValues.map((value) => {
-        console.log(JSON.stringify(allTags[key]));
-        console.log(JSON.stringify(value));
-        if (JSON.stringify(allTags[key]) == JSON.stringify(value))
+        if (allTags[key] === value)
           chosedTagsKeys.push(key);
       });
     });
-    let newChosedTags = {};
-    chosedTagsKeys.map((key) => {
-      newChosedTags[key] = allTags[key];
-    });
-    setChosedTags(newChosedTags);
-  };
-
-  console.log(chosedTags, "chosedTags");
+    setChosedTags(chosedTagsKeys);
+    // let newChosedTags = {};
+    // chosedTagsKeys.map((key) => {
+      //   newChosedTags[key] = allTags[key];
+      // });
+      // setChosedTags(newChosedTags); // 以上因應 chosedTags 如果是給 dict 的情況
+    };
+    console.log(chosedTags, "chosedTags");
 
   return (
     <FormControl
@@ -53,10 +50,11 @@ export default function MultipleTags(props) {
         labelId="demo-multiple-chip-label"
         id="demo-multiple-chip"
         multiple
-        value={Object.values(chosedTags).map((tag) => tag)}
+        value={chosedTags.map(tagId => allTags[tagId])}
         onChange={handleChange}
         input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
         renderValue={(selected) => (
+          console.log(selected, "selected"),
           <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
             {selected.map((value, index) => (
               <Chip key={index} label={value} color="primary" />

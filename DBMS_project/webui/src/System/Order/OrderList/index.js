@@ -62,14 +62,18 @@ export default function OrderList(props) {
   const [orderBy, setOrderBy] = React.useState("name");
   const [allTags, setAllTags] = React.useState({
     10: "邱德晏的屁股努力加載中",
-    20: "邱德晏的屁股努力加載中",
+    20: "邱德晏的肚子努力加載中",
   });
 
   const [rows, setRows] = React.useState([
     {
       orderId: "努力加載中",
       totalPrice: "000",
-      tags: { 18: "邱德晏的屁股", 12: "邱德晏的肚子" },
+      tags: [
+        {
+          tagId: "10",
+        },
+      ],
       createTime: "明天",
       orderProducts: ["努力加載中"],
     },
@@ -85,9 +89,9 @@ export default function OrderList(props) {
 
   React.useEffect(() => {
     (async () => {
-      const result = await getAllOrders();
-      setRows(result);
-      console.log(result);
+      const results = await getAllOrders();
+      setRows(results);
+      console.log(results, "results");
     })();
     fetchTags();
   }, []);

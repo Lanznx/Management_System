@@ -25,7 +25,12 @@ export default function OrderRow(props) {
   // history 原料更動紀錄
   // refresh 刷新原料資料 API
   const { row, refresh, allTags } = props;
-  const [chosedTags, setChosedTags] = React.useState({});
+  const [chosedTags, setChosedTags] = React.useState(
+    row.tags.map((tag) => {
+      if (allTags[tag.tagId]) return tag.tagId;
+    })
+  );
+
   const [orderData, setOrderData] = React.useState([]);
   const [totalPrice, setTotalPrice] = React.useState(row.totalPrice);
   const [canSend, setCanSend] = React.useState(false);
@@ -33,9 +38,16 @@ export default function OrderRow(props) {
   const [orderProducts, setOrderProducts] = React.useState(row.orderProducts);
   const [expandOpen, setExpandOpen] = React.useState(false);
 
+    React.useEffect(()=>{
+      let checkChosedTags = row.tags.map((tag) => {
+        if (allTags[tag.tagId]) return tag.tagId;
+      });
+      setChosedTags(checkChosedTags);
+    }, [allTags, row])
+
 
   React.useEffect(() => {
-    setNewRow({ 
+    setNewRow({
       orderId: row.orderId,
       createTime: row.createTime,
       totalPrice: totalPrice,
@@ -47,7 +59,7 @@ export default function OrderRow(props) {
           productAmount: orderData[orderProduct.productId],
         };
       }),
-      tags: Object.keys(chosedTags),
+      tags: chosedTags,
     });
 
     // console.log(row, "row");
@@ -79,12 +91,7 @@ export default function OrderRow(props) {
   const handleUpdate = async (id) => {
     console.log("[CollapsibleRow.js handleUpdate] update order: ", id);
     props.setIsBackdropOpen(true);
-    let resp = await updateOrder(
-      id,
-      orderData,
-      Object.keys(chosedTags),
-      totalPrice
-    );
+    let resp = await updateOrder(id, orderData, chosedTags, totalPrice);
     console.log("update resp: ", resp);
     await props.refresh();
     props.setIsBackdropOpen(false);
@@ -110,7 +117,6 @@ export default function OrderRow(props) {
         </TableCell>
         <TableCell align="right">
           <MultipleTags
-          
             label={"標籤"}
             options={Object.values(allTags).map((tag) => tag)}
             chosedTags={chosedTags}
