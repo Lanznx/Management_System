@@ -58,6 +58,9 @@ const attribute = [
 ];
 
 export default function OrderList(props) {
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [isBackdropOpen, setIsBackdropOpen] = React.useState(false);
   const [sort, setSort] = React.useState("asc"); // asc or desc 排序用
   const [orderBy, setOrderBy] = React.useState("name");
   const [allTags, setAllTags] = React.useState({
@@ -75,7 +78,14 @@ export default function OrderList(props) {
         },
       ],
       createTime: "明天",
-      orderProducts: ["努力加載中"],
+      orderProducts: [
+        {
+          productId: "努力加載中",
+          productName: "努力加載中",
+          productPrice: "000",
+          productAmount: "000",
+        },
+      ],
     },
   ]);
 
@@ -102,18 +112,18 @@ export default function OrderList(props) {
     setAllTags(resp);
   }
 
-  React.useEffect(() => {
-    (async () => {
-      const results = await getAllOrders();
-      setRows(results);
-      console.log(results, "allOrders");
-    })();
-    fetchTags();
-  }, []);
+  async function refresh() {
+    setIsBackdropOpen(true);
+    const results = await getAllOrders();
+    setRows(results);
+    console.log(results, "allOrders");
+    await fetchTags();
+    setIsBackdropOpen(false);
+  }
 
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [isBackdropOpen, setIsBackdropOpen] = React.useState(false);
+  React.useEffect(() => {
+    refresh();
+  }, []);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && sort === "asc";
@@ -166,7 +176,7 @@ export default function OrderList(props) {
                     allTags={allTags}
                     key={index}
                     row={row}
-                    refresh={props.refresh}
+                    refresh={refresh}
                     setIsBackdropOpen={setIsBackdropOpen}
                   />
                 ))}
