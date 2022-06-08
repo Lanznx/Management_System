@@ -41,7 +41,6 @@ export default function FormDialog(props) {
                         onChange={(e) => {setEmployeeName(e.target.value)}}
                     />
                     <TextField
-                        autoFocus
                         margin="dense"
                         fullWidth
                         label="員工薪水"

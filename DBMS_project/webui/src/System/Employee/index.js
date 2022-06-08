@@ -86,7 +86,7 @@ export default function Employee(){
                                     <Button variant="outlined" startIcon={<FeedIcon />} onClick={ ()=>{setIsDialogOpen(true)} }>
                                         詳細資料
                                     </Button>
-                                    <IconButton aria-label="delete" onClick={ () => {handleDelete(employee.id)} }>
+                                    <IconButton aria-label="delete" onClick={ () => {handleDelete(employee.employeeId)} }>
                                         <DeleteIcon />
                                     </IconButton>
                                     <DetailDialog open={isDialogOpen} setIsDialogOpen={setIsDialogOpen} row={employee} refresh={fetchData}/>

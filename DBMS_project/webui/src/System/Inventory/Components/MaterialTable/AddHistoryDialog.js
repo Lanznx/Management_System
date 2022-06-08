@@ -9,7 +9,7 @@ import { updateMaterialAmount } from '../../APIs';
 export default function AddHistoryDialog(props) {
     const { open, setIsDialogOpen, refresh } = props
 
-    const [materialName, setMaterialName] = React.useState(props.row.name)
+    // const [materialName, setMaterialName] = React.useState(props.row.name)
     const [materialPrice, setMaterialPrice] = React.useState(0)
     const [materialAmount, setMaterialAmount] = React.useState(0)
 
@@ -31,7 +31,7 @@ export default function AddHistoryDialog(props) {
                         margin="dense"
                         fullWidth
                         label="品名"
-                        value={materialName}
+                        value={props.row.name}
                         type="text"
                         variant='standard'
                         onChange={(e) => {}}
