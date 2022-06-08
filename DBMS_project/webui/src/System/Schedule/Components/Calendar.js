@@ -21,6 +21,19 @@ import {
 const recurrenceAppointments = [
   {
     title: "邱德晏",
+    startDate: new Date(2022, 6, 8, 9, 45),
+    endDate: new Date(2022, 6, 8, 11, 15),
+    id: 6,
+    location: "Room 1",
+  },
+  {
+    title: "邱德晏",
+    startDate: new Date(2022, 6, 9, 11, 45),
+    endDate: new Date(2022, 6, 9, 13, 4),
+    id: 7,
+  },
+  {
+    title: "邱德晏",
     startDate: new Date(2022, 6, 25, 9, 15),
     endDate: new Date(2022, 6, 25, 11, 30),
     id: 100,
@@ -69,7 +82,7 @@ const LabelComponent = (props) => {
   if (props.text === 'Details') {
     return <AppointmentForm.Label
     { ...props} 
-    text="Precio Modulo"
+    text="職員"
     />  
   } else if (props.text === 'More Information') {
     return null
@@ -92,8 +105,8 @@ const InputComponent = (props) => {
             value={1}
             onValueChange={(value) => {console.log(value)} }
             availableOptions={[
-              { id: 1, text: 'Precio Modulo' },
-              { id: 2, text: 'Precio' },
+              { id: 1, text: '邱德晏' },
+              { id: 2, text: '屁股' },
             ]}
           />
 
@@ -137,12 +150,11 @@ export default class Calendar extends React.PureComponent {
         data = [...data, { id: startingAddedId, ...added }];
       }
       if (changed) {
-        data.map((timeblock) => {
-          console.log("timeblock: ", timeblock);
-          // changed[timeblock.id]
-          //   ? { ...timeblock, ...changed[timeblock.id] }
-          //   : timeblock
-        });
+        data = data.map((timeblock) => 
+          changed[timeblock.id]
+            ? { ...timeblock, ...changed[timeblock.id] }
+            : timeblock
+        );
       }
       if (deleted !== undefined) {
         data = data.filter((timeblock) => timeblock.id !== deleted);
