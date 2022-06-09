@@ -43,7 +43,7 @@ export default function AddHistoryDialog(props) {
                         autoFocus
                         margin="dense"
                         fullWidth
-                        label="售價"
+                        label="花費（減少則免填）"
                         value={`${materialPrice}`}
                         type="text"
                         variant='standard'
@@ -55,7 +55,7 @@ export default function AddHistoryDialog(props) {
                         autoFocus
                         margin="dense"
                         fullWidth
-                        label="數量"
+                        label="數量（增加/減少）"
                         value={materialAmount}
                         type="number"
                         variant='standard'
