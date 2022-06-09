@@ -51,7 +51,7 @@ export default function Row(props){
         props.setIsBackdropOpen(true);
         let resp = await getMaterialHistory(materialId);
         console.log("[CollapsibleRow.js updateHistory] resp: ", resp);
-        setHistory(resp);
+        await setHistory(resp);
         props.setIsBackdropOpen(false);
     }
 

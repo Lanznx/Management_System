@@ -17,8 +17,8 @@ export default function AddHistoryDialog(props) {
         console.log("[FormDialog.js handleSubmit] update product: ", materialId);
         const resp = await updateMaterialAmount(materialId, amountChange, materialPrice);
         console.log("update resp: ", resp);
-        await refresh();
         setIsDialogOpen(false);
+        await refresh(materialId);
     }
 
     return (
