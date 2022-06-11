@@ -64,7 +64,7 @@ export default function OrderList(props) {
   const [sort, setSort] = React.useState("asc"); // asc or desc 排序用
   const [orderBy, setOrderBy] = React.useState("name");
   const [allTags, setAllTags] = React.useState({
-    10: "邱德晏的屁股努力加載中",
+    10: "邱德晏的xx努力加載中",
     20: "邱德晏的肚子努力加載中",
   });
   const [open, setOpen] = React.useState(false);

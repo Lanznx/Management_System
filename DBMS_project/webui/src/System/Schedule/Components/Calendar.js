@@ -106,7 +106,7 @@ const InputComponent = (props) => {
             onValueChange={(value) => {console.log(value)} }
             availableOptions={[
               { id: 1, text: '邱德晏' },
-              { id: 2, text: '屁股' },
+              { id: 2, text: 'xx' },
             ]}
           />
 

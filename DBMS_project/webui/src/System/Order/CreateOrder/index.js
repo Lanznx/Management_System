@@ -27,7 +27,7 @@ import {
 export default function CreateOrder() {
   const [productInfos, setProductInfos] = useState([
     {
-      name: "邱德晏的屁股努力加載中",
+      name: "邱德晏的xx努力加載中",
       productId: "",
       price: 50,
       amount: 2,
@@ -38,7 +38,7 @@ export default function CreateOrder() {
   const [orderDatas, setOrderDatas] = useState([]);
   const [toZero, setToZero] = useState(false);
   const [totalPrice, setTotalPrice] = useState(0);
-  const [tags, setTags] = useState({0: "邱德晏的屁股努力加載中"});
+  const [tags, setTags] = useState({0: "邱德晏的xx努力加載中"});
   const [chosedTags, setChosedTags] = useState([]);
   const [open, setOpen] = useState(false);
 
