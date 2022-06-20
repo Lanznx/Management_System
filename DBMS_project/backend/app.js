@@ -5,18 +5,43 @@ var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 var cors = require("cors");
 
+require("dotenv").config();
+
 const { mysqlPoolQuery } = require("./src/mysql");
 
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 var materialRouter = require("./routes/material");
 var productRouter = require("./routes/product");
+var orderRouter = require("./routes/order");
+var scheduleRouter = require("./routes/schedule");
 
 var app = express();
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "pug");
+
+// swagger
+const basicAuth = require("express-basic-auth");
+const swaggerUi = require("swagger-ui-express");
+const swaggerFile = require("./swagger_output.json");
+
+/* swagger admin */
+adminName = process.env.ADMIN_NAME;
+adminPassword = process.env.ADMIN_PASSWORD;
+
+app.use(
+  "/api-doc",
+  basicAuth({
+    users: {
+      [adminName]: adminPassword,
+    },
+    challenge: true,
+  }),
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerFile)
+);
 
 app.use(cors());
 app.use(logger("dev"));
@@ -34,6 +59,8 @@ app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/material", materialRouter);
 app.use("/product", productRouter);
+app.use("/order", orderRouter);
+app.use("/schedule", scheduleRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
