@@ -3,6 +3,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Link from '@mui/material/Link';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import { Box } from '@mui/material';
 
 function Navbar(props) {
     return (
@@ -12,9 +13,39 @@ function Navbar(props) {
         elevation={0}
         sx={{ borderBottom: (theme) => `1px solid ${theme.palette.divider}` }}
         >
-            <Toolbar sx={{ flexWrap: 'wrap' }}>
-                <Typography variant="h6" color="inherit" noWrap sx={{ flexGrow: 1 }}>
-                Company name
+            <Toolbar 
+                sx={{ 
+                    flexWrap: 'wrap',
+                    backgroundImage: 'linear-gradient(to right, rgb(239 124 29), rgb(255 184 94))'
+                }}
+            >
+                <Box
+                    component="img"
+                    sx={{
+                    height: 24,
+                    mr: 1,
+                    ml: 2
+                    }}
+                    alt="Your logo."
+                    src='/bee_vendor_christmas.svg'
+                />
+                <Typography
+                variant="h6"
+                noWrap
+                component="a"
+                href="/"
+                sx={{
+                    mr: 1,
+                    display: { xs: 'none', md: 'flex' },
+                    fontFamily: 'monospace',
+                    fontWeight: 700,
+                    letterSpacing: '.1rem',
+                    color: 'inherit',
+                    textDecoration: 'none',
+                    flexGrow: 1
+                }}
+                >
+                    BeeVendor
                 </Typography>
                 <nav>
                 <Link
@@ -34,7 +65,7 @@ function Navbar(props) {
                     Pricing
                 </Link>
                 </nav>
-                <Button href="signin" variant="outlined" sx={{ my: 1, mx: 1.5 }}>
+                <Button href="signin" variant="outlined" sx={{ color: 'gray', borderColor: 'gray', "&:hover": {color: 'white', borderColor: 'white'}, my: 1, mx: 1.5 }}>
                 Login
                 </Button>
             </Toolbar>

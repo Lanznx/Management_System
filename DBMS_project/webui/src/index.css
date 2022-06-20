@@ -11,3 +11,39 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.colorful-theme-container {
+  --theme-color-bg: #1a73e8;
+  --theme-color-bg-input: var(--theme-color-bg);
+  --theme-color-fg-primary: #fff;
+  --theme-color-fg-secondary: rgba(255,255,255,.7);
+  --theme-color-fg-tertiary: rgba(255,255,255,.5);
+  --theme-color-fg-disabled: rgba(255,255,255,.3);
+  --theme-color-fg-placeholder: rgba(255,255,255,.7);
+  --theme-color-fg-default-border: rgba(255,255,255,.2);
+  --theme-color-fg-rgb: 255,255,255;
+  --fire-color-primary-default: #fff;
+  --theme-color-primary: #fff;
+  --theme-color-primary-rgb: 255,255,255;
+  --theme-color-primary-a11y: #fff;
+  --theme-color-primary-2: rgba(var(--theme-color-primary-rgb),0.9);
+  --theme-color-primary-3: rgba(var(--theme-color-primary-rgb),0.8);
+  --theme-color-on-primary: #1a73e8;
+  --theme-color-ink: #fff;
+  --theme-color-ink-rgb: 255,255,255;
+  --theme-color-ink-2: rgba(255,255,255,.7);
+  --theme-color-ink-3: rgba(255,255,255,.5);
+  --theme-color-ink-disabled: rgba(255,255,255,.3);
+  --theme-opacity-highlight: 0.18;
+  --theme-opacity-highlight-2: 0.24;
+  --theme-button-outline-color: rgba(255,255,255,.5);
+  --fire-focus-outline-color: rgba(var(--fire-color-primary-50-rgb),0.8);
+  --fire-color-link: white;
+  --theme-color-error: var(--fire-color-error-on-dark);
+  --donotuse-filter-chip-bg: rgba(26,115,232,.08);
+  --donotuse-filter-chip-fg-primary: rgba(0,0,0,.87);
+  --donotuse-filter-chip-fg-secondary: rgba(0,0,0,.54);
+  --donotuse-environment-badge-color: #d32f2f;
+  --donotuse-environment-badge-background: var(--fire-color-badge-font);
+  --donotuse-environment-badge-outline: var(--fire-color-black-border);
+}

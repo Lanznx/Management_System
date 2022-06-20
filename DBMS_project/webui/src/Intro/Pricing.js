@@ -13,38 +13,26 @@ import Container from '@mui/material/Container';
 
 const tiers = [
   {
-    title: 'Free',
+    title: '免費',
     price: '0',
     description: [
-      '10 users included',
-      '2 GB of storage',
-      'Help center access',
-      'Email support',
+      '全部的功能',
+      '全部的服務',
+      '全部的幫助',
+      '全部的幹話',
     ],
     buttonText: 'Sign up for free',
+    buttonLink: '/signup',
     buttonVariant: 'outlined',
   },
   {
-    title: 'Pro',
-    subheader: 'Most popular',
-    price: '15',
+    title: '還是免費',
+    price: '0',
     description: [
-      '20 users included',
-      '10 GB of storage',
-      'Help center access',
-      'Priority email support',
-    ],
-    buttonText: 'Get started',
-    buttonVariant: 'contained',
-  },
-  {
-    title: 'Enterprise',
-    price: '30',
-    description: [
-      '50 users included',
-      '30 GB of storage',
-      'Help center access',
-      'Phone & email support',
+      '全部的功能',
+      '全部的服務',
+      '全部的幫助',
+      '全部的幹話',
     ],
     buttonText: 'Contact us',
     buttonVariant: 'outlined',
@@ -56,20 +44,18 @@ export default function Pricing() {
     <React.Fragment>
       <CssBaseline />
       {/* Hero unit */}
-      <Container disableGutters maxWidth="sm" component="main" sx={{ pt: 8, pb: 6 }}>
+      <Container disableGutters maxWidth="sm" component="main" sx={{ pt: 0, pb: 6 }}>
         <Typography
-          component="h1"
-          variant="h2"
+          component="h2"
+          variant="h3"
           align="center"
           color="text.primary"
           gutterBottom
         >
-          Pricing
+          價格
         </Typography>
         <Typography variant="h5" align="center" color="text.secondary" component="p">
-          Quickly build an effective pricing table for your potential customers with
-          this layout. It&apos;s built with default MUI components with little
-          customization.
+        我們一般認為，抓住了問題的關鍵，其他一切則會迎刃而解。經過上述討論，在人類的歷史中，我們總是盡了一切努力想搞懂免費。
         </Typography>
       </Container>
       {/* End hero unit */}
@@ -82,7 +68,7 @@ export default function Pricing() {
               key={tier.title}
               xs={12}
               sm={tier.title === 'Enterprise' ? 12 : 6}
-              md={4}
+              md={6}
             >
               <Card>
                 <CardHeader
@@ -130,7 +116,7 @@ export default function Pricing() {
                   </ul>
                 </CardContent>
                 <CardActions>
-                  <Button fullWidth variant={tier.buttonVariant}>
+                  <Button fullWidth variant={tier.buttonVariant} href={tier.buttonLink}>
                     {tier.buttonText}
                   </Button>
                 </CardActions>

@@ -5,7 +5,7 @@ import { getAllProducts } from "./APIs"
 
 export default function Product() {
   const [allProducts, setAllProduct] = useState([
-    {id: 'chou\'s butt', name: '邱德晏的屁股努力加載中....', price: 50, amount: 1}
+    {id: 'chou\'s butt', name: '邱德晏的xx努力加載中....', price: 50, amount: 1}
   ])
   
   const fetchData = async () => {

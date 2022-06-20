@@ -6,6 +6,8 @@ async function getAllProducts(){
         userId: localStorage.getItem("id_token")
     })
 
+    if(result.data.message == "尚無商品") return []
+
     let allProduct = result.data.allProductInformation.map(item => {
         return {
         id: item.productId, 
@@ -23,6 +25,9 @@ async function getAllMaterials(){
     const result = await axios.post("https://nccu-dbms-team11.herokuapp.com/material/getAllMaterials", {
         userId: localStorage.getItem("id_token")
     })
+
+    
+    if(result.data.message == "尚無原料") return []
 
     let allMaterial = result.data.allMaterialInformation.map(item => {
         return {
@@ -89,6 +94,27 @@ async function addNewMaterial(newObj){
     return result.data.message
 }
 
+async function updateProductAmount(productId, amountChange){
+    const result = await axios.post("https://nccu-dbms-team11.herokuapp.com/product/updateAmount", {
+        userId: localStorage.getItem("id_token"),
+        productId: productId,
+        amountChange: amountChange
+    })
+
+    return result.data.message
+}
+
+async function updateMaterialAmount(materialId, amountChange, price){
+    const result = await axios.post("https://nccu-dbms-team11.herokuapp.com/material/updateAmount", {
+        userId: localStorage.getItem("id_token"),
+        materialId: materialId,
+        amountChange: amountChange,
+        price: price
+    })
+
+    return result.data.message
+}
+
 async function deleteProduct(productId){
     const result = await axios.post("https://nccu-dbms-team11.herokuapp.com/product/deleteProduct", {
         userId: localStorage.getItem("id_token"),
@@ -107,4 +133,14 @@ async function deleteMaterial(materialId){
     return result.data.message
 }
 
-export { getAllProducts, getAllMaterials, addNewProduct, addNewMaterial, getMaterialDict, getMaterialHistory, deleteProduct, deleteMaterial }
+export { 
+    getAllProducts, 
+    getAllMaterials, 
+    addNewProduct, 
+    addNewMaterial, 
+    getMaterialDict, 
+    getMaterialHistory, 
+    updateProductAmount,
+    updateMaterialAmount,
+    deleteProduct, 
+    deleteMaterial }

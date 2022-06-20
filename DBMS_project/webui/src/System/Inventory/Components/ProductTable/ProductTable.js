@@ -50,7 +50,7 @@ const init_attribute = [
     {id: "productName", label: "產品名稱", type: "text"},
     {id: "productPrice", label: "價錢", type: "number"},
     {id: "productAmount", label: "數量", type: "number"},
-    {id: "materialIds", label: "原料", type: "chip", options: [{materialId: '0', materialName: '邱德晏的屁股'}]}
+    {id: "materialIds", label: "原料", type: "chip", options: [{materialId: '0', materialName: '邱德晏的xx'}]}
 ]
 
 export default function MaterialTable(props){

@@ -6,8 +6,23 @@ import { IconButton } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import { Button } from "@mui/material";
+import FeedIcon from '@mui/icons-material/Feed';
+
+import AddHistoryDialog from "./AddHistoryDialog";
 
 import { getMaterialHistory, deleteMaterial } from '../../APIs'
+
+function descendingComparator(a, b) {
+    const orderBy = 'date';
+    if (b[orderBy] < a[orderBy]) {
+        return -1;
+    }
+    if (b[orderBy] > a[orderBy]) {
+        return 1;
+    }
+    return 0;
+}
 
 export default function Row(props){
     console.log("props: ", props);
@@ -19,6 +34,7 @@ export default function Row(props){
     const [history, setHistory] = React.useState([]);
 
     const [expandOpen, setExpandOpen] = React.useState(false);
+    const [isDialogOpen, setIsDialogOpen] = React.useState(false);
 
     const handleDelete = async (id) => {
         console.log("[CollapsibleRow.js handleDelete] delete material: ", id);
@@ -35,7 +51,7 @@ export default function Row(props){
         props.setIsBackdropOpen(true);
         let resp = await getMaterialHistory(materialId);
         console.log("[CollapsibleRow.js updateHistory] resp: ", resp);
-        setHistory(resp);
+        await setHistory(resp);
         props.setIsBackdropOpen(false);
     }
 
@@ -60,9 +76,13 @@ export default function Row(props){
                 <TableCell> {row.name} </TableCell>
                 <TableCell align="right"> {row.amount} </TableCell>
                 <TableCell align="right">
+                    <Button variant="outlined" startIcon={<FeedIcon />} onClick={ ()=>{setIsDialogOpen(true)} }>
+                        更動庫存
+                    </Button>
                     <IconButton aria-label="delete" onClick={ () => {handleDelete(row.id)} }>
                         <DeleteIcon />
                     </IconButton>
+                    <AddHistoryDialog open={isDialogOpen} setIsDialogOpen={setIsDialogOpen} row={row} refresh={updateHistory}/>
                 </TableCell>
             </TableRow>
             <TableRow>
@@ -83,14 +103,18 @@ export default function Row(props){
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {history.map((record, index) => {
+                                    {history
+                                    .slice()
+                                    .sort((a, b) => descendingComparator(a, b))
+                                    .slice(0,5)
+                                    .map((record, index) => {
                                         return (
                                             <TableRow key={index}>
                                                 <TableCell> {record.date} </TableCell>
-                                                <TableCell> {row.materialName} </TableCell>
-                                                <TableCell> {record.price} </TableCell>
+                                                <TableCell> {row.name} </TableCell>
+                                                <TableCell> ${record.price} </TableCell>
                                                 <TableCell> {record.amount} </TableCell>
-                                                <TableCell> {record.price * record.amount} </TableCell>
+                                                <TableCell> ${record.price * record.amount} </TableCell>
                                             </TableRow>
                                         );
                                     })}
