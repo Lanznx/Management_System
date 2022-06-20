@@ -19,21 +19,27 @@ const DatabaseCredential = {
 };
 let pool = mysql.createPool(DatabaseCredential);
 
-const mysqlPoolQuery = async (sql, options, callback) => {
-  if (typeof options === "function") {
-    callback = options;
-    options = undefined;
-  }
-  pool.getConnection(async function (err, conn) {
-    if (err) {
-      callback(err, null, null);
-    } else {
-      conn.query(sql, options, async function (err, result, fields) {
-        callback(err, result, fields);
-      });
-      // connection 的釋放需要在此 release，而不能在 callback 中 release
-      conn.release();
+const mysqlPoolQuery = async (sql, options) => {
+  return new Promise((resolve, reject) => {
+    // if options is not provided
+    if (typeof options === "undefined") {
+      options = [];
     }
+    pool.getConnection(async function (err, conn) {
+      if (err) {
+        reject(err);
+      } else {
+        conn.query(sql, options, async function (err, result, fields) {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(result);
+          }
+        });
+        // connection 的釋放需要在此 release，而不能在 callback 中 release
+        conn.release();
+      }
+    });
   });
 };
 
