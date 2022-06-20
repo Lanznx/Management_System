@@ -8,7 +8,6 @@ function Feature(){
             <CssBaseline />
             <Container disableGutters maxWidth="sm" component="main" sx={{ pt: 8, pb: 6 }}>
                 <div> Feature </div>
-                <div> Feature </div>
             </Container>
         </React.Fragment>
     )

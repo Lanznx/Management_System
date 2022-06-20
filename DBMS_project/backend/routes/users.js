@@ -15,13 +15,11 @@ router.post("/signup", function (req, res, next) {
   const password = req.body.password;
   const email = req.body.email;
   const phoneNumber = req.body.phoneNumber;
-  const salt = bcrypt.genSaltSync();
-  const passwordHash = bcrypt.hashSync(password, salt);
   //store information into DB
   let insertSQL = {
     user_id: uuidv4(),
     user_name: username,
-    password: passwordHash,
+    password: password,
     email: email,
     phone_number: phoneNumber,
   };
@@ -74,6 +72,25 @@ router.post("/login", function (req, res, next) {
             res.status(200).json({ success: true, userId: rows[0].user_id });
           }
         }
+      }
+    }
+  );
+});
+
+router.post("/getInformation", function (req, res, next) {
+  const mysqlPoolQuery = req.pool;
+  const userId = req.body.userId;
+  mysqlPoolQuery(
+    "SELECT user_name AS username, email, phone_number AS phoneNumber FROM user WHERE user_id = ?",
+    userId,
+    function (err, rows) {
+      if (err) {
+        res.status(404).json({ success: false, err: err });
+      } else {
+        if (rows.length == 0) {
+          res.status(409).json({ success: false, err: "使用者不存在" });
+        }
+        res.status(200).json({ success: true, userInformation: rows[0] });
       }
     }
   );
