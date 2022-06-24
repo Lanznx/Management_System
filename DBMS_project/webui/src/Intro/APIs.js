@@ -7,7 +7,7 @@ async function signUp(username, password, email, phoneNumber){
         email: email,
         phoneNumber: phoneNumber
     })
-    
+    console.log(result.data, " ===========          ===============           =============")
     return result.data.message
 }
 

@@ -23,6 +23,7 @@ import {
   createTag,
   getTagDict,
 } from "./APIs.js";
+import swal from "sweetalert";
 
 export default function CreateOrder() {
   const [productInfos, setProductInfos] = useState([
@@ -38,7 +39,7 @@ export default function CreateOrder() {
   const [orderDatas, setOrderDatas] = useState([]);
   const [toZero, setToZero] = useState(false);
   const [totalPrice, setTotalPrice] = useState(0);
-  const [tags, setTags] = useState({0: "邱德晏的xx努力加載中"});
+  const [tags, setTags] = useState({ 0: "邱德晏的xx努力加載中" });
   const [chosedTags, setChosedTags] = useState([]);
   const [open, setOpen] = useState(false);
 
@@ -57,15 +58,20 @@ export default function CreateOrder() {
 
   async function handleGetProducts() {
     let allProduct = await getAllProducts();
-    setProductInfos(allProduct);
-    if (allProduct.length === 0)
-      setProductInfos({
-        name: "暫時沒有商品，可以趕快去新增呦！",
-        productId: "",
-        price: 0,
-        amount: 0,
-      });
-
+    if (allProduct === undefined) {
+      console.log(allProduct, "allProduct is null");
+      setProductInfos([
+        {
+          name: "暫時沒有商品，可以趕快去新增呦！",
+          productId: "",
+          price: 0,
+          amount: 0,
+        },
+      ]);
+    } else {
+      console.log(allProduct, "allProduct");
+      setProductInfos(allProduct);
+    }
     let tagDict = await getTagDict();
     setTags(tagDict);
   }
@@ -103,7 +109,7 @@ export default function CreateOrder() {
         updateAmount(orders.productId, -orders.amount);
       });
     } else {
-      window.alert("Not enough amount");
+      swal("warning", "數量不夠", "warning");
     }
   }
 
@@ -112,14 +118,14 @@ export default function CreateOrder() {
     let tagDict = await getTagDict();
     let tagId = Object.keys(tagDict).find((key) => tagDict[key] === tag);
     if (tagDict[tagId]) {
-      window.alert("此標籤已存在");
+      swal("warning", "此標籤已存在", "warning");
     } else if (!tag) {
-      window.alert("您必須輸入標籤名稱");
+      swal("warning", "您必須輸入標籤名稱", "warning");
     } else {
       await createTag(tag);
       let tagDict = await getTagDict();
       setTags(tagDict);
-      window.alert("新增標籤成功");
+      swal("Success", "新增標籤成功", "success");      
       setOpen(false);
     }
   }
@@ -139,7 +145,6 @@ export default function CreateOrder() {
           </Grid>
         ))}
       </Grid>
-
       <Grid container md={6}>
         <Stack
           md={11}

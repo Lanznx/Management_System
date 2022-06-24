@@ -8,10 +8,9 @@ async function updateAmount(productId, amountChange) {
     productId: productId,
     amountChange: amountChange,
   });
-  if(result.data.success === true) return amountChange;
+  if (result.data.success === true) return amountChange;
   else return 0;
 }
-
 
 async function getTagDict() {
   const result = await axios.post(baseUrl + "/order/getTagDict", {
@@ -34,12 +33,20 @@ async function getAllOrders() {
     userId: userId,
   });
 
-  if(result.data.success === true) return result.data.allOrdersData;
-  
+  if (result.data.success === true) return result.data.allOrdersData;
+
   return ["there is an error"];
 }
 
 async function updateOrder(orderId, orderData, tagId, totalPrice) {
+  console.log("updatting..................")
+  console.log({
+    userId: userId,
+    orderId: orderId,
+    orderData: orderData,
+    tagId: tagId,
+    totalPrice: totalPrice,
+  })
   const result = await axios.post(baseUrl + "/order/updateOrder", {
     userId: userId,
     orderId: orderId,
@@ -47,22 +54,26 @@ async function updateOrder(orderId, orderData, tagId, totalPrice) {
     tagId: tagId,
     totalPrice: totalPrice,
   });
-  if(result.data.success === true) return true;
+  if (result.data.success === true) return true;
 
   return false;
 }
-
 
 async function deleteOrder(orderId) {
   const result = await axios.post(baseUrl + "/order/deleteOrder", {
     userId: userId,
     orderId: orderId,
   });
-  if(result.data.success === true) return true;
+  if (result.data.success === true) return true;
 
   return false;
 }
 
-
-
-export { updateAmount, createTag, getTagDict, getAllOrders, deleteOrder, updateOrder };
+export {
+  updateAmount,
+  createTag,
+  getTagDict,
+  getAllOrders,
+  deleteOrder,
+  updateOrder,
+};
