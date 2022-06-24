@@ -1,9 +1,9 @@
-
-import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import { IconButton } from '@mui/material';
+import * as React from "react";
+import Avatar from "@mui/material/Avatar";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import { IconButton } from "@mui/material";
+import swal from "sweetalert";
 
 // import { logOut } from './APIs';
 
@@ -15,12 +15,12 @@ export default function AvatarMenu(props) {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleLogOut = async() => {
+  const handleLogOut = async () => {
     // logOut();
-    localStorage.removeItem('id_token');
-    window.alert("登出成功 meow meow");
-    window.location.href = '/';
-  }
+    localStorage.removeItem("id_token");
+    swal("success", "登出成功", "success");
+    window.location.href = "/";
+  };
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -35,7 +35,7 @@ export default function AvatarMenu(props) {
         aria-haspopup="true"
         color="inherit"
         onClick={handleClick}
-        >
+      >
         <Avatar src={props.src} />
       </IconButton>
       <Menu
@@ -44,7 +44,7 @@ export default function AvatarMenu(props) {
         open={open}
         onClose={handleClose}
         MenuListProps={{
-          'aria-labelledby': 'basic-button',
+          "aria-labelledby": "basic-button",
         }}
       >
         <MenuItem onClick={handleClose}>Profile</MenuItem>

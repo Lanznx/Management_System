@@ -17,6 +17,7 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { deleteOrder, updateOrder } from "../APIs";
 import MultipleTags from "./MultipleTags";
+import swal from "sweetalert"
 
 export default function OrderRow(props) {
   const { row, refresh, allTags } = props;
@@ -33,43 +34,35 @@ export default function OrderRow(props) {
   );
   const [orderData, setOrderData] = React.useState({});
   const [totalPrice, setTotalPrice] = React.useState(row.totalPrice);
-
+  const [canDelete, setCanDelete] = React.useState(true);
   React.useEffect(() => {
-    setOrderProducts(row.orderProducts);  // 用來防止 row 的 useState 比 orderProducts 的 useState 跑多一次！！！
+    setOrderProducts(row.orderProducts); // 用來防止 row 的 useState 比 orderProducts 的 useState 跑多一次！！！
     let checkChosedTags = row.tags.map((tag) => {
       if (allTags[tag.tagId]) return tag.tagId;
     });
     setChosedTags(checkChosedTags);
   }, [allTags, row]);
 
+
+  React.useEffect(() => {
+      if (row.orderId == -1 ) setCanDelete(false);
+      else setCanDelete(true);
+  }, [row]);
   React.useEffect(() => {
     if (
       JSON.stringify(chosedTags) !== JSON.stringify(OLD_chosedTags) ||
       JSON.stringify(orderProducts) !== JSON.stringify(OLD_orderProducts)
     ) {
-      console.log("!!!!!!!!!!!!!NOT EQUAL===========");
       setCanSend(true);
     } else {
       setCanSend(false);
-      console.log("============EQUAL============");
     }
-    console.log("===================================");
-    console.log(row.orderId, "row.orderId");
-    console.log(OLD_chosedTags, "OLD_chosedTags");
-    console.log(chosedTags, "chosedTags");
-    console.log(OLD_orderProducts, "OLD_orderProducts");
-    console.log(orderProducts, "orderProducts");
-    console.log("===================================");
 
     const newOrderData = {};
     orderProducts.forEach((orderProduct) => {
       newOrderData[orderProduct.productId] = orderProduct.productAmount;
     });
     setOrderData(newOrderData);
-    // console.log(totalPrice, "totalPrice");
-    // console.log(chosedTags, "chosedTags");
-    // console.log(orderData, "orderData"); // 因為還沒更新，所以他會 render 出上一次的值
-    // console.log("===================================")
   }, [chosedTags, totalPrice]);
 
   const handleAmountChange = (id, event) => {
@@ -99,16 +92,17 @@ export default function OrderRow(props) {
     await props.refresh();
     props.setIsBackdropOpen(false);
     refresh();
+    swal("Deleted!", "訂單已成功取消!", "success");
   };
 
   const handleUpdate = async (id) => {
     console.log("[CollapsibleRow.js handleUpdate] update order: ", id);
     props.setIsBackdropOpen(true);
-    // let resp = await updateOrder(id, orderData, chosedTags, totalPrice);
-    // console.log("update resp: ", resp);
-    // await props.refresh();
+    let resp = await updateOrder(id, orderData, chosedTags, totalPrice);
+    console.log("update resp: ", resp);
+    await props.refresh();
     props.setIsBackdropOpen(false);
-    props.refresh();
+    swal("更新!", "訂單已成功更新!", "success");
   };
 
   return (
@@ -141,9 +135,10 @@ export default function OrderRow(props) {
         <TableCell align="right"> {row.totalPrice} </TableCell>
         <TableCell align="center">
           <IconButton
+            disabled={!canDelete}
             aria-label="delete"
             onClick={() => {
-              handleDelete(row.id);
+              handleDelete(row.orderId);
             }}
           >
             <DeleteIcon />
@@ -151,18 +146,17 @@ export default function OrderRow(props) {
         </TableCell>
         <TableCell align="center">
           <IconButton
-            disabled={!canSend}
+            disabled={!canSend || !canDelete}
             color="success"
             aria-label="delete"
             onClick={() => {
               handleUpdate(
-                row.id,
+                row.orderId,
                 orderData,
                 Object.keys(chosedTags),
                 totalPrice
               );
               setCanSend(false);
-              console.log(canSend);
             }}
           >
             <CheckCircleIcon />

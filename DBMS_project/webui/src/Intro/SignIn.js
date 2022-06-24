@@ -18,6 +18,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import AlertTitle from '@mui/material/AlertTitle';
 
 import { logIn } from './APIs';
+import swal from 'sweetalert';
 
 export default function SignIn() {
   const [open, setOpen] = React.useState(false);
@@ -37,7 +38,7 @@ export default function SignIn() {
 
       if (idToken) {
         localStorage.setItem('id_token', idToken);
-        window.alert("登入成功 meow meow");
+        swal("Success","登入成功！", "success")
         window.location.href = '/sys';
       }else{
         setOpen(true);

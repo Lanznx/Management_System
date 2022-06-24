@@ -2,12 +2,11 @@ import * as React from "react";
 import { Box, TableContainer, Paper } from "@mui/material";
 import { Table, TableBody, TablePagination } from "@mui/material";
 import { Backdrop, CircularProgress } from "@mui/material";
-
 import OrderRow from "./Components/OrderRow";
 import EnhancedTableToolbar from "./Components/EnhancedTableToolbar";
 import EnhancedTableHead from "./Components/EnhancedTableHead";
 import { getAllOrders, getTagDict, createTag } from "./APIs";
-
+import swal from "sweetalert";
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
@@ -94,14 +93,14 @@ export default function OrderList(props) {
     let tagDict = await getTagDict();
     let tagId = Object.keys(tagDict).find((key) => tagDict[key] === tag);
     if (tagDict[tagId]) {
-      window.alert("此標籤已存在");
+      swal("warning", "此標籤已存在", "warning");
     } else if (!tag) {
-      window.alert("您必須輸入標籤名稱");
+      swal("warning", "您必須輸入標籤名稱", "warning");
     } else {
       await createTag(tag);
       let tagDict = await getTagDict();
       setAllTags(tagDict);
-      window.alert("新增標籤成功");
+      swal("Success", "新增標籤成功", "success");
       setOpen(false);
     }
   }
@@ -115,7 +114,28 @@ export default function OrderList(props) {
   async function refresh() {
     setIsBackdropOpen(true);
     const results = await getAllOrders();
-    setRows(results);
+    if (results === undefined) {
+      setRows([
+        {
+          orderId: "-1",
+          totalPrice: "000",
+          tags: [
+            {
+              tagId: "",
+            },
+          ],
+          createTime: "目前尚無訂單",
+          orderProducts: [
+            {
+              productId: "努力加載中",
+              productName: "努力加載中",
+              productPrice: "000",
+              productAmount: "",
+            },
+          ],
+        },
+      ]);
+    } else setRows(results);
     console.log(results, "allOrders");
     await fetchTags();
     setIsBackdropOpen(false);
